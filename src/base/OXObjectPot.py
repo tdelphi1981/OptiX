@@ -1,9 +1,7 @@
 from collections.abc import Callable
 from dataclasses import dataclass, field
 
-from base import OXObject
 from base.OXObject import OXObject
-
 
 
 @dataclass
@@ -41,18 +39,11 @@ class OXObjectPot(OXObject):
     def __len__(self):
         return len(self.objects)
 
-    def query(self, **kwargs) -> list[OXObject]:
-
-        def query_function(object: OXObject):
-            if isinstance(object, OXObject):
-                number_of_keys_found = 0
-                for key, value in kwargs.items():
-                    if key in object.related_data:
-                        number_of_keys_found += 1
-                        if object.related_data[key] != value:
-                            return False
-                if number_of_keys_found == 0:
-                    return False
-            return True
-
-        return self.search_by_function(query_function)
+    def get_object_types(self) -> list[str]:
+        result = set()
+        for obj in self.objects:
+            temp_class_name = obj.class_name[(obj.class_name.rfind(".") + 1):].lower()
+            if temp_class_name[:2] == "ox":
+                temp_class_name = temp_class_name[2:]
+            result.add(temp_class_name)
+        return list(result)

@@ -16,3 +16,4 @@ class OXDatabase(OXObjectPot):
         if not isinstance(obj, OXData):
             raise OXception("Only OXData can be removed from OXDatabase")
         super().remove_object(obj)
+
