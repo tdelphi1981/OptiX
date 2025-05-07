@@ -2,6 +2,7 @@ import itertools
 from collections.abc import Callable
 from dataclasses import dataclass, field
 from enum import StrEnum
+from typing import Self
 from uuid import UUID
 
 from base import OXObject, OXception
@@ -13,28 +14,7 @@ from variables.OXVariableSet import OXVariableSet
 
 
 @dataclass
-class OXProblem(OXObject):
-    """Base class for optimization problems.
-
-    This class provides the foundation for defining optimization problems,
-    including variables, constraints, and a database of related data.
-
-    Attributes:
-        db (OXDatabase): A database of related data objects.
-        variables (OXVariableSet): A set of decision variables.
-        constraints (list[OXConstraint]): A list of constraints.
-
-    Examples:
-        >>> problem = OXProblem()
-        >>> problem.create_decision_variable("x1", "Variable 1", 10, 0)
-        >>> problem.create_decision_variable("x2", "Variable 2", 15, 0)
-        >>> problem.create_constraint(
-        ...     variables=[var.id for var in problem.variables],
-        ...     weights=[2, 3],
-        ...     operator=RelationalOperators.LESS_THAN_EQUAL,
-        ...     value=20
-        ... )
-    """
+class OXCSPProblem(OXObject):
     db: OXDatabase = field(default_factory=OXDatabase)
     variables: OXVariableSet = field(default_factory=OXVariableSet)
     constraints: list[OXConstraint] = field(default_factory=list)
@@ -45,23 +25,8 @@ class OXProblem(OXObject):
                                  upper_bound: float | int = float("inf"),
                                  lower_bound: float | int = 0,
                                  *args):
-        """Create variables based on objects in the database.
-
-        Note:
-            This method appears to be incomplete in the current implementation.
-
-        Args:
-            var_name_template (str): A template for variable names.
-            var_description_template (str): A template for variable descriptions.
-            upper_bound (float | int): The upper bound for the variables.
-            lower_bound (float | int): The lower bound for the variables.
-            *args: Object types to include in the variable creation.
-
-        Raises:
-            OXception: If an invalid object type is specified.
-        """
         available_object_type_set = set(self.db.get_object_types())
-        argument_set = set(args)
+        argument_set = set(t.__name__.lower() for t in args)
         invalid_arguments = argument_set.difference(available_object_type_set)
         if len(invalid_arguments) > 0:
             raise OXception(f"Invalid db object type(s) detected : {invalid_arguments}")
@@ -72,38 +37,20 @@ class OXProblem(OXObject):
             object_instances.append(self.db.search_by_function(
                 lambda x: x.class_name.lower().endswith(object_type.lower())))
 
-        for instances_tuple in itertools.product(object_instances):
+        for instances_tuple in itertools.product(*object_instances):
             related_data = {}
             for i in range(len(object_type_names)):
                 related_data[object_type_names[i]] = instances_tuple[i].id
             var_name = var_name_template.format(**related_data)
             var_description = var_description_template.format(**related_data)
+            self.create_decision_variable(var_name=var_name, description=var_description,
+                                          upper_bound=upper_bound, lower_bound=lower_bound,
+                                          **related_data)
 
     def create_decision_variable(self, var_name: str = "", description: str = "",
                                  upper_bound: float | int = float("inf"),
                                  lower_bound: float | int = 0,
                                  **kwargs):
-        """Create a decision variable and add it to the problem.
-
-        Args:
-            var_name (str): The name of the variable.
-            description (str): A description of the variable.
-            upper_bound (float | int): The upper bound for the variable.
-            lower_bound (float | int): The lower bound for the variable.
-            **kwargs: Related data for the variable, where keys are object types
-                and values are object IDs.
-
-        Raises:
-            OXception: If an invalid key is specified in kwargs.
-
-        Examples:
-            >>> problem.create_decision_variable(
-            ...     var_name="x1",
-            ...     description="Variable 1",
-            ...     upper_bound=10,
-            ...     lower_bound=0
-            ... )
-        """
         d_var = OXVariable(name=var_name, description=description, upper_bound=upper_bound, lower_bound=lower_bound)
         db_types = self.db.get_object_types()
         for key, value in kwargs.items():
@@ -114,33 +61,95 @@ class OXProblem(OXObject):
 
     def create_constraint(self,
                           variable_search_function: Callable[[OXObject], bool] = None,
+                          weight_calculation_function: Callable[[OXVariable, Self], float | int] = None,
                           variables: list[UUID] = None,
                           weights: list[float | int] = None,
                           operator: RelationalOperators = RelationalOperators.LESS_THAN_EQUAL,
                           value: float | int = None):
-        """Create a constraint and add it to the problem.
+        self._check_parameters(variable_search_function, variables, weight_calculation_function, weights)
 
-        Args:
-            variable_search_function (Callable[[OXObject], bool], optional): A function
-                to search for variables to include in the constraint.
-            variables (list[UUID], optional): A list of variable IDs to include
-                in the constraint.
-            weights (list[float | int], optional): A list of weights for the variables.
-                If not provided, all weights are set to 1.
-            operator (RelationalOperators): The relational operator for the constraint.
-                Defaults to LESS_THAN_EQUAL.
-            value (float | int): The right-hand side value for the constraint.
+        if variable_search_function is not None:
+            variables = self.variables.search_by_function(variable_search_function)
+            weights = [weight_calculation_function(var, self) for var in variables]
 
-        Raises:
-            OXception: If neither variable_search_function nor variables is provided,
-                if both are provided, if no variables are found, if the number of
-                weights doesn't match the number of variables, or if value is None.
+        expr = OXpression(variables=variables, weights=weights)
+        constraint = OXConstraint(expression=expr, relational_operator=operator, rhs=value)
+        self.constraints.append(constraint)
 
-        Examples:
-            >>> problem.create_constraint(
-            ...     variables=[var1.id, var2.id],
-            ...     weights=[2, 3],
-            ...     operator=RelationalOperators.LESS_THAN_EQUAL,
-            ...     value=20
-            ... )
-        """
+    def _check_parameters(self, variable_search_function, variables, weight_calculation_function, weights):
+        if variable_search_function is None and variables is None:
+            raise OXception("Either variable_search_function or variables must be provided.")
+        if variable_search_function is not None and variables is not None:
+            raise OXception("Only one of variable_search_function or variables can be provided.")
+        if weight_calculation_function is None and weights is None:
+            raise OXception("Either weight_calculation_function or weights must be provided.")
+        if weight_calculation_function is not None and weights is not None:
+            raise OXception("Only one of weight_calculation_function or weights can be provided.")
+        if variable_search_function is not None and weight_calculation_function is None:
+            raise OXception("weight_calculation_function must be provided if variable_search_function is provided.")
+        if variables is not None and weights is None:
+            raise OXception("weights must be provided if variables is provided.")
+        if variables is not None and len(variables) != len(weights):
+            raise OXception("variables and weights must have the same length.")
+
+
+class ObjectiveType(StrEnum):
+    MINIMIZE = "minimize"
+    MAXIMIZE = "maximize"
+
+
+@dataclass
+class OXLPProblem(OXCSPProblem):
+    objective_function: OXpression = field(default_factory=OXpression)
+    objective_type: ObjectiveType = ObjectiveType.MINIMIZE
+
+    def create_objective_function(self,
+                                  variable_search_function: Callable[[OXObject], bool] = None,
+                                  weight_calculation_function: Callable[[OXVariable, Self], float | int] = None,
+                                  variables: list[UUID] = None,
+                                  weights: list[float | int] = None,
+                                  objective_type: ObjectiveType = ObjectiveType.MINIMIZE):
+        self._check_parameters(variable_search_function, variables, weight_calculation_function, weights)
+
+        if variable_search_function is not None:
+            variables = self.variables.search_by_function(variable_search_function)
+            weights = [weight_calculation_function(var, self) for var in variables]
+
+        self.objective_function = OXpression(variables=variables, weights=weights)
+        self.objective_type = objective_type
+
+
+@dataclass
+class OXGPProblem(OXLPProblem):
+    goal_constraints: list[OXGoalConstraint] = field(default_factory=list)
+
+    def create_goal_constraint(self,
+                               variable_search_function: Callable[[OXObject], bool] = None,
+                               weight_calculation_function: Callable[[OXVariable, Self], float | int] = None,
+                               variables: list[UUID] = None,
+                               weights: list[float | int] = None,
+                               operator: RelationalOperators = RelationalOperators.LESS_THAN_EQUAL,
+                               value: float | int = None):
+        self.create_constraint(variable_search_function, weight_calculation_function, variables, weights, operator,
+                               value)
+
+        last_constraint = self.constraints.pop()
+        goal_constraint = last_constraint.to_goal()
+        self.goal_constraints.append(goal_constraint)
+
+    def create_objective_function(self,
+                                  variable_search_function: Callable[[OXObject], bool] = None,
+                                  weight_calculation_function: Callable[[OXVariable, Self], float | int] = None,
+                                  variables: list[UUID] = None,
+                                  weights: list[float | int] = None,
+                                  objective_type: ObjectiveType = ObjectiveType.MINIMIZE):
+        variables = []
+
+        for constraint in self.goal_constraints:
+            variables.extend(constraint.undesired_variables)
+
+        weights = [1.0] * len(variables)
+
+        self.objective_function = OXpression(variables=variables, weights=weights)
+        self.objective_type = ObjectiveType.MINIMIZE
+
