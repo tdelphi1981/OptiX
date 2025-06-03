@@ -66,6 +66,7 @@ class OXCSPProblem(OXObject):
                           weights: list[float | int] = None,
                           operator: RelationalOperators = RelationalOperators.LESS_THAN_EQUAL,
                           value: float | int = None):
+        # TODO value için fonksiyonel bir mekanizma koyulabilir mi? Ne için lazım acaba?
         self._check_parameters(variable_search_function, variables, weight_calculation_function, weights)
 
         if variable_search_function is not None:
