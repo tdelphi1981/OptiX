@@ -1,16 +1,117 @@
 import itertools
+import operator
 from collections.abc import Callable
 from dataclasses import dataclass, field
 from enum import StrEnum
+from functools import reduce
 from typing import Self
 from uuid import UUID
 
 from base import OXObject, OXception
 from constraints.OXConstraint import OXConstraint, OXGoalConstraint, RelationalOperators
+from constraints.OXSpecialConstraints import OXSpecialConstraint, OXMultiplicativeEqualityConstraint, \
+    OXDivisionEqualityConstraint, OXModuloEqualityConstraint, OXSummationEqualityConstraint, OXConditionalConstraint
 from constraints.OXpression import OXpression
 from data.OXDatabase import OXDatabase
 from variables.OXVariable import OXVariable
 from variables.OXVariableSet import OXVariableSet
+
+
+class SpecialConstraintType(StrEnum):
+    MultiplicativeEquality = "MultiplicativeEquality"
+    DivisionEquality = "DivisionEquality"
+    ModulusEquality = "ModulusEquality"
+    SummationEquality = "SummationEquality"
+    ConditionalConstraint = "ConditionalConstraint"
+
+
+def __create_multiplicative_equality_constraint(problem: 'OXCSPProblem',
+                                                input_variables: Callable[[OXObject], bool] | list[OXObject] = None
+                                                ) -> OXMultiplicativeEqualityConstraint:
+    if isinstance(input_variables, Callable):
+        input_variables = [var for var in problem.variables if input_variables(var)]
+    variable_uuids = [var.id for var in input_variables]
+
+    if len(variable_uuids) < 2:
+        raise OXception("Multiplicative equality constraint requires at least 2 variables")
+
+    domains = [(var.lower_bound, var.upper_bound) for var in input_variables]
+
+    combinations = itertools.product(*domains)
+
+    products = [reduce(operator.mul, combination) for combination in combinations]
+
+    lower_bound, upper_bound = min(products), max(products)
+
+    new_var_name = f"Multiplication of {'_'.join(var.name for var in input_variables)}"
+
+    problem.create_decision_variable(new_var_name, lower_bound, upper_bound)
+
+    result = OXMultiplicativeEqualityConstraint(
+        input_variables=variable_uuids,
+        output_variable=problem.variables.last_object.id,
+    )
+
+    problem.specials.append(result)
+
+    return result
+
+
+def __create_division_or_modulus_equality_constraint(problem: 'OXCSPProblem',
+                                                     input_variable: Callable[[OXObject], bool] | OXObject,
+                                                     divisor: int,
+                                                     constraint_type: SpecialConstraintType) -> OXDivisionEqualityConstraint | OXModuloEqualityConstraint:
+    if isinstance(input_variable, Callable):
+        input_variable = [var for var in problem.variables if input_variable(var)]
+
+    if len(input_variable) < 1 or len(input_variable) >= 2:
+        raise OXception("Division/Modulus equality constraint requires exactly 1 variable")
+    if constraint_type not in [SpecialConstraintType.DivisionEquality, SpecialConstraintType.ModulusEquality]:
+        raise OXception("This function only works for Division/Modulus equality constraints")
+
+    lower_bound, upper_bound = input_variable[0].lower_bound, input_variable[0].upper_bound
+
+    if constraint_type == SpecialConstraintType.DivisionEquality:
+        lb, ub = lower_bound / divisor, upper_bound / divisor
+    else:
+        lb, ub = 0, divisor - 1
+
+    if constraint_type == SpecialConstraintType.DivisionEquality:
+        new_var_name = f"{input_variable[0].name} / {divisor}"
+    else:
+        new_var_name = f"{input_variable[0].name} % {divisor}"
+
+    problem.create_decision_variable(new_var_name, lb, ub)
+
+    if constraint_type == SpecialConstraintType.DivisionEquality:
+        result = OXDivisionEqualityConstraint(
+            input_variable=input_variable[0].id,
+            output_variable=problem.variables.last_object.id,
+            denominator=divisor
+        )
+    else:
+        result = OXModuloEqualityConstraint(
+            input_variable=input_variable[0].id,
+            output_variable=problem.variables.last_object.id,
+            denominator=divisor
+        )
+
+    problem.specials.append(result)
+
+    return result
+
+
+def __create_summation_equality_constraint(problem: 'OXCSPProblem',
+                                           input_variables: Callable[[OXObject], bool] | list[
+                                               OXObject]) -> OXSummationEqualityConstraint:
+    pass
+
+
+def __create_conditional_constraint(problem: 'OXCSPProblem',
+                                    input_constraint: Callable[[OXObject], bool] | OXObject,
+                                    true_constraint: Callable[[OXObject], bool] | OXObject,
+                                    false_constraint: Callable[[OXObject], bool] | OXObject) -> OXConditionalConstraint:
+    pass
 
 
 @dataclass
@@ -18,6 +119,13 @@ class OXCSPProblem(OXObject):
     db: OXDatabase = field(default_factory=OXDatabase)
     variables: OXVariableSet = field(default_factory=OXVariableSet)
     constraints: list[OXConstraint] = field(default_factory=list)
+    specials: list[OXSpecialConstraint] = field(default_factory=list)
+
+    def create_special_constraint(self, *,
+                                  constraint_type: SpecialConstraintType = SpecialConstraintType.MultiplicativeEquality,
+                                  **kwargs
+                                  ):
+        pass
 
     def create_variables_from_db(self,
                                  var_name_template: str = "",
@@ -66,7 +174,8 @@ class OXCSPProblem(OXObject):
                           weights: list[float | int] = None,
                           operator: RelationalOperators = RelationalOperators.LESS_THAN_EQUAL,
                           value: float | int = None):
-        # TODO value için fonksiyonel bir mekanizma koyulabilir mi? Ne için lazım acaba?
+        # TODO value için fonksiyonel bir mekanizma koyulabilir mi? Value için değişkenler ve ağırlıklar için olduğu gibi
+        #      bir fonksiyonel ağırlıklandırma yapılabilir mi?
         self._check_parameters(variable_search_function, variables, weight_calculation_function, weights)
 
         if variable_search_function is not None:
@@ -153,4 +262,3 @@ class OXGPProblem(OXLPProblem):
 
         self.objective_function = OXpression(variables=variables, weights=weights)
         self.objective_type = ObjectiveType.MINIMIZE
-

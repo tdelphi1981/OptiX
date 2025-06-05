@@ -110,6 +110,25 @@ class OXObjectPot(OXObject):
         """
         return len(self.objects)
 
+    @property
+    def last_object(self):
+        """
+        Retrieve the last object from the list of objects.
+
+        :return: The last object in the objects list.
+        """
+        return self.objects[-1]
+
+    @property
+    def first_object(self):
+        """
+        Returns the first object from the objects list.
+
+        :return: The first object in the list.
+        :rtype: Object
+        """
+        return self.objects[0]
+
     def get_object_types(self) -> list[str]:
         """Get a list of the types of objects in the pot.
 
