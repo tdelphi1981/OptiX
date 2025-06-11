@@ -25,9 +25,9 @@ class SpecialConstraintType(StrEnum):
     ConditionalConstraint = "ConditionalConstraint"
 
 
-def __create_multiplicative_equality_constraint(problem: 'OXCSPProblem',
-                                                input_variables: Callable[[OXObject], bool] | list[OXObject] = None
-                                                ) -> OXMultiplicativeEqualityConstraint:
+def _create_multiplicative_equality_constraint(problem: 'OXCSPProblem',
+                                               input_variables: Callable[[OXObject], bool] | list[OXObject] = None
+                                               ) -> OXMultiplicativeEqualityConstraint:
     if isinstance(input_variables, Callable):
         input_variables = [var for var in problem.variables if input_variables(var)]
     variable_uuids = [var.id for var in input_variables]
@@ -45,7 +45,7 @@ def __create_multiplicative_equality_constraint(problem: 'OXCSPProblem',
 
     new_var_name = f"Multiplication of {'_'.join(var.name for var in input_variables)}"
 
-    problem.create_decision_variable(new_var_name, lower_bound, upper_bound)
+    problem.create_decision_variable(var_name=new_var_name, lower_bound=lower_bound, upper_bound=upper_bound)
 
     result = OXMultiplicativeEqualityConstraint(
         input_variables=variable_uuids,
@@ -57,10 +57,10 @@ def __create_multiplicative_equality_constraint(problem: 'OXCSPProblem',
     return result
 
 
-def __create_division_or_modulus_equality_constraint(problem: 'OXCSPProblem',
-                                                     input_variable: Callable[[OXObject], bool] | OXObject,
-                                                     divisor: int,
-                                                     constraint_type: SpecialConstraintType) -> OXDivisionEqualityConstraint | OXModuloEqualityConstraint:
+def _create_division_or_modulus_equality_constraint(problem: 'OXCSPProblem',
+                                                    input_variable: Callable[[OXObject], bool] | OXObject,
+                                                    divisor: int,
+                                                    constraint_type: SpecialConstraintType) -> OXDivisionEqualityConstraint | OXModuloEqualityConstraint:
     if isinstance(input_variable, Callable):
         input_variable = [var for var in problem.variables if input_variable(var)]
 
@@ -81,7 +81,7 @@ def __create_division_or_modulus_equality_constraint(problem: 'OXCSPProblem',
     else:
         new_var_name = f"{input_variable[0].name} % {divisor}"
 
-    problem.create_decision_variable(new_var_name, lb, ub)
+    problem.create_decision_variable(var_name=new_var_name, lower_bound=lb, upper_bound=ub)
 
     if constraint_type == SpecialConstraintType.DivisionEquality:
         result = OXDivisionEqualityConstraint(
@@ -101,17 +101,66 @@ def __create_division_or_modulus_equality_constraint(problem: 'OXCSPProblem',
     return result
 
 
-def __create_summation_equality_constraint(problem: 'OXCSPProblem',
-                                           input_variables: Callable[[OXObject], bool] | list[
-                                               OXObject]) -> OXSummationEqualityConstraint:
-    pass
+def _create_summation_equality_constraint(problem: 'OXCSPProblem',
+                                          input_variables: Callable[[OXObject], bool] | list[
+                                              OXObject]) -> OXSummationEqualityConstraint:
+    if isinstance(input_variables, Callable):
+        input_variables = [var for var in problem.variables if input_variables(var)]
+    variable_uuids = [var.id for var in input_variables]
+    if len(variable_uuids) < 2:
+        raise OXception("Summation equality constraint requires at least 2 variables")
+    if not isinstance(input_variables, list):
+        raise OXception("input_variables must be a list of OXVariable objects")
+    if not all(isinstance(var, OXVariable) for var in input_variables):
+        raise OXception("All elements in input_variables must be OXVariable objects")
+    lower_bound = sum(var.lower_bound for var in input_variables)
+    upper_bound = sum(var.upper_bound for var in input_variables)
+    new_var_name = f"Summation of {'_'.join(var.name for var in input_variables)}"
+    problem.create_decision_variable(var_name=new_var_name, lower_bound=lower_bound, upper_bound=upper_bound)
+    result = OXSummationEqualityConstraint(
+        input_variables=variable_uuids,
+        output_variable=problem.variables.last_object.id,
+    )
+    problem.specials.append(result)
+    return result
 
 
-def __create_conditional_constraint(problem: 'OXCSPProblem',
-                                    input_constraint: Callable[[OXObject], bool] | OXObject,
-                                    true_constraint: Callable[[OXObject], bool] | OXObject,
-                                    false_constraint: Callable[[OXObject], bool] | OXObject) -> OXConditionalConstraint:
-    pass
+def _create_conditional_constraint(problem: 'OXCSPProblem',
+                                   input_constraint: Callable[[OXObject], bool] | OXObject,
+                                   true_constraint: Callable[[OXObject], bool] | OXObject,
+                                   false_constraint: Callable[[OXObject], bool] | OXObject) -> OXConditionalConstraint:
+    if isinstance(input_constraint, Callable):
+        input_constraint = [var for var in problem.constraints if input_constraint(var)]
+    if isinstance(true_constraint, Callable):
+        true_constraint = [var for var in problem.constraints if true_constraint(var)]
+    if isinstance(false_constraint, Callable):
+        false_constraint = [var for var in problem.constraints if false_constraint(var)]
+    # if (isinstance(input_constraint, list) and len(input_constraint) != 1) or
+    #    (isinstance(true_constraint, list) and len(true_constraint) != 1) or
+    #    (isinstance(false_constraint, list) and len(false_constraint) != 1):
+    if any(isinstance(obj, list) and len(obj) != 1 for obj in [input_constraint, true_constraint, false_constraint]):
+        raise OXception("Conditional constraint requires exactly 1 input, true and false constraints")
+
+    input_constraint = input_constraint[0]
+    true_constraint = true_constraint[0]
+    false_constraint = false_constraint[0]
+
+    # if not isinstance(input_constraint, OXConstraint) or not isinstance(true_constraint,
+    #                                                                     OXConstraint) or not isinstance(
+    #         false_constraint, OXConstraint):
+    if not all(isinstance(obj, OXConstraint) for obj in [input_constraint, true_constraint, false_constraint]):
+        raise OXception("All constraints must be OXConstraint objects")
+
+    new_var_name = f"Conditional constraint: {input_constraint.id} ? {true_constraint.id} : {false_constraint.id}"
+    problem.create_decision_variable(var_name=new_var_name, lower_bound=0, upper_bound=1)
+    result = OXConditionalConstraint(
+        indicator_variable=problem.variables.last_object.id,
+        input_constraint=input_constraint.id,
+        constraint_if_true=true_constraint.id,
+        constraint_if_false=false_constraint.id
+    )
+    problem.specials.append(result)
+    return result
 
 
 @dataclass
@@ -125,7 +174,20 @@ class OXCSPProblem(OXObject):
                                   constraint_type: SpecialConstraintType = SpecialConstraintType.MultiplicativeEquality,
                                   **kwargs
                                   ):
-        pass
+        match constraint_type:
+            case SpecialConstraintType.MultiplicativeEquality:
+                return _create_multiplicative_equality_constraint(self, **kwargs)
+            case SpecialConstraintType.DivisionEquality:
+                return _create_division_or_modulus_equality_constraint(self, **kwargs,
+                                                                       constraint_type=SpecialConstraintType.DivisionEquality)
+            case SpecialConstraintType.ModulusEquality:
+                return _create_division_or_modulus_equality_constraint(self, **kwargs,
+                                                                       constraint_type=SpecialConstraintType.ModulusEquality)
+            case SpecialConstraintType.SummationEquality:
+                return _create_summation_equality_constraint(self, **kwargs)
+            case SpecialConstraintType.ConditionalConstraint:
+                return _create_conditional_constraint(self, **kwargs)
+        raise OXception(f"Unknown constraint type: {constraint_type}")
 
     def create_variables_from_db(self,
                                  var_name_template: str = "",
