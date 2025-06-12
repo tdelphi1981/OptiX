@@ -1,0 +1,86 @@
+from typing import TypeVar, Union, Optional, List, Dict, Tuple
+from uuid import UUID
+
+from constraints.OXConstraint import OXConstraint, RelationalOperators
+from constraints.OXSpecialConstraints import OXSpecialConstraint
+from constraints.OXpression import OXpression
+from problem.OXProblem import ObjectiveType
+from variables.OXVariable import OXVariable
+from variables.OXVariableSet import OXVariableSet
+
+# TypeVar definitions
+T = TypeVar('T')
+NumericType = Union[float, int]
+VariableType = Union[OXVariable, OXVariableSet]
+SingleOrList = Union[T, List[T]]
+ConstraintType = SingleOrList[OXConstraint]
+SpecialConstraintType = SingleOrList[OXSpecialConstraint]
+VariableValueMapping = Dict[UUID, NumericType]
+ConstraintValueType = Tuple[NumericType, RelationalOperators, NumericType]
+ConstraintValueMapping = Dict[UUID, ConstraintValueType]
+
+SpecialContraintEqualityValue = Tuple[NumericType, NumericType]
+ConditionalContraintValue = Tuple[ConstraintValueType, NumericType, ConstraintValueType, ConstraintValueType]
+SpecialConstraintValueType = Union[SpecialContraintEqualityValue, ConditionalContraintValue]
+
+SpecialContraintValueMapping = Dict[UUID, SpecialConstraintValueType]
+
+
+class OXSolutionStatus:
+    OPTIMAL = "optimal"
+    INFEASIBLE = "infeasible"
+    FEASIBLE = "feasible"
+    UNBOUNDED = "unbounded"
+    TIMEOUT = "timeout"
+    ERROR = "error"
+    UNKNOWN = "unknown"
+
+
+class OXSolverInterface:
+
+    def __init__(self):
+        pass
+
+    def create_variable(self, var: VariableType):
+        raise NotImplementedError()
+
+    def create_constraints(self, constaint: ConstraintType):
+        raise NotImplementedError()
+
+    def create_special_constraints(self, constraint: SpecialConstraintType):
+        raise NotImplementedError()
+
+    def create_objective(self, expression: OXpression, objective_type: ObjectiveType):
+        raise NotImplementedError()
+
+    def solve(self):
+        raise NotImplementedError()
+
+    def get_solution(self):
+        raise NotImplementedError()
+
+    def get_status(self) -> OXSolutionStatus:
+        raise NotImplementedError()
+
+    def get_objective_value(self) -> Optional[NumericType]:
+        raise NotImplementedError()
+
+    def get_variable_values(self) -> Optional[VariableValueMapping]:
+        raise NotImplementedError()
+
+    def get_constraint_values(self) -> Optional[ConstraintValueMapping]:
+        raise NotImplementedError()
+
+    def get_special_constraint_values(self) -> Optional[SpecialContraintValueMapping]:
+        raise NotImplementedError()
+
+    def get_solver_logs(self):
+        raise NotImplementedError()
+
+    @property
+    def parameters(self):
+        raise NotImplementedError()
+
+    @parameters.setter
+    def parameters(self, value):
+        raise NotImplementedError()
