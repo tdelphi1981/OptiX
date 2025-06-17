@@ -4,14 +4,7 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="8079d7c8-d88b-4860-b52c-e25ebcf044e3" name="Changes" comment="Add OXSolverInterface enhancements and XML configuration files">
-      <change afterPath="$PROJECT_DIR$/src/solvers/ortools/OXORToolsSolverInterface.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/solvers/ortools/__init__.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/pyproject.toml" beforeDir="false" afterPath="$PROJECT_DIR$/pyproject.toml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/solvers/OXSolverInterface.py" beforeDir="false" afterPath="$PROJECT_DIR$/src/solvers/OXSolverInterface.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/variables/OXVariable.py" beforeDir="false" afterPath="$PROJECT_DIR$/src/variables/OXVariable.py" afterDir="false" />
-    </list>
+    <list default="true" id="8079d7c8-d88b-4860-b52c-e25ebcf044e3" name="Changes" comment="Add OXORToolsSolverInterface implementation for variable and constraint management" />
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
@@ -167,7 +160,7 @@
       <workItem from="1749799493360" duration="86000" />
       <workItem from="1749799613059" duration="1249000" />
       <workItem from="1750138833407" duration="3388000" />
-      <workItem from="1750142231623" duration="5463000" />
+      <workItem from="1750142231623" duration="5791000" />
     </task>
     <task id="LOCAL-00001" summary="Add initial implementation of core OptiX framework  &#10;&#10;This commit introduces foundational components for the OptiX framework, including utility functions, base classes (e.g., `OXObject`, `OXVariable`), and test coverage for these modules. Additionally, it sets up project structure with `pyproject.toml`, `.gitignore`, and IntelliJ IDEA settings.">
       <option name="closed" value="true" />
@@ -305,7 +298,15 @@
       <option name="project" value="LOCAL" />
       <updated>1750140248154</updated>
     </task>
-    <option name="localTasksCounter" value="18" />
+    <task id="LOCAL-00018" summary="Add OXORToolsSolverInterface implementation for variable and constraint management">
+      <option name="closed" value="true" />
+      <created>1750147962876</created>
+      <option name="number" value="00018" />
+      <option name="presentableId" value="LOCAL-00018" />
+      <option name="project" value="LOCAL" />
+      <updated>1750147962876</updated>
+    </task>
+    <option name="localTasksCounter" value="19" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -323,7 +324,6 @@
     </option>
   </component>
   <component name="VcsManagerConfiguration">
-    <MESSAGE value="Add Sphinx documentation structure for OptiX&#10;&#10;Set up Sphinx for documentation generation, including configuration, makefiles, and project structure. Added essential `.rst` files for usage, installation, contributing, and changelog, along with `.gitignore` for ignoring build artifacts. Includes support for auto-generating API documentation." />
     <MESSAGE value="Update dependencies in pyproject.toml and organize dev tools&#10;&#10;Moved development dependencies to main dependencies section for consistency and clarity. Updated versions for `sphinx`, `myst-parser`, and related tools to reflect new standards. This improves dependency management and ensures compatibility." />
     <MESSAGE value="Refactor problem classes and add corresponding tests&#10;&#10;Renamed and modularized problem classes into `OXCSPProblem`, `OXLPProblem`, and `OXGPProblem` with added functionality for constraints and objective functions. Simplified variable creation logic and added validation for parameters. Included unit tests to validate database-driven variable creation and error handling." />
     <MESSAGE value="Add UML diagram for project structure&#10;&#10;Introduce a UML diagram to visually represent the project's class structure and relationships. This aids in understanding the system architecture and facilitates future development efforts." />
@@ -348,7 +348,8 @@
     <MESSAGE value="Add unit tests for OXception, OXConstraint, and OXSpecialConstraints" />
     <MESSAGE value="Add OXSolverInterface class with methods for variable and constraint management" />
     <MESSAGE value="Add OXSolverInterface enhancements and XML configuration files" />
-    <option name="LAST_COMMIT_MESSAGE" value="Add OXSolverInterface enhancements and XML configuration files" />
+    <MESSAGE value="Add OXORToolsSolverInterface implementation for variable and constraint management" />
+    <option name="LAST_COMMIT_MESSAGE" value="Add OXORToolsSolverInterface implementation for variable and constraint management" />
   </component>
   <component name="XDebuggerManager">
     <watches-manager>
