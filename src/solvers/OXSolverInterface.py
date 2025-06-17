@@ -1,4 +1,4 @@
-from typing import TypeVar, Union, Optional, List, Dict, Tuple
+from typing import TypeVar, Union, Optional, List, Dict, Tuple, Any
 from uuid import UUID
 
 from constraints.OXConstraint import OXConstraint, RelationalOperators
@@ -25,6 +25,11 @@ SpecialConstraintValueType = Union[SpecialContraintEqualityValue, ConditionalCon
 
 SpecialContraintValueMapping = Dict[UUID, SpecialConstraintValueType]
 
+LogType = Union[str, List[str]]
+LogsType = List[LogType]
+
+Parameters = Dict[str, Any]
+
 
 class OXSolutionStatus:
     OPTIMAL = "optimal"
@@ -38,8 +43,8 @@ class OXSolutionStatus:
 
 class OXSolverInterface:
 
-    def __init__(self):
-        pass
+    def __init__(self, **kwargs):
+        self._parameters: Parameters = kwargs
 
     def create_variable(self, var: VariableType):
         raise NotImplementedError()
@@ -74,13 +79,12 @@ class OXSolverInterface:
     def get_special_constraint_values(self) -> Optional[SpecialContraintValueMapping]:
         raise NotImplementedError()
 
-    def get_solver_logs(self):
+    def get_solver_logs(self) -> Optional[LogsType]:
         raise NotImplementedError()
 
     @property
-    def parameters(self):
-        raise NotImplementedError()
+    def parameters(self) -> Parameters:
+        # WARN Here we are expecting to user to modify the solver parameters, however we need to create a
+        #      validation mechanism to ensure that the parameters are valid for the specific solver.
+        return self._parameters
 
-    @parameters.setter
-    def parameters(self, value):
-        raise NotImplementedError()
