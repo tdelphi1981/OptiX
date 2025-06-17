@@ -46,11 +46,25 @@ class OXSolverInterface:
     def __init__(self, **kwargs):
         self._parameters: Parameters = kwargs
 
+    def _create_single_variable(self, var: OXVariable):
+        raise NotImplementedError("This method should be implemented in the subclass.")
+
     def create_variable(self, var: VariableType):
-        raise NotImplementedError()
+        if isinstance(var, list):
+            for v in var:
+                self._create_single_variable(v)
+        else:
+            self._create_single_variable(var)
+
+    def _create_single_constraint(self, constraint: OXConstraint):
+        raise NotImplementedError("This method should be implemented in the subclass.")
 
     def create_constraints(self, constaint: ConstraintType):
-        raise NotImplementedError()
+        if isinstance(constaint, list):
+            for c in constaint:
+                self._create_single_constraint(c)
+        else:
+            self._create_single_constraint(constaint)
 
     def create_special_constraints(self, constraint: SpecialConstraintType):
         raise NotImplementedError()
@@ -58,10 +72,10 @@ class OXSolverInterface:
     def create_objective(self, expression: OXpression, objective_type: ObjectiveType):
         raise NotImplementedError()
 
-    def solve(self):
+    def solve(self) -> OXSolutionStatus:
         raise NotImplementedError()
 
-    def get_solution(self):
+    def get_solution(self) -> VariableValueMapping:
         raise NotImplementedError()
 
     def get_status(self) -> OXSolutionStatus:
@@ -87,4 +101,3 @@ class OXSolverInterface:
         # WARN Here we are expecting to user to modify the solver parameters, however we need to create a
         #      validation mechanism to ensure that the parameters are valid for the specific solver.
         return self._parameters
-

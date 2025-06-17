@@ -7,14 +7,15 @@ authors = [
     {name = "Beyzanur SİYAH",email = "beyzanursiyah@ktu.edu.tr"}
 ]
 readme = "README.md"
-requires-python = ">=3.12"
+requires-python = ">=3.11"
 dependencies = [
     "pytest (>=8.3.4,<9.0.0)",
     "urllib3 (==2.4.0)",
-    "sphinx (==8.3.0)",
+    "ortools (==9.12.4544)",
+    "sphinx (>=8.2.3,<9.0.0)",
     "sphinx-rtd-theme (>=3.0.2,<4.0.0)",
-    "sphinxcontrib-apidoc (>=0.5.0,<0.6.0)",
-    "myst-parser (>=4.0.1,<5.0.0)"
+    "sphinxcontrib-apidoc (>=0.6.0,<0.7.0)",
+    "myst-parser (>=4.0.1,<5.0.0)",
 ]
 
 [build-system]
