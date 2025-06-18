@@ -4,6 +4,8 @@ from ortools.sat.python.cp_model import CpModel
 
 from base import OXception
 from constraints.OXConstraint import OXConstraint, OXGoalConstraint, RelationalOperators
+from constraints.OXSpecialConstraints import OXNonLinearEqualityConstraint, OXMultiplicativeEqualityConstraint, \
+    OXDivisionEqualityConstraint, OXModuloEqualityConstraint, OXSummationEqualityConstraint, OXConditionalConstraint
 from constraints.OXpression import OXpression
 from problem.OXProblem import ObjectiveType
 
@@ -67,7 +69,16 @@ class OXORToolsSolverInterface(OXSolverInterface):
                 raise OXception(f"Unsupported relational operator: {constraint.relational_operator}")
 
     def create_special_constraints(self, constraint: SpecialConstraintType):
-        pass
+        if isinstance(constraint, OXMultiplicativeEqualityConstraint):
+            self.__create_multiplicative_equality_constraint(constraint)
+        elif isinstance(constraint, OXDivisionEqualityConstraint) or isinstance(constraint, OXModuloEqualityConstraint):
+            self.__create_division_modulo_equality_constraint(constraint)
+        elif isinstance(constraint, OXSummationEqualityConstraint):
+            self.__create_summation_equality_constraint(constraint)
+        elif isinstance(constraint, OXConditionalConstraint):
+            self.__create_conditional_constraint(constraint)
+        else:
+            raise OXception(f"Unsupported special constraint type: {type(constraint)}")
 
     def create_objective(self, expression: OXpression, objective_type: ObjectiveType):
         pass
