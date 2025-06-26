@@ -2,7 +2,7 @@ from dataclasses import dataclass, field
 from enum import StrEnum
 from fractions import Fraction
 
-from base import OXObject
+from base import OXObject, OXception
 from constraints.OXpression import OXpression
 from variables.OXDeviationVar import OXDeviationVar
 
@@ -53,6 +53,34 @@ class OXConstraint(OXObject):
     expression: OXpression = field(default_factory=OXpression)
     relational_operator: RelationalOperators = RelationalOperators.EQUAL
     rhs: float | int = 0
+
+    def reverse(self):
+        """Reverse the relational operator of the constraint.
+
+        This method changes the relational operator to its opposite:
+        - GREATER_THAN becomes LESS_THAN
+        - GREATER_THAN_EQUAL becomes LESS_THAN_EQUAL
+        - EQUAL remains EQUAL
+        - LESS_THAN becomes GREATER_THAN
+        - LESS_THAN_EQUAL becomes GREATER_THAN_EQUAL
+
+        Returns:
+            OXConstraint: A new constraint with the reversed operator.
+        """
+        if self.relational_operator == RelationalOperators.EQUAL:
+            raise OXception("Cannot reverse an equality constraint.")
+        reversed_operator = {
+            RelationalOperators.GREATER_THAN: RelationalOperators.LESS_THAN_EQUAL,
+            RelationalOperators.GREATER_THAN_EQUAL: RelationalOperators.LESS_THAN,
+            RelationalOperators.LESS_THAN: RelationalOperators.GREATER_THAN_EQUAL,
+            RelationalOperators.LESS_THAN_EQUAL: RelationalOperators.GREATER_THAN
+        }[self.relational_operator]
+
+        return OXConstraint(
+            expression=self.expression,
+            relational_operator=reversed_operator,
+            rhs=self.rhs
+        )
 
     @property
     def rhs_numerator(self):

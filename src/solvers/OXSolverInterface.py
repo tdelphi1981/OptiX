@@ -4,7 +4,7 @@ from uuid import UUID
 from constraints.OXConstraint import OXConstraint, RelationalOperators
 from constraints.OXSpecialConstraints import OXSpecialConstraint
 from constraints.OXpression import OXpression
-from problem.OXProblem import ObjectiveType
+from problem.OXProblem import ObjectiveType, OXCSPProblem, OXLPProblem
 from variables.OXVariable import OXVariable
 from variables.OXVariableSet import OXVariableSet
 
@@ -42,6 +42,7 @@ class OXSolutionStatus:
 
 
 class OXSolverInterface:
+    # TODO: Change Parameters to OXProblem.
 
     def __init__(self, **kwargs):
         self._parameters: Parameters = kwargs
@@ -49,30 +50,26 @@ class OXSolverInterface:
     def _create_single_variable(self, var: OXVariable):
         raise NotImplementedError("This method should be implemented in the subclass.")
 
-    def create_variable(self, var: VariableType):
-        if isinstance(var, list):
-            for v in var:
-                self._create_single_variable(v)
-        else:
+    def create_variable(self, prb: OXCSPProblem):
+        for var in prb.variables:
             self._create_single_variable(var)
 
     def _create_single_constraint(self, constraint: OXConstraint):
         raise NotImplementedError("This method should be implemented in the subclass.")
 
-    def create_constraints(self, constaint: ConstraintType):
-        if isinstance(constaint, list):
-            for c in constaint:
-                self._create_single_constraint(c)
-        else:
-            self._create_single_constraint(constaint)
+    def create_constraints(self, prb: OXCSPProblem):
+        for constraint in prb.constraints:
+            if constraint.id in prb.constraints_in_special_constraints:
+                continue
+            self._create_single_constraint(constraint)
 
-    def create_special_constraints(self, constraint: SpecialConstraintType):
+    def create_special_constraints(self, prb: OXCSPProblem):
         raise NotImplementedError()
 
-    def create_objective(self, expression: OXpression, objective_type: ObjectiveType):
+    def create_objective(self, prb: OXLPProblem):
         raise NotImplementedError()
 
-    def solve(self) -> OXSolutionStatus:
+    def solve(self, prb: OXCSPProblem) -> OXSolutionStatus:
         raise NotImplementedError()
 
     def get_solution(self) -> VariableValueMapping:

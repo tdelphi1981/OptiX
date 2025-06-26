@@ -4,8 +4,11 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="8079d7c8-d88b-4860-b52c-e25ebcf044e3" name="Changes" comment="">
+    <list default="true" id="8079d7c8-d88b-4860-b52c-e25ebcf044e3" name="Changes" comment="Implement special constraint creation in OXORToolsSolverInterface">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/constraints/OXConstraint.py" beforeDir="false" afterPath="$PROJECT_DIR$/src/constraints/OXConstraint.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/problem/OXProblem.py" beforeDir="false" afterPath="$PROJECT_DIR$/src/problem/OXProblem.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/solvers/OXSolverInterface.py" beforeDir="false" afterPath="$PROJECT_DIR$/src/solvers/OXSolverInterface.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/solvers/ortools/OXORToolsSolverInterface.py" beforeDir="false" afterPath="$PROJECT_DIR$/src/solvers/ortools/OXORToolsSolverInterface.py" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
@@ -40,8 +43,8 @@
 }</component>
   <component name="GitLabMergeRequestsSettings">{
   &quot;selectedUrlAndAccountId&quot;: {
-    &quot;first&quot;: &quot;git@uygur.ktu.edu.tr:tblisansustu/optix.git&quot;,
-    &quot;second&quot;: &quot;5e166063-629b-40a5-9b6b-e048ab6099cb&quot;
+    &quot;first&quot;: &quot;https://uygur.ktu.edu.tr/tblisansustu/optix.git&quot;,
+    &quot;second&quot;: &quot;f40a59c6-9c81-4571-a240-0fa929f353ab&quot;
   }
 }</component>
   <component name="ProjectColorInfo">{
@@ -52,29 +55,54 @@
     <option name="hideEmptyMiddlePackages" value="true" />
     <option name="showLibraryContents" value="true" />
   </component>
-  <component name="PropertiesComponent">{
-  &quot;keyToString&quot;: {
-    &quot;Python tests.Python tests in test_OXData.py.executor&quot;: &quot;Debug&quot;,
-    &quot;Python tests.Python tests in tests.executor&quot;: &quot;Run&quot;,
-    &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
-    &quot;RunOnceActivity.git.unshallow&quot;: &quot;true&quot;,
-    &quot;git-widget-placeholder&quot;: &quot;tolga&quot;,
-    &quot;junie.onboarding.icon.badge.shown&quot;: &quot;true&quot;,
-    &quot;node.js.detected.package.eslint&quot;: &quot;true&quot;,
-    &quot;node.js.detected.package.tslint&quot;: &quot;true&quot;,
-    &quot;node.js.selected.package.eslint&quot;: &quot;(autodetect)&quot;,
-    &quot;node.js.selected.package.tslint&quot;: &quot;(autodetect)&quot;,
-    &quot;nodejs_package_manager_path&quot;: &quot;npm&quot;,
-    &quot;settings.editor.selected.configurable&quot;: &quot;ml.llm.LLMThirdPartyAiProvidersConfigurable&quot;,
-    &quot;vue.rearranger.settings.migration&quot;: &quot;true&quot;
+  <component name="PropertiesComponent"><![CDATA[{
+  "keyToString": {
+    "Python tests.Python tests in test_OXData.py.executor": "Debug",
+    "Python tests.Python tests in tests.executor": "Run",
+    "Python.scratch.executor": "Debug",
+    "RunOnceActivity.ShowReadmeOnStart": "true",
+    "RunOnceActivity.git.unshallow": "true",
+    "git-widget-placeholder": "tolga",
+    "junie.onboarding.icon.badge.shown": "true",
+    "node.js.detected.package.eslint": "true",
+    "node.js.detected.package.tslint": "true",
+    "node.js.selected.package.eslint": "(autodetect)",
+    "node.js.selected.package.tslint": "(autodetect)",
+    "nodejs_package_manager_path": "npm",
+    "settings.editor.selected.configurable": "editor.preferences.fonts.default",
+    "vue.rearranger.settings.migration": "true"
   },
-  &quot;keyToStringList&quot;: {
-    &quot;com.intellij.ide.scratch.ScratchImplUtil$2/New Scratch File&quot;: [
-      &quot;JSON&quot;
+  "keyToStringList": {
+    "com.intellij.ide.scratch.ScratchImplUtil$2/New Scratch File": [
+      "Python",
+      "JSON"
     ]
   }
-}</component>
-  <component name="RunManager" selected="Python tests.Python tests in tests">
+}]]></component>
+  <component name="RunManager" selected="Python.scratch">
+    <configuration name="scratch" type="PythonConfigurationType" factoryName="Python" temporary="true" nameIsGenerated="true">
+      <module name="OptiX" />
+      <option name="ENV_FILES" value="" />
+      <option name="INTERPRETER_OPTIONS" value="" />
+      <option name="PARENT_ENVS" value="true" />
+      <envs>
+        <env name="PYTHONUNBUFFERED" value="1" />
+      </envs>
+      <option name="SDK_HOME" value="" />
+      <option name="WORKING_DIRECTORY" value="$APPLICATION_CONFIG_DIR$/scratches" />
+      <option name="IS_MODULE_SDK" value="false" />
+      <option name="ADD_CONTENT_ROOTS" value="true" />
+      <option name="ADD_SOURCE_ROOTS" value="true" />
+      <EXTENSION ID="PythonCoverageRunConfigurationExtension" runner="coverage.py" />
+      <option name="SCRIPT_NAME" value="$APPLICATION_CONFIG_DIR$/scratches/scratch.py" />
+      <option name="PARAMETERS" value="" />
+      <option name="SHOW_COMMAND_LINE" value="false" />
+      <option name="EMULATE_TERMINAL" value="false" />
+      <option name="MODULE_MODE" value="false" />
+      <option name="REDIRECT_INPUT" value="false" />
+      <option name="INPUT_FILE" value="" />
+      <method v="2" />
+    </configuration>
     <configuration name="Python tests in test_OXData.py" type="tests" factoryName="Autodetect" temporary="true" nameIsGenerated="true">
       <module name="OptiX" />
       <option name="ENV_FILES" value="" />
@@ -110,6 +138,7 @@
     </configuration>
     <recent_temporary>
       <list>
+        <item itemvalue="Python.scratch" />
         <item itemvalue="Python tests.Python tests in test_OXData.py" />
       </list>
     </recent_temporary>
@@ -165,6 +194,9 @@
       <workItem from="1750138833407" duration="3388000" />
       <workItem from="1750142231623" duration="5804000" />
       <workItem from="1750169693445" duration="46000" />
+      <workItem from="1750668641011" duration="172000" />
+      <workItem from="1750668818788" duration="697000" />
+      <workItem from="1750921208180" duration="10173000" />
     </task>
     <task id="LOCAL-00001" summary="Add initial implementation of core OptiX framework  &#10;&#10;This commit introduces foundational components for the OptiX framework, including utility functions, base classes (e.g., `OXObject`, `OXVariable`), and test coverage for these modules. Additionally, it sets up project structure with `pyproject.toml`, `.gitignore`, and IntelliJ IDEA settings.">
       <option name="closed" value="true" />
@@ -318,7 +350,15 @@
       <option name="project" value="LOCAL" />
       <updated>1750148037776</updated>
     </task>
-    <option name="localTasksCounter" value="20" />
+    <task id="LOCAL-00020" summary="Implement special constraint creation in OXORToolsSolverInterface">
+      <option name="closed" value="true" />
+      <created>1750250844000</created>
+      <option name="number" value="00020" />
+      <option name="presentableId" value="LOCAL-00020" />
+      <option name="project" value="LOCAL" />
+      <updated>1750250844000</updated>
+    </task>
+    <option name="localTasksCounter" value="21" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -336,7 +376,6 @@
     </option>
   </component>
   <component name="VcsManagerConfiguration">
-    <MESSAGE value="Update dependencies in pyproject.toml and organize dev tools&#10;&#10;Moved development dependencies to main dependencies section for consistency and clarity. Updated versions for `sphinx`, `myst-parser`, and related tools to reflect new standards. This improves dependency management and ensures compatibility." />
     <MESSAGE value="Refactor problem classes and add corresponding tests&#10;&#10;Renamed and modularized problem classes into `OXCSPProblem`, `OXLPProblem`, and `OXGPProblem` with added functionality for constraints and objective functions. Simplified variable creation logic and added validation for parameters. Included unit tests to validate database-driven variable creation and error handling." />
     <MESSAGE value="Add UML diagram for project structure&#10;&#10;Introduce a UML diagram to visually represent the project's class structure and relationships. This aids in understanding the system architecture and facilitates future development efforts." />
     <MESSAGE value="Add OXSpecialConstraints with various constraint types&#10;&#10;Introduce a new module `OXSpecialConstraints.py` containing specialized constraint classes like `OXNonLinearEqualityConstraint`, `OXMultiplicativeEqualityConstraint`, `OXDivisionEqualityConstraint`, `OXModuloEqualityConstraint`, `OXSummationEqualityConstraint`, and `OXConditionalConstraint`. These classes extend the existing constraint framework to support more complex problem definitions." />
@@ -361,9 +400,19 @@
     <MESSAGE value="Add OXSolverInterface class with methods for variable and constraint management" />
     <MESSAGE value="Add OXSolverInterface enhancements and XML configuration files" />
     <MESSAGE value="Add OXORToolsSolverInterface implementation for variable and constraint management" />
-    <option name="LAST_COMMIT_MESSAGE" value="Add OXORToolsSolverInterface implementation for variable and constraint management" />
+    <MESSAGE value="Implement special constraint creation in OXORToolsSolverInterface" />
+    <option name="LAST_COMMIT_MESSAGE" value="Implement special constraint creation in OXORToolsSolverInterface" />
   </component>
   <component name="XDebuggerManager">
+    <breakpoint-manager>
+      <breakpoints>
+        <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
+          <url>file://$APPLICATION_CONFIG_DIR$/scratches/scratch.py</url>
+          <line>32</line>
+          <option name="timeStamp" value="1" />
+        </line-breakpoint>
+      </breakpoints>
+    </breakpoint-manager>
     <watches-manager>
       <configuration name="tests">
         <watch expression="var_description" />
@@ -372,5 +421,6 @@
   </component>
   <component name="com.intellij.coverage.CoverageDataManagerImpl">
     <SUITE FILE_PATH="coverage/OptiX$.coverage" NAME=" Coverage Results" MODIFIED="1750250261514" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="" />
+    <SUITE FILE_PATH="coverage/OptiX$scratch.coverage" NAME="scratch Coverage Results" MODIFIED="1750922946804" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$APPLICATION_CONFIG_DIR$/scratches" />
   </component>
 </project>

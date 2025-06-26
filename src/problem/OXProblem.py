@@ -145,6 +145,10 @@ def _create_conditional_constraint(problem: 'OXCSPProblem',
     true_constraint = true_constraint[0]
     false_constraint = false_constraint[0]
 
+    problem.constraints_in_special_constraints.append(input_constraint.id)
+    problem.constraints_in_special_constraints.append(true_constraint.id)
+    problem.constraints_in_special_constraints.append(false_constraint.id)
+
     # if not isinstance(input_constraint, OXConstraint) or not isinstance(true_constraint,
     #                                                                     OXConstraint) or not isinstance(
     #         false_constraint, OXConstraint):
@@ -169,6 +173,14 @@ class OXCSPProblem(OXObject):
     variables: OXVariableSet = field(default_factory=OXVariableSet)
     constraints: list[OXConstraint] = field(default_factory=list)
     specials: list[OXSpecialConstraint] = field(default_factory=list)
+    constraints_in_special_constraints: list[UUID] = field(default_factory=list)
+
+    def find_constraint_by_id(self, constraint_id: UUID) -> OXConstraint | None:
+        """Find a constraint by its ID."""
+        for constraint in self.constraints:
+            if constraint.id == constraint_id:
+                return constraint
+        return None
 
     def create_special_constraint(self, *,
                                   constraint_type: SpecialConstraintType = SpecialConstraintType.MultiplicativeEquality,
