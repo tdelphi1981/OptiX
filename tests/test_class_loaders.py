@@ -1,4 +1,3 @@
-import pytest
 from src.utilities.class_loaders import load_class
 
 

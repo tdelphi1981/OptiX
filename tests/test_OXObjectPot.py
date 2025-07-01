@@ -1,5 +1,4 @@
 import pytest
-from uuid import UUID
 
 from src.base.OXObject import OXObject
 from src.base.OXObjectPot import OXObjectPot

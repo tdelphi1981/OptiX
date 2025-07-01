@@ -1,4 +1,3 @@
-import pytest
 from uuid import UUID
 
 from src.constraints.OXConstraint import OXConstraint, OXGoalConstraint, RelationalOperators

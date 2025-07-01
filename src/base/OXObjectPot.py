@@ -110,6 +110,20 @@ class OXObjectPot(OXObject):
         """
         return len(self.objects)
 
+    def __contains__(self, obj: OXObject) -> bool:
+        """Check if an object is in the pot.
+
+        Args:
+            obj (OXObject): The object to check.
+
+        Returns:
+            bool: True if the object is in the pot, False otherwise.
+        """
+        for object in self.objects:
+            if object.id == obj.id:
+                return True
+        return False
+
     @property
     def last_object(self):
         """

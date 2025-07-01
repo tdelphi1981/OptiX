@@ -1,7 +1,3 @@
-import pytest
-import os
-from pathlib import Path
-
 from src.base.OXception import OXception
 
 

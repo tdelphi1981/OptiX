@@ -333,6 +333,11 @@ class OXGPProblem(OXLPProblem):
             variables.extend(constraint.undesired_variables)
 
         weights = [1.0] * len(variables)
+        uuids = [var.id for var in variables]
 
-        self.objective_function = OXpression(variables=variables, weights=weights)
+        for var in variables:
+            if not var in variables:
+                self.variables.add_object(var)
+
+        self.objective_function = OXpression(variables=uuids, weights=weights)
         self.objective_type = ObjectiveType.MINIMIZE

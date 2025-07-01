@@ -1,8 +1,7 @@
 # tests/test_serializers.py
 
-from uuid import UUID
-
 import pytest
+
 from base import OXObject
 from base import OXObjectPot
 from base import OXception

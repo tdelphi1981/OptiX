@@ -3,8 +3,7 @@ from uuid import UUID
 
 from constraints.OXConstraint import OXConstraint, RelationalOperators
 from constraints.OXSpecialConstraints import OXSpecialConstraint
-from constraints.OXpression import OXpression
-from problem.OXProblem import ObjectiveType, OXCSPProblem, OXLPProblem
+from problem.OXProblem import OXCSPProblem, OXLPProblem
 from variables.OXVariable import OXVariable
 from variables.OXVariableSet import OXVariableSet
 

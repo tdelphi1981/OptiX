@@ -1,4 +1,3 @@
-import pytest
 from uuid import UUID
 
 from src.base.OXObject import OXObject

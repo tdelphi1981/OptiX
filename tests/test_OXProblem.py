@@ -1,26 +1,19 @@
 import pytest
-from uuid import UUID
 
-from problem.OXProblem import (
-    OXCSPProblem, OXLPProblem, OXGPProblem, 
-    SpecialConstraintType, ObjectiveType,
-    _create_multiplicative_equality_constraint,
-    _create_division_or_modulus_equality_constraint,
-    _create_summation_equality_constraint,
-    _create_conditional_constraint
-)
-from base import OXObject, OXception
+from base import OXception
 from constraints.OXConstraint import OXConstraint, RelationalOperators
-from constraints.OXpression import OXpression
 from constraints.OXSpecialConstraints import (
     OXMultiplicativeEqualityConstraint,
     OXDivisionEqualityConstraint,
     OXModuloEqualityConstraint,
-    OXSummationEqualityConstraint,
-    OXConditionalConstraint
+    OXSummationEqualityConstraint
 )
-from variables.OXVariable import OXVariable
+from constraints.OXpression import OXpression
 from data.OXDatabase import OXDatabase
+from problem.OXProblem import (
+    OXCSPProblem, OXLPProblem, OXGPProblem,
+    SpecialConstraintType, ObjectiveType
+)
 
 
 def test_oxcspproblem_initialization():

@@ -1,7 +1,4 @@
-import pytest
 from uuid import UUID
-import math
-from fractions import Fraction
 
 from src.constraints.OXpression import OXpression, get_integer_numerator_and_denominators
 

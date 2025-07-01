@@ -4,13 +4,11 @@ from ortools.sat.python.cp_model import CpModel
 
 from base import OXception
 from constraints.OXConstraint import OXConstraint, OXGoalConstraint, RelationalOperators
-from constraints.OXSpecialConstraints import OXNonLinearEqualityConstraint, OXMultiplicativeEqualityConstraint, \
+from constraints.OXSpecialConstraints import OXMultiplicativeEqualityConstraint, \
     OXDivisionEqualityConstraint, OXModuloEqualityConstraint, OXSummationEqualityConstraint, OXConditionalConstraint
-from constraints.OXpression import OXpression
-from problem.OXProblem import ObjectiveType, OXCSPProblem, OXLPProblem
-
+from problem.OXProblem import OXCSPProblem, OXLPProblem, OXGPProblem, ObjectiveType
 from solvers.OXSolverInterface import OXSolverInterface, LogsType, SpecialContraintValueMapping, ConstraintValueMapping, \
-    VariableValueMapping, NumericType, OXSolutionStatus, SpecialConstraintType, ConstraintType, VariableType
+    VariableValueMapping, NumericType, OXSolutionStatus
 from variables.OXVariable import OXVariable
 
 
@@ -84,7 +82,28 @@ class OXORToolsSolverInterface(OXSolverInterface):
                 raise OXception(f"Unsupported special constraint type: {type(constraint)}")
 
     def create_objective(self, prb: OXLPProblem):
-        pass
+        if prb is None or prb.objective_function is None:
+            raise OXception(f"No objective function specified")
+        if len(prb.objective_function.variables) == 0:
+            if isinstance(prb, OXGPProblem):
+                prb.create_objective_function()
+            else:
+                raise OXception(f"No objective function specified")
+
+        weights = prb.objective_function.weights
+        vars = [self._var_mapping[v] for v in prb.objective_function.variables]
+        if any(isinstance(weight, float) for weight in weights):
+            if self._parameters["equalizeDenominators"]:
+                weights = [weight for weight in prb.objective_function.integer_weights]
+            else:
+                raise OXception("OR-Tools does not support float weights in objective functions. Use integers instead.")
+        expr = sum(var * weight for var, weight in zip(vars, weights))
+
+        if prb.objective_type == ObjectiveType.MINIMIZE:
+            self._model.minimize(expr)
+        else:
+            self._model.maximize(expr)
+
 
     def solve(self, prb: OXCSPProblem) -> OXSolutionStatus:
         pass
