@@ -1,4 +1,7 @@
-from typing import TypeVar, Union, Optional, List, Dict, Tuple, Any
+import enum
+from collections import defaultdict
+from dataclasses import dataclass, field
+from typing import TypeVar, Union, Optional, List, Dict, Tuple, Any, Generator, Iterator
 from uuid import UUID
 
 from constraints.OXConstraint import OXConstraint, RelationalOperators
@@ -30,7 +33,7 @@ LogsType = List[LogType]
 Parameters = Dict[str, Any]
 
 
-class OXSolutionStatus:
+class OXSolutionStatus(enum.Enum):
     OPTIMAL = "optimal"
     INFEASIBLE = "infeasible"
     FEASIBLE = "feasible"
@@ -40,11 +43,21 @@ class OXSolutionStatus:
     UNKNOWN = "unknown"
 
 
+@dataclass
+class OXSolverSolution:
+    status: OXSolutionStatus = field(default=OXSolutionStatus.UNKNOWN)
+    decision_variable_values: VariableValueMapping = field(default_factory=defaultdict)
+    constraint_values: ConstraintValueMapping = field(default_factory=defaultdict)
+    objective_function_value: NumericType = field(default=0)
+    special_constraint_values: SpecialContraintValueMapping = field(default_factory=defaultdict)
+
+
 class OXSolverInterface:
     # TODO: Change Parameters to OXProblem.
 
     def __init__(self, **kwargs):
         self._parameters: Parameters = kwargs
+        self._solutions: list[OXSolverSolution] = []
 
     def _create_single_variable(self, var: OXVariable):
         raise NotImplementedError("This method should be implemented in the subclass.")
@@ -71,26 +84,17 @@ class OXSolverInterface:
     def solve(self, prb: OXCSPProblem) -> OXSolutionStatus:
         raise NotImplementedError()
 
-    def get_solution(self) -> VariableValueMapping:
-        raise NotImplementedError()
-
-    def get_status(self) -> OXSolutionStatus:
-        raise NotImplementedError()
-
-    def get_objective_value(self) -> Optional[NumericType]:
-        raise NotImplementedError()
-
-    def get_variable_values(self) -> Optional[VariableValueMapping]:
-        raise NotImplementedError()
-
-    def get_constraint_values(self) -> Optional[ConstraintValueMapping]:
-        raise NotImplementedError()
-
-    def get_special_constraint_values(self) -> Optional[SpecialContraintValueMapping]:
-        raise NotImplementedError()
-
     def get_solver_logs(self) -> Optional[LogsType]:
         raise NotImplementedError()
+
+    def __getitem__(self, item) -> OXSolverSolution:
+        return self._solutions[item]
+
+    def __len__(self) -> int:
+        return len(self._solutions)
+
+    def __iter__(self) -> Iterator[OXSolverSolution]:
+        return iter(self._solutions)
 
     @property
     def parameters(self) -> Parameters:

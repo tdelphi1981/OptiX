@@ -1,6 +1,7 @@
 from typing import Optional
 
-from ortools.sat.python.cp_model import CpModel
+from ortools.sat.python.cp_model import CpModel, CpSolver, CpSolverSolutionCallback, OPTIMAL, FEASIBLE, INFEASIBLE, \
+    UNKNOWN, MODEL_INVALID
 
 from base import OXception
 from constraints.OXConstraint import OXConstraint, OXGoalConstraint, RelationalOperators
@@ -104,27 +105,50 @@ class OXORToolsSolverInterface(OXSolverInterface):
         else:
             self._model.maximize(expr)
 
+    class SolutionLimiter(CpSolverSolutionCallback):
+
+        def __init__(self, max_solution_count: int, solver: 'OXORToolsSolverInterface'):
+            super().__init__()
+            self._solution_count = 0
+            self._max_solution_count = max_solution_count
+            self._solver = solver
+
+        def on_solution_callback(self):
+            self._solution_count += 1
+            # TODO Read solution values from solver, prepare solution object and add to solver interface
+            if self._solution_count >= self._max_solution_count:
+                self.StopSearch()
 
     def solve(self, prb: OXCSPProblem) -> OXSolutionStatus:
-        pass
+        solution_count = 1
+        max_time = 10 * 60
+        if "solutionCount" in self._parameters:
+            solution_count = self._parameters["solutionCount"]
+        if "maxTime" in self._parameters:
+            max_time = self._parameters["maxTime"]
 
-    def get_solution(self) -> VariableValueMapping:
-        pass
+        solver = CpSolver()
 
-    def get_status(self) -> OXSolutionStatus:
-        pass
+        if max_time is not None:
+            solver.parameters.max_time_in_seconds = max_time
 
-    def get_objective_value(self) -> Optional[NumericType]:
-        pass
+        limiter = OXORToolsSolverInterface.SolutionLimiter(solution_count, self)
 
-    def get_variable_values(self) -> Optional[VariableValueMapping]:
-        pass
+        status = solver.solve(self._model, solution_callback=limiter)
 
-    def get_constraint_values(self) -> Optional[ConstraintValueMapping]:
-        pass
+        if status == OPTIMAL:
+            return OXSolutionStatus.OPTIMAL
+        elif status == FEASIBLE:
+            return OXSolutionStatus.FEASIBLE
+        elif status == INFEASIBLE:
+            return OXSolutionStatus.INFEASIBLE
+        elif status == UNKNOWN:
+            return OXSolutionStatus.UNKNOWN
+        elif status == MODEL_INVALID:
+            return OXSolutionStatus.ERROR
 
-    def get_special_constraint_values(self) -> Optional[SpecialContraintValueMapping]:
-        pass
+        raise OXception(f"Solver returned status: {status}")
+
 
     def get_solver_logs(self) -> Optional[LogsType]:
         pass
