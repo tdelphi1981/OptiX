@@ -45,6 +45,7 @@ class OXSolutionStatus(enum.Enum):
 
 @dataclass
 class OXSolverSolution:
+    # TODO Can add statistics?
     status: OXSolutionStatus = field(default=OXSolutionStatus.UNKNOWN)
     decision_variable_values: VariableValueMapping = field(default_factory=defaultdict)
     constraint_values: ConstraintValueMapping = field(default_factory=defaultdict)

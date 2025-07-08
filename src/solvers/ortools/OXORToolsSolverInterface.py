@@ -1,3 +1,4 @@
+from math import prod
 from typing import Optional
 
 from ortools.sat.python.cp_model import CpModel, CpSolver, CpSolverSolutionCallback, OPTIMAL, FEASIBLE, INFEASIBLE, \
@@ -9,7 +10,7 @@ from constraints.OXSpecialConstraints import OXMultiplicativeEqualityConstraint,
     OXDivisionEqualityConstraint, OXModuloEqualityConstraint, OXSummationEqualityConstraint, OXConditionalConstraint
 from problem.OXProblem import OXCSPProblem, OXLPProblem, OXGPProblem, ObjectiveType
 from solvers.OXSolverInterface import OXSolverInterface, LogsType, SpecialContraintValueMapping, ConstraintValueMapping, \
-    VariableValueMapping, NumericType, OXSolutionStatus
+    VariableValueMapping, NumericType, OXSolutionStatus, OXSolverSolution
 from variables.OXVariable import OXVariable
 
 
@@ -23,6 +24,7 @@ class OXORToolsSolverInterface(OXSolverInterface):
 
         self._var_mapping = {}
         self._constraint_mapping = {}
+        self._constraint_expr_mapping = {}
 
     def _create_single_variable(self, var: OXVariable):
         if var.lower_bound == 0 and var.upper_bound == 1:
@@ -48,23 +50,26 @@ class OXORToolsSolverInterface(OXSolverInterface):
             expr = sum(self._var_mapping[v] * w for v, w in zip(constraint.expression.variables, weights))
             expr = expr - self._var_mapping[constraint.positive_deviation_variable.id] + self._var_mapping[
                 constraint.negative_deviation_variable.id]
+            self._constraint_expr_mapping[constraint.id] = expr
             self._constraint_mapping[constraint.id] = self._model.add(expr == rhs)
         else:
+            self._constraint_expr_mapping[constraint.id] = sum(
+                self._var_mapping[v] * w for v, w in zip(constraint.expression.variables, weights))
             if constraint.relational_operator == RelationalOperators.GREATER_THAN:
                 self._constraint_mapping[constraint.id] = self._model.add(
-                    sum(self._var_mapping[v] * w for v, w in zip(constraint.expression.variables, weights)) > rhs)
+                    self._constraint_expr_mapping[constraint.id] > rhs)
             elif constraint.relational_operator == RelationalOperators.GREATER_THAN_EQUAL:
                 self._constraint_mapping[constraint.id] = self._model.add(
-                    sum(self._var_mapping[v] * w for v, w in zip(constraint.expression.variables, weights)) >= rhs)
+                    self._constraint_expr_mapping[constraint.id] >= rhs)
             elif constraint.relational_operator == RelationalOperators.EQUAL:
                 self._constraint_mapping[constraint.id] = self._model.add(
-                    sum(self._var_mapping[v] * w for v, w in zip(constraint.expression.variables, weights)) == rhs)
+                    self._constraint_expr_mapping[constraint.id] == rhs)
             elif constraint.relational_operator == RelationalOperators.LESS_THAN_EQUAL:
                 self._constraint_mapping[constraint.id] = self._model.add(
-                    sum(self._var_mapping[v] * w for v, w in zip(constraint.expression.variables, weights)) <= rhs)
+                    self._constraint_expr_mapping[constraint.id] <= rhs)
             elif constraint.relational_operator == RelationalOperators.LESS_THAN:
                 self._constraint_mapping[constraint.id] = self._model.add(
-                    sum(self._var_mapping[v] * w for v, w in zip(constraint.expression.variables, weights)) < rhs)
+                    self._constraint_expr_mapping[constraint.id] < rhs)
             else:
                 raise OXception(f"Unsupported relational operator: {constraint.relational_operator}")
 
@@ -107,15 +112,64 @@ class OXORToolsSolverInterface(OXSolverInterface):
 
     class SolutionLimiter(CpSolverSolutionCallback):
 
-        def __init__(self, max_solution_count: int, solver: 'OXORToolsSolverInterface'):
+        def __init__(self, max_solution_count: int,
+                     solver: 'OXORToolsSolverInterface',
+                     prb: OXCSPProblem):
             super().__init__()
             self._solution_count = 0
             self._max_solution_count = max_solution_count
             self._solver = solver
+            self._problem = prb
 
         def on_solution_callback(self):
             self._solution_count += 1
             # TODO Read solution values from solver, prepare solution object and add to solver interface
+            solution_object = OXSolverSolution()
+            solution_object.status = OXSolutionStatus.OPTIMAL
+            solution_object.decision_variable_values = {
+                var_id: self.value(self._solver._var_mapping[var_id]) for var_id in self._solver._var_mapping
+            }
+            solution_object.constraint_values = {
+                constraint_id: (self.value(self._solver._constraint_expr_mapping[constraint_id]),
+                                self._problem.find_constraint_by_id(constraint_id).relational_operator,
+                                self._problem.find_constraint_by_id(constraint_id).rhs)
+                for constraint_id in self._solver._constraint_mapping
+            }
+            if isinstance(self._problem, OXLPProblem):
+                solution_object.objective_function_value = self.ObjectiveValue()
+            if len(self._problem.specials) > 0:
+                for s_constraint in self._problem.specials:
+                    if not isinstance(s_constraint, OXConditionalConstraint):
+                        input_value = 0
+                        output_value = 0
+                        if isinstance(s_constraint, OXMultiplicativeEqualityConstraint):
+                            input_value = prod(
+                                self.value(self._solver._var_mapping[var]) for var in s_constraint.input_variables)
+                            output_value = self.value(self._solver._var_mapping[s_constraint.output_variable])
+                        elif isinstance(s_constraint, OXDivisionEqualityConstraint):
+                            input_value = self.value(
+                                self._solver._var_mapping[s_constraint.input_variable]) // s_constraint.denominator
+                            output_value = self.value(self._solver._var_mapping[s_constraint.output_variable])
+                        elif isinstance(s_constraint, OXModuloEqualityConstraint):
+                            input_value = self.value(
+                                self._solver._var_mapping[s_constraint.input_variable]) % s_constraint.denominator
+                            output_value = self.value(self._solver._var_mapping[s_constraint.output_variable])
+                        elif isinstance(s_constraint, OXSummationEqualityConstraint):
+                            input_value = sum(
+                                self.value(self._solver._var_mapping[var]) for var in s_constraint.input_variables)
+                            output_value = self.value(self._solver._var_mapping[s_constraint.output_variable])
+                        else:
+                            raise OXception(f"Unsupported special constraint type: {type(s_constraint)}")
+                        solution_object.special_constraint_values[s_constraint.id] = (input_value, output_value)
+                    else:
+                        input_constraint_value = solution_object.constraint_values[s_constraint.input_constraint]
+                        indicator_value = self.value(self._solver._var_mapping[s_constraint.indicator_variable])
+                        true_value = solution_object.constraint_values[s_constraint.constraint_if_true]
+                        false_value = solution_object.constraint_values[s_constraint.constraint_if_false]
+                        solution_object.special_constraint_values[s_constraint.id] = (input_constraint_value,
+                                                                                      indicator_value, true_value,
+                                                                                      false_value)
+            self._solver._solutions.append(solution_object)
             if self._solution_count >= self._max_solution_count:
                 self.StopSearch()
 
@@ -132,7 +186,9 @@ class OXORToolsSolverInterface(OXSolverInterface):
         if max_time is not None:
             solver.parameters.max_time_in_seconds = max_time
 
-        limiter = OXORToolsSolverInterface.SolutionLimiter(solution_count, self)
+        limiter = OXORToolsSolverInterface.SolutionLimiter(solution_count,
+                                                           self,
+                                                           prb)
 
         status = solver.solve(self._model, solution_callback=limiter)
 
@@ -148,7 +204,6 @@ class OXORToolsSolverInterface(OXSolverInterface):
             return OXSolutionStatus.ERROR
 
         raise OXception(f"Solver returned status: {status}")
-
 
     def get_solver_logs(self) -> Optional[LogsType]:
         pass

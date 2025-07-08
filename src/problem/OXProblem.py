@@ -182,6 +182,12 @@ class OXCSPProblem(OXObject):
                 return constraint
         return None
 
+    def find_variable_by_id(self, variable_id: UUID) -> OXVariable | None:
+        for variable in self.variables:
+            if variable.id == variable_id:
+                return variable
+        return None
+
     def create_special_constraint(self, *,
                                   constraint_type: SpecialConstraintType = SpecialConstraintType.MultiplicativeEquality,
                                   **kwargs
