@@ -50,6 +50,9 @@ class OXVariable(OXObject):
         This method is automatically called after the object is initialized.
         It calls the parent's __post_init__ method and then ensures that the
         variable has a name, generating one based on the UUID if necessary.
+        
+        Raises:
+            OXception: If lower_bound is greater than upper_bound.
         """
         super().__post_init__()
         if self.lower_bound > self.upper_bound:

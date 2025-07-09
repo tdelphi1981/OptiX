@@ -1,7 +1,6 @@
 import math
 from dataclasses import dataclass, field
 from fractions import Fraction
-from functools import lru_cache
 from uuid import UUID
 
 from base import OXObject

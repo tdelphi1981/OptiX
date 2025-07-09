@@ -8,21 +8,15 @@
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/base/OXObjectPot.py" beforeDir="false" afterPath="$PROJECT_DIR$/src/base/OXObjectPot.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/base/__init__.py" beforeDir="false" afterPath="$PROJECT_DIR$/src/base/__init__.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/constraints/OXSpecialConstraints.py" beforeDir="false" afterPath="$PROJECT_DIR$/src/constraints/OXSpecialConstraints.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/constraints/OXpression.py" beforeDir="false" afterPath="$PROJECT_DIR$/src/constraints/OXpression.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/constraints/__init__.py" beforeDir="false" afterPath="$PROJECT_DIR$/src/constraints/__init__.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/data/__init__.py" beforeDir="false" afterPath="$PROJECT_DIR$/src/data/__init__.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/problem/OXProblem.py" beforeDir="false" afterPath="$PROJECT_DIR$/src/problem/OXProblem.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/problem/__init__.py" beforeDir="false" afterPath="$PROJECT_DIR$/src/problem/__init__.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/serialization/serializers.py" beforeDir="false" afterPath="$PROJECT_DIR$/src/serialization/serializers.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/solvers/OXSolverInterface.py" beforeDir="false" afterPath="$PROJECT_DIR$/src/solvers/OXSolverInterface.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/solvers/ortools/OXORToolsSolverInterface.py" beforeDir="false" afterPath="$PROJECT_DIR$/src/solvers/ortools/OXORToolsSolverInterface.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/variables/OXVariable.py" beforeDir="false" afterPath="$PROJECT_DIR$/src/variables/OXVariable.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/tests/test_OXConstraint.py" beforeDir="false" afterPath="$PROJECT_DIR$/tests/test_OXConstraint.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/tests/test_OXObject.py" beforeDir="false" afterPath="$PROJECT_DIR$/tests/test_OXObject.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/tests/test_OXObjectPot.py" beforeDir="false" afterPath="$PROJECT_DIR$/tests/test_OXObjectPot.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/tests/test_OXProblem.py" beforeDir="false" afterPath="$PROJECT_DIR$/tests/test_OXProblem.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/tests/test_OXSpecialConstraints.py" beforeDir="false" afterPath="$PROJECT_DIR$/tests/test_OXSpecialConstraints.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/tests/test_OXVariable.py" beforeDir="false" afterPath="$PROJECT_DIR$/tests/test_OXVariable.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/tests/test_OXception.py" beforeDir="false" afterPath="$PROJECT_DIR$/tests/test_OXception.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/tests/test_OXpression.py" beforeDir="false" afterPath="$PROJECT_DIR$/tests/test_OXpression.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/tests/test_class_loaders.py" beforeDir="false" afterPath="$PROJECT_DIR$/tests/test_class_loaders.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/tests/test_serializers.py" beforeDir="false" afterPath="$PROJECT_DIR$/tests/test_serializers.py" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -60,6 +54,9 @@
     &quot;second&quot;: &quot;f40a59c6-9c81-4571-a240-0fa929f353ab&quot;
   }
 }</component>
+  <component name="HighlightingSettingsPerFile">
+    <setting file="file://$USER_HOME$/Library/Caches/pypoetry/virtualenvs/optix-K3-xX3T1-py3.13/lib/python3.13/site-packages/ortools/sat/python/cp_model.py" root0="SKIP_INSPECTION" />
+  </component>
   <component name="ProjectColorInfo">{
   &quot;associatedIndex&quot;: 4
 }</component>
@@ -68,31 +65,56 @@
     <option name="hideEmptyMiddlePackages" value="true" />
     <option name="showLibraryContents" value="true" />
   </component>
-  <component name="PropertiesComponent">{
-  &quot;keyToString&quot;: {
-    &quot;Python tests.Python tests in test_OXData.py.executor&quot;: &quot;Debug&quot;,
-    &quot;Python tests.Python tests in tests.executor&quot;: &quot;Run&quot;,
-    &quot;Python.scratch.executor&quot;: &quot;Debug&quot;,
-    &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
-    &quot;RunOnceActivity.git.unshallow&quot;: &quot;true&quot;,
-    &quot;git-widget-placeholder&quot;: &quot;tolga&quot;,
-    &quot;junie.onboarding.icon.badge.shown&quot;: &quot;true&quot;,
-    &quot;node.js.detected.package.eslint&quot;: &quot;true&quot;,
-    &quot;node.js.detected.package.tslint&quot;: &quot;true&quot;,
-    &quot;node.js.selected.package.eslint&quot;: &quot;(autodetect)&quot;,
-    &quot;node.js.selected.package.tslint&quot;: &quot;(autodetect)&quot;,
-    &quot;nodejs_package_manager_path&quot;: &quot;npm&quot;,
-    &quot;settings.editor.selected.configurable&quot;: &quot;editor.preferences.fonts.default&quot;,
-    &quot;vue.rearranger.settings.migration&quot;: &quot;true&quot;
+  <component name="PropertiesComponent"><![CDATA[{
+  "keyToString": {
+    "Python tests.Python tests in test_OXData.py.executor": "Debug",
+    "Python tests.Python tests in tests.executor": "Run",
+    "Python.01_simple_bus_assignment_problem.executor": "Run",
+    "Python.scratch.executor": "Debug",
+    "RunOnceActivity.ShowReadmeOnStart": "true",
+    "RunOnceActivity.TerminalTabsStorage.copyFrom.TerminalArrangementManager": "true",
+    "RunOnceActivity.git.unshallow": "true",
+    "git-widget-placeholder": "tolga",
+    "junie.onboarding.icon.badge.shown": "true",
+    "node.js.detected.package.eslint": "true",
+    "node.js.detected.package.tslint": "true",
+    "node.js.selected.package.eslint": "(autodetect)",
+    "node.js.selected.package.tslint": "(autodetect)",
+    "nodejs_package_manager_path": "npm",
+    "settings.editor.selected.configurable": "preferences.lookFeel",
+    "vue.rearranger.settings.migration": "true"
   },
-  &quot;keyToStringList&quot;: {
-    &quot;com.intellij.ide.scratch.ScratchImplUtil$2/New Scratch File&quot;: [
-      &quot;Python&quot;,
-      &quot;JSON&quot;
+  "keyToStringList": {
+    "com.intellij.ide.scratch.ScratchImplUtil$2/New Scratch File": [
+      "Python",
+      "JSON"
     ]
   }
-}</component>
-  <component name="RunManager" selected="Python.scratch">
+}]]></component>
+  <component name="RunManager" selected="Python.01_simple_bus_assignment_problem">
+    <configuration name="01_simple_bus_assignment_problem" type="PythonConfigurationType" factoryName="Python" temporary="true" nameIsGenerated="true">
+      <module name="OptiX" />
+      <option name="ENV_FILES" value="" />
+      <option name="INTERPRETER_OPTIONS" value="" />
+      <option name="PARENT_ENVS" value="true" />
+      <envs>
+        <env name="PYTHONUNBUFFERED" value="1" />
+      </envs>
+      <option name="SDK_HOME" value="" />
+      <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$/samples/bus_assignment_problem" />
+      <option name="IS_MODULE_SDK" value="true" />
+      <option name="ADD_CONTENT_ROOTS" value="true" />
+      <option name="ADD_SOURCE_ROOTS" value="true" />
+      <EXTENSION ID="PythonCoverageRunConfigurationExtension" runner="coverage.py" />
+      <option name="SCRIPT_NAME" value="$PROJECT_DIR$/samples/bus_assignment_problem/01_simple_bus_assignment_problem.py" />
+      <option name="PARAMETERS" value="" />
+      <option name="SHOW_COMMAND_LINE" value="false" />
+      <option name="EMULATE_TERMINAL" value="false" />
+      <option name="MODULE_MODE" value="false" />
+      <option name="REDIRECT_INPUT" value="false" />
+      <option name="INPUT_FILE" value="" />
+      <method v="2" />
+    </configuration>
     <configuration name="scratch" type="PythonConfigurationType" factoryName="Python" temporary="true" nameIsGenerated="true">
       <module name="OptiX" />
       <option name="ENV_FILES" value="" />
@@ -151,6 +173,7 @@
     </configuration>
     <recent_temporary>
       <list>
+        <item itemvalue="Python.01_simple_bus_assignment_problem" />
         <item itemvalue="Python.scratch" />
         <item itemvalue="Python tests.Python tests in test_OXData.py" />
       </list>
@@ -159,8 +182,8 @@
   <component name="SharedIndexes">
     <attachedChunks>
       <set>
-        <option value="bundled-js-predefined-d6986cc7102b-b26f3e71634d-JavaScript-PY-251.26094.141" />
-        <option value="bundled-python-sdk-9f8e2b94138c-36ea0e71a18c-com.jetbrains.pycharm.pro.sharedIndexes.bundled-PY-251.26094.141" />
+        <option value="bundled-js-predefined-d6986cc7102b-09060db00ec0-JavaScript-PY-251.26927.74" />
+        <option value="bundled-python-sdk-657d8234b839-64d779b69b7a-com.jetbrains.pycharm.pro.sharedIndexes.bundled-PY-251.26927.74" />
       </set>
     </attachedChunks>
   </component>
@@ -211,7 +234,16 @@
       <workItem from="1750668818788" duration="697000" />
       <workItem from="1750921208180" duration="10241000" />
       <workItem from="1750942346395" duration="8000" />
-      <workItem from="1751355810735" duration="2778000" />
+      <workItem from="1751355810735" duration="4971000" />
+      <workItem from="1751370590001" duration="5448000" />
+      <workItem from="1751384544726" duration="197000" />
+      <workItem from="1751957056174" duration="2087000" />
+      <workItem from="1751961002662" duration="9000" />
+      <workItem from="1751973652276" duration="1427000" />
+      <workItem from="1751976647400" duration="4278000" />
+      <workItem from="1751984476465" duration="7000" />
+      <workItem from="1752045053107" duration="3982000" />
+      <workItem from="1752060604815" duration="5964000" />
     </task>
     <task id="LOCAL-00001" summary="Add initial implementation of core OptiX framework  &#10;&#10;This commit introduces foundational components for the OptiX framework, including utility functions, base classes (e.g., `OXObject`, `OXVariable`), and test coverage for these modules. Additionally, it sets up project structure with `pyproject.toml`, `.gitignore`, and IntelliJ IDEA settings.">
       <option name="closed" value="true" />
@@ -434,6 +466,16 @@
           <line>32</line>
           <option name="timeStamp" value="1" />
         </line-breakpoint>
+        <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
+          <url>file://$PROJECT_DIR$/src/solvers/ortools/OXORToolsSolverInterface.py</url>
+          <line>175</line>
+          <option name="timeStamp" value="10" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
+          <url>file://$PROJECT_DIR$/src/constraints/OXpression.py</url>
+          <line>25</line>
+          <option name="timeStamp" value="11" />
+        </line-breakpoint>
       </breakpoints>
     </breakpoint-manager>
     <watches-manager>
@@ -445,5 +487,6 @@
   <component name="com.intellij.coverage.CoverageDataManagerImpl">
     <SUITE FILE_PATH="coverage/OptiX$.coverage" NAME=" Coverage Results" MODIFIED="1750250261514" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="" />
     <SUITE FILE_PATH="coverage/OptiX$scratch.coverage" NAME="scratch Coverage Results" MODIFIED="1750922946804" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$APPLICATION_CONFIG_DIR$/scratches" />
+    <SUITE FILE_PATH="coverage/OptiX$01_simple_bus_assignment_problem.coverage" NAME="01_simple_bus_assignment_problem Coverage Results" MODIFIED="1752064608513" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/samples/bus_assignment_problem" />
   </component>
 </project>

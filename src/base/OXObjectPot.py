@@ -97,6 +97,25 @@ class OXObjectPot(OXObject):
         self.objects.remove(obj)
 
     def __getitem__(self, item):
+        """Get an object by its UUID.
+
+        Args:
+            item (UUID): The UUID of the object to retrieve.
+
+        Returns:
+            OXObject: The object with the specified UUID.
+
+        Raises:
+            OXception: If the item is not a UUID or if no object with the given UUID is found.
+
+        Examples:
+            >>> pot = OXObjectPot()
+            >>> obj = OXObject()
+            >>> pot.add_object(obj)
+            >>> retrieved = pot[obj.id]
+            >>> retrieved == obj
+            True
+        """
         if not isinstance(item, UUID):
             raise OXception("Only UUID indices are accepted")
         for object in self.objects:
@@ -136,20 +155,39 @@ class OXObjectPot(OXObject):
 
     @property
     def last_object(self):
-        """
-        Retrieve the last object from the list of objects.
+        """Get the last object from the list of objects.
 
-        :return: The last object in the objects list.
+        Returns:
+            OXObject: The last object in the objects list.
+
+        Raises:
+            IndexError: If the objects list is empty.
+
+        Examples:
+            >>> pot = OXObjectPot()
+            >>> obj = OXObject()
+            >>> pot.add_object(obj)
+            >>> pot.last_object == obj
+            True
         """
         return self.objects[-1]
 
     @property
     def first_object(self):
-        """
-        Returns the first object from the objects list.
+        """Get the first object from the list of objects.
 
-        :return: The first object in the list.
-        :rtype: Object
+        Returns:
+            OXObject: The first object in the objects list.
+
+        Raises:
+            IndexError: If the objects list is empty.
+
+        Examples:
+            >>> pot = OXObjectPot()
+            >>> obj = OXObject()
+            >>> pot.add_object(obj)
+            >>> pot.first_object == obj
+            True
         """
         return self.objects[0]
 
