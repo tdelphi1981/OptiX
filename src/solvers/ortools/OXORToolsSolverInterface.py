@@ -40,7 +40,7 @@ class OXORToolsSolverInterface(OXSolverInterface):
         weights = constraint.expression.weights
         rhs = constraint.rhs
         if any(isinstance(weight, float) for weight in weights) or isinstance(rhs, float):
-            if self._parameters["equalizeDenominators"]:
+            if "equalizeDenominators" in self._parameters and self._parameters["equalizeDenominators"]:
                 weights = [round(constraint.rhs_denominator * weight) for weight in
                            constraint.expression.integer_weights]
                 rhs = round(constraint.expression.integer_denominator * constraint.rhs_numerator)
@@ -99,7 +99,7 @@ class OXORToolsSolverInterface(OXSolverInterface):
         weights = prb.objective_function.weights
         vars = [self._var_mapping[v] for v in prb.objective_function.variables]
         if any(isinstance(weight, float) for weight in weights):
-            if self._parameters["equalizeDenominators"]:
+            if 'equalizeDenominators' in self._parameters and self._parameters["equalizeDenominators"]:
                 weights = [weight for weight in prb.objective_function.integer_weights]
             else:
                 raise OXception("OR-Tools does not support float weights in objective functions. Use integers instead.")
@@ -238,7 +238,7 @@ class OXORToolsSolverInterface(OXSolverInterface):
         weights = constraint.expression.weights
         rhs = constraint.rhs
         if any(isinstance(weight, float) for weight in weights) or isinstance(rhs, float):
-            if self._parameters["equalizeDenominators"]:
+            if "equalizeDenominators" in self._parameters and self._parameters["equalizeDenominators"]:
                 weights = [round(constraint.rhs_denominator * weight) for weight in
                            constraint.expression.integer_weights]
                 rhs = round(constraint.expression.integer_denominator * constraint.rhs_numerator)

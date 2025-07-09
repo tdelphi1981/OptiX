@@ -1,6 +1,8 @@
 from collections.abc import Callable
 from dataclasses import dataclass, field
+from uuid import UUID
 
+from base import OXception
 from base.OXObject import OXObject
 
 
@@ -93,6 +95,14 @@ class OXObjectPot(OXObject):
             ValueError: If the object is not in the pot.
         """
         self.objects.remove(obj)
+
+    def __getitem__(self, item):
+        if not isinstance(item, UUID):
+            raise OXception("Only UUID indices are accepted")
+        for object in self.objects:
+            if object.id == item:
+                return object
+        raise OXception("Object not found")
 
     def __iter__(self):
         """Return an iterator over the objects in the pot.

@@ -7,7 +7,6 @@ from uuid import UUID
 from base import OXObject
 
 
-@lru_cache
 def get_integer_numerator_and_denominators(numbers: list[float | int]) -> tuple[int, list[int]]:
     """Convert a list of floating-point or integer weights to integer values.
 

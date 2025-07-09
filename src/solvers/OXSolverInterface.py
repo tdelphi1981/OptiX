@@ -52,12 +52,34 @@ class OXSolverSolution:
     objective_function_value: NumericType = field(default=0)
     special_constraint_values: SpecialContraintValueMapping = field(default_factory=defaultdict)
 
+    def print_solution_for(self, prb:OXCSPProblem):
+        result = f"Solution Found {self.status}\n"
+        result += f"\tObjective Function Value: {self.objective_function_value}\n"
+        result += f"\tDecision Variable Values:\n"
+        for var_id, var_value in self.decision_variable_values.items():
+            result += f"\t\t{prb.variables[var_id].name}: {var_value}\n"
+        result += f"\tConstraints:\n"
+        for constraint_id, (lhs, operator, rhs) in self.constraint_values.items():
+            result += f"\t\t{constraint_id}: {lhs} {operator} {rhs}\n"
+        print(result)
+
+    def __str__(self):
+        result = f"Solution Found {self.status}\n"
+        result += f"\tObjective Function Value: {self.objective_function_value}\n"
+        result += f"\tDecision Variable Values:\n"
+        for var_id, var_value in self.decision_variable_values.items():
+            result += f"\t\t{var_id}: {var_value}\n"
+        result += f"\tConstraints:\n"
+        for constraint_id, (lhs, operator, rhs) in self.constraint_values.items():
+            result += f"\t\t{constraint_id}: {lhs} {operator} {rhs}\n"
+        return result
+
 
 class OXSolverInterface:
     # TODO: Change Parameters to OXProblem.
 
     def __init__(self, **kwargs):
-        self._parameters: Parameters = kwargs
+        self._parameters: Parameters = defaultdict(None, **kwargs)
         self._solutions: list[OXSolverSolution] = []
 
     def _create_single_variable(self, var: OXVariable):

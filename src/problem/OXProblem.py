@@ -207,12 +207,11 @@ class OXCSPProblem(OXObject):
                 return _create_conditional_constraint(self, **kwargs)
         raise OXception(f"Unknown constraint type: {constraint_type}")
 
-    def create_variables_from_db(self,
+    def create_variables_from_db(self, *args,
                                  var_name_template: str = "",
                                  var_description_template: str = "",
                                  upper_bound: float | int = float("inf"),
-                                 lower_bound: float | int = 0,
-                                 *args):
+                                 lower_bound: float | int = 0):
         available_object_type_set = set(self.db.get_object_types())
         argument_set = set(t.__name__.lower() for t in args)
         invalid_arguments = argument_set.difference(available_object_type_set)
@@ -258,8 +257,10 @@ class OXCSPProblem(OXObject):
         #      bir fonksiyonel ağırlıklandırma yapılabilir mi?
         self._check_parameters(variable_search_function, variables, weight_calculation_function, weights)
 
-        if variable_search_function is not None:
-            variables = self.variables.search_by_function(variable_search_function)
+        if variables is None:
+            variables = [v.id for v in self.variables.search_by_function(variable_search_function)]
+
+        if weights is None:
             weights = [weight_calculation_function(var, self) for var in variables]
 
         expr = OXpression(variables=variables, weights=weights)
@@ -302,7 +303,7 @@ class OXLPProblem(OXCSPProblem):
         self._check_parameters(variable_search_function, variables, weight_calculation_function, weights)
 
         if variable_search_function is not None:
-            variables = self.variables.search_by_function(variable_search_function)
+            variables = [v.id for v in self.variables.search_by_function(variable_search_function)]
             weights = [weight_calculation_function(var, self) for var in variables]
 
         self.objective_function = OXpression(variables=variables, weights=weights)
