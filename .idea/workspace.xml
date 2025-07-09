@@ -6,17 +6,18 @@
   <component name="ChangeListManager">
     <list default="true" id="8079d7c8-d88b-4860-b52c-e25ebcf044e3" name="Changes" comment="Implement special constraint creation and management in OXORToolsSolverInterface">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/base/OXObjectPot.py" beforeDir="false" afterPath="$PROJECT_DIR$/src/base/OXObjectPot.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/base/__init__.py" beforeDir="false" afterPath="$PROJECT_DIR$/src/base/__init__.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/constraints/OXSpecialConstraints.py" beforeDir="false" afterPath="$PROJECT_DIR$/src/constraints/OXSpecialConstraints.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/constraints/OXpression.py" beforeDir="false" afterPath="$PROJECT_DIR$/src/constraints/OXpression.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/constraints/__init__.py" beforeDir="false" afterPath="$PROJECT_DIR$/src/constraints/__init__.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/data/__init__.py" beforeDir="false" afterPath="$PROJECT_DIR$/src/data/__init__.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/problem/OXProblem.py" beforeDir="false" afterPath="$PROJECT_DIR$/src/problem/OXProblem.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/problem/__init__.py" beforeDir="false" afterPath="$PROJECT_DIR$/src/problem/__init__.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/serialization/serializers.py" beforeDir="false" afterPath="$PROJECT_DIR$/src/serialization/serializers.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/solvers/OXSolverInterface.py" beforeDir="false" afterPath="$PROJECT_DIR$/src/solvers/OXSolverInterface.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/solvers/ortools/OXORToolsSolverInterface.py" beforeDir="false" afterPath="$PROJECT_DIR$/src/solvers/ortools/OXORToolsSolverInterface.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/CHANGELOG.md" beforeDir="false" afterPath="$PROJECT_DIR$/CHANGELOG.md" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/CONTRIBUTING.md" beforeDir="false" afterPath="$PROJECT_DIR$/CONTRIBUTING.md" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/README.md" beforeDir="false" afterPath="$PROJECT_DIR$/README.md" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/docs/Makefile" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/docs/README.rst" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/docs/changelog.rst" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/docs/conf.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/docs/contributing.rst" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/docs/index.rst" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/docs/installation.rst" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/docs/make.bat" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/docs/usage.rst" beforeDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -243,7 +244,7 @@
       <workItem from="1751976647400" duration="4278000" />
       <workItem from="1751984476465" duration="7000" />
       <workItem from="1752045053107" duration="3982000" />
-      <workItem from="1752060604815" duration="5964000" />
+      <workItem from="1752060604815" duration="9264000" />
     </task>
     <task id="LOCAL-00001" summary="Add initial implementation of core OptiX framework  &#10;&#10;This commit introduces foundational components for the OptiX framework, including utility functions, base classes (e.g., `OXObject`, `OXVariable`), and test coverage for these modules. Additionally, it sets up project structure with `pyproject.toml`, `.gitignore`, and IntelliJ IDEA settings.">
       <option name="closed" value="true" />
@@ -468,7 +469,7 @@
         </line-breakpoint>
         <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
           <url>file://$PROJECT_DIR$/src/solvers/ortools/OXORToolsSolverInterface.py</url>
-          <line>175</line>
+          <line>270</line>
           <option name="timeStamp" value="10" />
         </line-breakpoint>
         <line-breakpoint enabled="true" suspend="THREAD" type="python-line">

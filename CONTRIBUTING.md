@@ -49,6 +49,11 @@ Please be respectful and considerate of others when contributing to this project
    pytest
    ```
 
+   For specific test files:
+   ```bash
+   pytest tests/test_OXVariable.py
+   ```
+
 5. Commit your changes with a descriptive commit message:
    ```bash
    git commit -m "Add feature: your feature description"
@@ -73,10 +78,14 @@ Please be respectful and considerate of others when contributing to this project
 
 - Follow [PEP 8](https://peps.python.org/pep-0008/) style guide for Python code.
 - Use meaningful variable and function names.
-- Write docstrings for all functions, classes, and methods.
+- Write comprehensive docstrings for all functions, classes, and methods.
 - Keep functions and methods focused on a single responsibility.
-- Use type hints where appropriate.
+- Use type hints extensively (see `OXSolverInterface.py` for examples).
 - Organize imports alphabetically within their groups.
+- Use dataclasses for data structures when appropriate.
+- Follow the existing naming conventions (e.g., `OX` prefix for main classes).
+- Implement proper error handling with custom exceptions.
+- Use abstract base classes for defining interfaces.
 
 ## Testing Guidelines
 
@@ -84,6 +93,9 @@ Please be respectful and considerate of others when contributing to this project
 - Ensure all tests pass before submitting a pull request.
 - Aim for high test coverage of your code.
 - Place tests in the `tests/` directory, following the existing structure.
+- Test files should be named `test_<component>.py` (e.g., `test_OXVariable.py`).
+- Include integration tests for solver implementations.
+- Test both positive and negative scenarios (error handling).
 
 ## Documentation Guidelines
 
@@ -120,14 +132,20 @@ Example:
 The project is organized as follows:
 
 - `src/`: Source code
-  - `base/`: Base classes and exceptions
-  - `constraints/`: Constraint-related classes
-  - `data/`: Data management classes
-  - `problem/`: Problem definition classes
-  - `serialization/`: Serialization utilities
-  - `utilities/`: Utility functions and classes
-  - `variables/`: Variable-related classes
-- `tests/`: Test files
+  - `base/`: Base classes and exceptions (`OXObject`, `OXObjectPot`, `OXception`)
+  - `constraints/`: Constraint-related classes (`OXConstraint`, `OXSpecialConstraints`, `OXpression`)
+  - `data/`: Data management classes (`OXData`, `OXDatabase`)
+  - `problem/`: Problem definition classes (`OXLPProblem`, `OXCSPProblem`, etc.)
+  - `serialization/`: Serialization utilities for data persistence
+  - `solvers/`: Solver interfaces and implementations
+    - `OXSolverInterface`: Abstract base class for all solvers
+    - `OXSolverFactory`: Factory for creating and managing solvers
+    - `ortools/`: OR-Tools specific implementation
+  - `utilities/`: Utility functions and classes (`class_loaders`, etc.)
+  - `variables/`: Variable-related classes (`OXVariable`, `OXVariableSet`)
+- `samples/`: Example problems and use cases
+  - `bus_assignment_problem/`: Real-world optimization examples
+- `tests/`: Comprehensive test suite covering all components
 
 ## Contact
 
