@@ -1,4 +1,18 @@
+"""Simple Bus Assignment Problem Example.
+
+This example demonstrates a basic bus assignment optimization problem where
+different bus groups with varying capacities are assigned to different lines
+to meet passenger demands while minimizing the total number of trips.
+
+The problem involves:
+- Bus groups with specific capacities and fleet sizes
+- Lines with daily passenger demands
+- Constraints to ensure passenger demands are met
+- Objective to minimize the total number of trips
+"""
+
 import random
+from dataclasses import dataclass
 
 from constraints.OXConstraint import RelationalOperators
 from data.OXData import OXData
@@ -6,16 +20,41 @@ from problem.OXProblem import OXLPProblem, ObjectiveType
 from solvers.OXSolverFactory import solve
 
 
+@dataclass
 class BusGroup(OXData):
-    capacity: int
-    number_of_busses: int
+    """Represents a group of buses with specific capacity and fleet size.
+    
+    Attributes:
+        capacity (int): The passenger capacity of each bus in this group.
+        number_of_busses (int): The number of buses available in this group.
+    """
+    capacity: int = 0
+    number_of_busses: int = 0
 
 
+@dataclass
 class Line(OXData):
-    daily_passenger_demand: int
+    """Represents a transit line with passenger demand.
+    
+    Attributes:
+        daily_passenger_demand (int): The number of passengers that need to be
+            transported on this line per day.
+    """
+    daily_passenger_demand: int = 0
 
 
 def main():
+    """Solve a simple bus assignment problem.
+    
+    This function creates a linear programming problem to assign bus groups
+    to lines optimally, ensuring all passenger demands are met while
+    minimizing the total number of trips.
+    
+    The problem formulation:
+    - Decision variables: Number of trips for each bus group on each line
+    - Constraints: Each line must have enough capacity to handle its demand
+    - Objective: Minimize total weighted trips (weight = 1.5 per trip)
+    """
     bap = OXLPProblem()
 
     number_of_groups = random.randint(3, 8)
@@ -34,8 +73,8 @@ def main():
 
     bap.create_variables_from_db(
         BusGroup, Line,
-        var_name_template="Bus Group[{busgroup}]-Line[{line}]",
-        var_description_template="Number of Trips of {line} of Bus Group {busgroup}",
+        var_name_template="Bus Group[{busgroup_id}]-Line[{line_id}]",
+        var_description_template="Number of Trips of {line_id} of Bus Group {busgroup_id}",
         lower_bound=0,
         upper_bound=20
     )
@@ -61,7 +100,6 @@ def main():
     print(f"Status: {status}")
 
     for solution in solver:
-        print(solution)
         solution.print_solution_for(bap)
 
 

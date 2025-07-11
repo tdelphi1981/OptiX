@@ -86,10 +86,13 @@ class OXSolverSolution:
     special_constraint_values: SpecialContraintValueMapping = field(default_factory=defaultdict)
 
     def print_solution_for(self, prb: OXCSPProblem):
-        """Print a formatted solution with variable names from the problem.
+        """Print a formatted solution with variable names and constraint names from the problem.
+        
+        This method prints a detailed solution report including the objective function value,
+        decision variable values with their names, and constraint values with their names.
         
         Args:
-            prb (OXCSPProblem): The problem instance containing variable definitions.
+            prb (OXCSPProblem): The problem instance containing variable and constraint definitions.
         """
         result = f"Solution Found {self.status}\n"
         result += f"\tObjective Function Value: {self.objective_function_value}\n"
@@ -98,7 +101,7 @@ class OXSolverSolution:
             result += f"\t\t{prb.variables[var_id].name}: {var_value}\n"
         result += f"\tConstraints:\n"
         for constraint_id, (lhs, operator, rhs) in self.constraint_values.items():
-            result += f"\t\t{constraint_id}: {lhs} {operator} {rhs}\n"
+            result += f"\t\t{prb.find_constraint_by_id(constraint_id).name}: {lhs} {operator} {rhs}\n"
         print(result)
 
     def __str__(self):

@@ -1,3 +1,4 @@
+import dataclasses
 import itertools
 import operator
 from collections.abc import Callable
@@ -493,9 +494,12 @@ class OXCSPProblem(OXObject):
             *args: Variable number of database object types to use for variable creation.
                 Each argument should be a type that exists in the problem's database.
             var_name_template (str, optional): Template string for variable names.
-                Can use database object type names as format keys. Defaults to "".
+                Can use database object type names as format keys, as well as
+                individual field values with format "{type_name}_{field_name}".
+                Defaults to "".
             var_description_template (str, optional): Template string for variable
-                descriptions. Can use database object type names as format keys.
+                descriptions. Can use database object type names as format keys, as well as
+                individual field values with format "{type_name}_{field_name}".
                 Defaults to "".
             upper_bound (float | int, optional): Upper bound for all created variables.
                 Defaults to positive infinity.
@@ -509,23 +513,25 @@ class OXCSPProblem(OXObject):
             >>> # Create variables for all combinations of buses and routes
             >>> problem.create_variables_from_db(
             ...     Bus, Route,
-            ...     var_name_template="bus_{bus}_route_{route}",
-            ...     var_description_template="Assignment of bus {bus} to route {route}",
+            ...     var_name_template="bus_{bus_id}_route_{route_id}",
+            ...     var_description_template="Assignment of bus {bus_name} to route {route_name}",
             ...     upper_bound=1,
             ...     lower_bound=0
             ... )
             >>> 
-            >>> # Create variables for single object type
+            >>> # Create variables for single object type using field values
             >>> problem.create_variables_from_db(
             ...     Driver,
-            ...     var_name_template="driver_{driver}_active",
+            ...     var_name_template="driver_{driver_id}_active",
+            ...     var_description_template="Driver {driver_name} is active",
             ...     upper_bound=1
             ... )
 
         Note:
             The method uses the Cartesian product of all specified object types,
             so the number of created variables equals the product of the counts
-            of each object type.
+            of each object type. Template strings can now access both object type
+            names and individual field values from dataclass objects.
         """
         available_object_type_set = set(self.db.get_object_types())
         argument_set = set(t.__name__.lower() for t in args)
@@ -541,10 +547,13 @@ class OXCSPProblem(OXObject):
 
         for instances_tuple in itertools.product(*object_instances):
             related_data = {}
+            format_parameters = {}
             for i in range(len(object_type_names)):
                 related_data[object_type_names[i]] = instances_tuple[i].id
-            var_name = var_name_template.format(**related_data)
-            var_description = var_description_template.format(**related_data)
+                for field in dataclasses.fields(instances_tuple[i]):
+                    format_parameters[f"{object_type_names[i]}_{field.name}"] = getattr(instances_tuple[i], field.name)
+            var_name = var_name_template.format(**format_parameters)
+            var_description = var_description_template.format(**format_parameters)
             self.create_decision_variable(var_name=var_name, description=var_description,
                                           upper_bound=upper_bound, lower_bound=lower_bound,
                                           **related_data)
@@ -609,7 +618,8 @@ class OXCSPProblem(OXObject):
                           variables: list[UUID] = None,
                           weights: list[float | int] = None,
                           operator: RelationalOperators = RelationalOperators.LESS_THAN_EQUAL,
-                          value: float | int = None):
+                          value: float | int = None,
+                          name: str = None):
         """Create a linear constraint for the optimization problem.
 
         Creates a linear constraint of the form:
@@ -632,6 +642,8 @@ class OXCSPProblem(OXObject):
             operator (RelationalOperators, optional): Relational operator for the
                 constraint. Defaults to LESS_THAN_EQUAL.
             value (float | int, optional): Right-hand side value of the constraint.
+            name (str, optional): A descriptive name for the constraint. If None,
+                an auto-generated name will be created based on the constraint terms.
 
         Raises:
             OXception: If parameter combinations are invalid (see _check_parameters).
@@ -669,7 +681,17 @@ class OXCSPProblem(OXObject):
             weights = [weight_calculation_function(var, self) for var in variables]
 
         expr = OXpression(variables=variables, weights=weights)
-        constraint = OXConstraint(expression=expr, relational_operator=operator, rhs=value)
+        if name is None:
+            var_names = [f"{abs(w)}*{v.name}" for v, w in
+                         zip(self.variables.search_by_function(variable_search_function), weights)]
+            negative_weights = [True if w < 0 else False for w in weights]
+            prefixes = [" - " if negative_weight else ' + ' for negative_weight in negative_weights]
+            if prefixes[0] == ' + ':
+                prefixes[0] = ''
+
+            terms = [f"{pfx}{var_name}" for pfx, var_name in zip(prefixes, var_names)]
+            name = "".join(terms).strip()
+        constraint = OXConstraint(expression=expr, relational_operator=operator, rhs=value, name=name)
         self.constraints.append(constraint)
 
     def _check_parameters(self, variable_search_function, variables, weight_calculation_function, weights):

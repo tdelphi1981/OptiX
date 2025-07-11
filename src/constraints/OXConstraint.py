@@ -38,6 +38,7 @@ class OXConstraint(OXObject):
         expression (OXpression): The left-hand side of the constraint.
         relational_operator (RelationalOperators): The operator (>, >=, =, <, <=).
         rhs (float | int): The right-hand side value.
+        name (str): A descriptive name for the constraint.
 
     Examples:
         >>> from constraints.OXpression import OXpression
@@ -45,7 +46,8 @@ class OXConstraint(OXObject):
         >>> constraint = OXConstraint(
         ...     expression=expr,
         ...     relational_operator=RelationalOperators.LESS_THAN_EQUAL,
-        ...     rhs=10
+        ...     rhs=10,
+        ...     name="Capacity constraint"
         ... )
         >>> print(constraint)
         constraints.OXConstraint(12345678-1234-5678-1234-567812345678)
@@ -53,6 +55,7 @@ class OXConstraint(OXObject):
     expression: OXpression = field(default_factory=OXpression)
     relational_operator: RelationalOperators = RelationalOperators.EQUAL
     rhs: float | int = 0
+    name: str = ""
 
     def reverse(self):
         """Reverse the relational operator of the constraint.
@@ -79,7 +82,8 @@ class OXConstraint(OXObject):
         return OXConstraint(
             expression=self.expression,
             relational_operator=reversed_operator,
-            rhs=self.rhs
+            rhs=self.rhs,
+            name=f"Inverse of {self.name}"
         )
 
     @property
