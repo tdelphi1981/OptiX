@@ -101,7 +101,7 @@ class OXSolverSolution:
             result += f"\t\t{prb.variables[var_id].name}: {var_value}\n"
         result += f"\tConstraints:\n"
         for constraint_id, (lhs, operator, rhs) in self.constraint_values.items():
-            result += f"\t\t{prb.find_constraint_by_id(constraint_id).name}: {lhs} {operator} {rhs}\n"
+            result += f"\t\t{prb.constraints[constraint_id].name}: {lhs} {operator} {rhs}\n"
         print(result)
 
     def __str__(self):

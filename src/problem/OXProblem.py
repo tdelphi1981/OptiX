@@ -9,6 +9,7 @@ from typing import Self
 from uuid import UUID
 
 from base import OXObject, OXception
+from constraints import OXConstraintSet
 from constraints.OXConstraint import OXConstraint, OXGoalConstraint, RelationalOperators
 from constraints.OXSpecialConstraints import OXSpecialConstraint, OXMultiplicativeEqualityConstraint, \
     OXDivisionEqualityConstraint, OXModuloEqualityConstraint, OXSummationEqualityConstraint, OXConditionalConstraint
@@ -376,51 +377,9 @@ class OXCSPProblem(OXObject):
     """
     db: OXDatabase = field(default_factory=OXDatabase)
     variables: OXVariableSet = field(default_factory=OXVariableSet)
-    constraints: list[OXConstraint] = field(default_factory=list)
+    constraints: OXConstraintSet = field(default_factory=OXConstraintSet)
     specials: list[OXSpecialConstraint] = field(default_factory=list)
     constraints_in_special_constraints: list[UUID] = field(default_factory=list)
-
-    def find_constraint_by_id(self, constraint_id: UUID) -> OXConstraint | None:
-        """Find a constraint by its ID.
-
-        Args:
-            constraint_id (UUID): The unique identifier of the constraint to find.
-
-        Returns:
-            OXConstraint | None: The constraint object if found, None otherwise.
-
-        Examples:
-            >>> constraint = problem.find_constraint_by_id(some_uuid)
-            >>> if constraint:
-            ...     print(f"Found constraint: {constraint}")
-            >>> else:
-            ...     print("Constraint not found")
-        """
-        for constraint in self.constraints:
-            if constraint.id == constraint_id:
-                return constraint
-        return None
-
-    def find_variable_by_id(self, variable_id: UUID) -> OXVariable | None:
-        """Find a variable by its ID.
-
-        Args:
-            variable_id (UUID): The unique identifier of the variable to find.
-
-        Returns:
-            OXVariable | None: The variable object if found, None otherwise.
-
-        Examples:
-            >>> variable = problem.find_variable_by_id(some_uuid)
-            >>> if variable:
-            ...     print(f"Found variable: {variable.name}")
-            >>> else:
-            ...     print("Variable not found")
-        """
-        for variable in self.variables:
-            if variable.id == variable_id:
-                return variable
-        return None
 
     def create_special_constraint(self, *,
                                   constraint_type: SpecialConstraintType = SpecialConstraintType.MultiplicativeEquality,
@@ -682,8 +641,8 @@ class OXCSPProblem(OXObject):
 
         expr = OXpression(variables=variables, weights=weights)
         if name is None:
-            var_names = [f"{abs(w)}*{v.name}" for v, w in
-                         zip(self.variables.search_by_function(variable_search_function), weights)]
+            vars = [self.variables[var_id] for var_id in variables]
+            var_names = [f"{abs(w)}*{v.name}" for v, w in zip(vars, weights)]
             negative_weights = [True if w < 0 else False for w in weights]
             prefixes = [" - " if negative_weight else ' + ' for negative_weight in negative_weights]
             if prefixes[0] == ' + ':
@@ -692,7 +651,7 @@ class OXCSPProblem(OXObject):
             terms = [f"{pfx}{var_name}" for pfx, var_name in zip(prefixes, var_names)]
             name = "".join(terms).strip()
         constraint = OXConstraint(expression=expr, relational_operator=operator, rhs=value, name=name)
-        self.constraints.append(constraint)
+        self.constraints.add_object(constraint)
 
     def _check_parameters(self, variable_search_function, variables, weight_calculation_function, weights):
         """Validate parameter combinations for constraint creation.

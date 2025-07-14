@@ -1,5 +1,6 @@
 import math
 from dataclasses import dataclass, field
+from decimal import Decimal
 from fractions import Fraction
 from uuid import UUID
 
@@ -23,7 +24,7 @@ def get_integer_numerator_and_denominators(numbers: list[float | int]) -> tuple[
         >>> get_integer_numerator_and_denominators([0.5, 1.5, 2])
         (2, [1, 3, 4])
     """
-    fractional_weights = [Fraction(w) for w in numbers]
+    fractional_weights = [Fraction(Decimal(str(w))) for w in numbers]
     denominators = [fw.denominator for fw in fractional_weights]
     numerator = [fw.numerator for fw in fractional_weights]
     common_multiple = math.lcm(*denominators)

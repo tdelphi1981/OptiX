@@ -4,7 +4,8 @@ This module provides a concrete implementation of the OXSolverInterface
 using Google's OR-Tools CP-SAT solver. It supports constraint satisfaction
 problems (CSP) and linear programming (LP) problems with various constraint types.
 """
-
+import math
+import sys
 from math import prod
 from typing import Optional
 
@@ -61,8 +62,17 @@ class OXORToolsSolverInterface(OXSolverInterface):
         if var.lower_bound == 0 and var.upper_bound == 1:
             self._var_mapping[var.id] = self._model.new_bool_var(var.name)
         else:
-            self._var_mapping[var.id] = self._model.new_int_var(round(var.lower_bound), round(var.upper_bound),
-                                                                var.name)
+            lbound = var.lower_bound
+            ubound = var.upper_bound
+            if math.isinf(ubound):
+                ubound = sys.maxsize
+            if math.isinf(lbound):
+                lbound = -sys.maxsize
+            if isinstance(lbound, float):
+                lbound = round(lbound)
+            if isinstance(ubound, float):
+                ubound = round(ubound)
+            self._var_mapping[var.id] = self._model.new_int_var(lbound, ubound, var.name)
 
     def _create_single_constraint(self, constraint: OXConstraint):
         """Create a single constraint in the OR-Tools model.
@@ -214,8 +224,8 @@ class OXORToolsSolverInterface(OXSolverInterface):
             }
             solution_object.constraint_values = {
                 constraint_id: (self.value(self._solver._constraint_expr_mapping[constraint_id]),
-                                self._problem.find_constraint_by_id(constraint_id).relational_operator,
-                                self._problem.find_constraint_by_id(constraint_id).rhs)
+                                self._problem.constraints[constraint_id].relational_operator,
+                                self._problem.constraints[constraint_id].rhs)
                 for constraint_id in self._solver._constraint_mapping
             }
             if isinstance(self._problem, OXLPProblem):
@@ -400,9 +410,9 @@ class OXORToolsSolverInterface(OXSolverInterface):
         true_constraint_id = constraint.constraint_if_true
         false_constraint_id = constraint.constraint_if_false
 
-        input_constraint = prb.find_constraint_by_id(input_constraint_id)
-        true_constraint = prb.find_constraint_by_id(true_constraint_id)
-        false_constraint = prb.find_constraint_by_id(false_constraint_id)
+        input_constraint = prb.constraints[input_constraint_id]
+        true_constraint = prb.constraints[true_constraint_id]
+        false_constraint = prb.constraints[false_constraint_id]
         input_reversed = input_constraint.reverse()
 
         input_expression = self.__create_constraint_expression(input_constraint)
