@@ -6,6 +6,7 @@ mathematical expressions, and special non-linear constraints.
 
 Classes:
     OXConstraint: Standard linear constraint with left-hand side expression and right-hand side value.
+    OXConstraintSet: Specialized container for managing collections of OXConstraint objects.
     OXGoalConstraint: Goal constraint for goal programming with deviation variables.
     RelationalOperators: Enumeration of comparison operators (>, >=, =, <, <=).
     OXpression: Mathematical expression representing linear combinations of variables.
@@ -38,6 +39,7 @@ Examples:
 """
 
 from .OXConstraint import OXConstraint, OXGoalConstraint, RelationalOperators
+from .OXConstraintSet import OXConstraintSet
 from .OXpression import OXpression, get_integer_numerator_and_denominators
 from .OXSpecialConstraints import (
     OXSpecialConstraint,
