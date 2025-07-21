@@ -4,6 +4,7 @@ import operator
 from collections.abc import Callable
 from dataclasses import dataclass, field
 from enum import StrEnum
+from fractions import Fraction
 from functools import reduce
 from typing import Self
 from uuid import UUID
@@ -573,9 +574,9 @@ class OXCSPProblem(OXObject):
 
     def create_constraint(self,
                           variable_search_function: Callable[[OXObject], bool] = None,
-                          weight_calculation_function: Callable[[UUID, Self], float | int] = None,
+                          weight_calculation_function: Callable[[UUID, Self], float | int | Fraction] = None,
                           variables: list[UUID] = None,
-                          weights: list[float | int] = None,
+                          weights: list[float | int | Fraction] = None,
                           operator: RelationalOperators = RelationalOperators.LESS_THAN_EQUAL,
                           value: float | int = None,
                           name: str = None):

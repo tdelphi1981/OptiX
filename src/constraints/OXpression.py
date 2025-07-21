@@ -24,7 +24,7 @@ def get_integer_numerator_and_denominators(numbers: list[float | int]) -> tuple[
         >>> get_integer_numerator_and_denominators([0.5, 1.5, 2])
         (2, [1, 3, 4])
     """
-    fractional_weights = [Fraction(Decimal(str(w))) for w in numbers]
+    fractional_weights = [Fraction(Decimal(str(w))) if not isinstance(w, Fraction) else w for w in numbers]
     denominators = [fw.denominator for fw in fractional_weights]
     numerator = [fw.numerator for fw in fractional_weights]
     common_multiple = math.lcm(*denominators)
@@ -59,7 +59,7 @@ class OXpression(OXObject):
         which allows for serialization and deserialization of expressions.
     """
     variables: list[UUID] = field(default_factory=list)
-    weights: list[float | int] = field(default_factory=list)
+    weights: list[float | int | Fraction] = field(default_factory=list)
 
     @property
     def number_of_variables(self) -> int:
