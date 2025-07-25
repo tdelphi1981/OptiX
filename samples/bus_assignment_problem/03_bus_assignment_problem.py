@@ -157,7 +157,7 @@ def main():
     # Satisfy Line passenger demand
 
     for line in bap.db.search_by_function(lambda var: isinstance(var, Line)):
-        bap.create_goal_constraint(
+        bap.create_constraint(
             variable_search_function=lambda var: var.related_data["line"] == line.id,
             weight_calculation_function=lambda var, prb: prb.db[
                 prb.variables[var].related_data["busgroup"]].total_capacity,
@@ -170,7 +170,7 @@ def main():
 
     for segment in bap.db.search_by_function(lambda var: isinstance(var, LineSegment)):
         for line_id in segment.related_lines:
-            bap.create_goal_constraint(
+            bap.create_constraint(
                 variable_search_function=lambda var: var.related_data["line"] == line_id,
                 weight_calculation_function=lambda var, prb: prb.db[
                     prb.variables[var].related_data["busgroup"]].total_capacity,

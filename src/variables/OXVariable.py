@@ -59,3 +59,6 @@ class OXVariable(OXObject):
             raise OXception("Lower bound cannot be greater than upper bound.")
         if self.name.strip() == "":
             self.name = f"var_{self.id}"
+
+    def __str__(self):
+        return self.name

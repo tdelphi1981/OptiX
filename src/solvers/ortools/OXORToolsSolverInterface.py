@@ -6,6 +6,7 @@ problems (CSP) and linear programming (LP) problems with various constraint type
 """
 import math
 import sys
+from fractions import Fraction
 from math import prod
 from typing import Optional
 
@@ -87,6 +88,13 @@ class OXORToolsSolverInterface(OXSolverInterface):
         weights = constraint.expression.weights
         rhs = constraint.rhs
         if any(isinstance(weight, float) for weight in weights) or isinstance(rhs, float):
+            if "equalizeDenominators" in self._parameters and self._parameters["equalizeDenominators"]:
+                weights = [round(constraint.rhs_denominator * weight) for weight in
+                           constraint.expression.integer_weights]
+                rhs = round(constraint.expression.integer_denominator * constraint.rhs_numerator)
+            else:
+                raise OXception("OR-Tools does not support float weights in constraints. Use integers instead.")
+        if any(isinstance(weight, Fraction) for weight in weights) or isinstance(rhs, Fraction):
             if "equalizeDenominators" in self._parameters and self._parameters["equalizeDenominators"]:
                 weights = [round(constraint.rhs_denominator * weight) for weight in
                            constraint.expression.integer_weights]

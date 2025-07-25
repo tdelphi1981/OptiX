@@ -99,7 +99,7 @@ class OXSolverSolution:
         result += f"\tObjective Function Value: {self.objective_function_value}\n"
         result += f"\tDecision Variable Values:\n"
         for var_id, var_value in self.decision_variable_values.items():
-            result += f"\t\t{prb.variables[var_id].name}: {var_value}\n"
+            result += f"\t\t{str(prb.variables[var_id])}: {var_value}\n"
         result += f"\tConstraints:\n"
         for constraint_id, (lhs, operator, rhs) in self.constraint_values.items():
             result += f"\t\t{prb.constraints[constraint_id].name

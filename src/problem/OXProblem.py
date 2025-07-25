@@ -907,6 +907,7 @@ class OXGPProblem(OXLPProblem):
         for var in last_constraint.expression.variables:
             if self.variables[var].upper_bound > upper_bound:
                 upper_bound = self.variables[var].upper_bound
+        upper_bound = round(upper_bound // 7)
         goal_constraint = last_constraint.to_goal(upper_bound=upper_bound)
         self.goal_constraints.add_object(goal_constraint)
 
@@ -968,7 +969,7 @@ class OXGPProblem(OXLPProblem):
             if not var in self.variables:
                 self.variables.add_object(var)
 
-        all_vars = variables #+ desireds
+        all_vars = variables  # + desireds
         weights = [1.0] * len(all_vars)
         uuids = [var.id for var in all_vars]
 

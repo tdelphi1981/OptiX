@@ -121,6 +121,8 @@ class OXConstraint(OXObject):
         result.relational_operator = RelationalOperators.EQUAL
         result.rhs = self.rhs
         result.name = self.name
+        result.positive_deviation_variable.name = f"Positive deviation of {self.name}"
+        result.negative_deviation_variable.name = f"Negative deviation of {self.name}"
         if self.relational_operator in [RelationalOperators.LESS_THAN, RelationalOperators.LESS_THAN_EQUAL]:
             result.negative_deviation_variable.desired = True
             result.negative_deviation_variable.upper_bound = upper_bound
