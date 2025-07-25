@@ -13,6 +13,7 @@ from uuid import UUID
 
 from constraints.OXConstraint import OXConstraint, RelationalOperators
 from constraints.OXSpecialConstraints import OXSpecialConstraint
+from problem import OXGPProblem
 from problem.OXProblem import OXCSPProblem, OXLPProblem
 from variables.OXVariable import OXVariable
 from variables.OXVariableSet import OXVariableSet
@@ -101,7 +102,8 @@ class OXSolverSolution:
             result += f"\t\t{prb.variables[var_id].name}: {var_value}\n"
         result += f"\tConstraints:\n"
         for constraint_id, (lhs, operator, rhs) in self.constraint_values.items():
-            result += f"\t\t{prb.constraints[constraint_id].name}: {lhs} {operator} {rhs}\n"
+            result += f"\t\t{prb.constraints[constraint_id].name
+                             if constraint_id in prb.constraints else prb.goal_constraints[constraint_id].name}: {lhs} {operator} {rhs}\n"
         print(result)
 
     def __str__(self):
@@ -187,6 +189,9 @@ class OXSolverInterface:
             if constraint.id in prb.constraints_in_special_constraints:
                 continue
             self._create_single_constraint(constraint)
+        if isinstance(prb, OXGPProblem):
+            for constraint in prb.goal_constraints:
+                self._create_single_constraint(constraint)
 
     def create_special_constraints(self, prb: OXCSPProblem):
         """Create all special constraints from the problem in the solver.

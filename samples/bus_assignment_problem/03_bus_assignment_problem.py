@@ -105,8 +105,8 @@ def prepare_database(prb: OXCSPProblem):
 
 
 def main():
-    bap = OXLPProblem()
-    busses, lines, segments = prepare_database(bap)
+    bap = OXGPProblem()
+    _, _, _ = prepare_database(bap)
 
     parameters = bap.db.search_by_function(lambda var: isinstance(var, GeneralProblemParameters))[0]
 
@@ -117,14 +117,6 @@ def main():
         lower_bound=0,
         upper_bound=2000
     )
-
-    # bap.create_variables_from_db(
-    #     Line,
-    #     var_name_template="Duration between consecutive Trips of Line {line_name}",
-    #     var_description_template="The duration between consecutive Trips of Line {line_name}",
-    #     lower_bound=0,
-    #     upper_bound=2000
-    # )
 
     # Ban bus groups on lines
 
@@ -153,10 +145,10 @@ def main():
     # Group-based bus count contraint
 
     for bus in bap.db.search_by_function(lambda var: isinstance(var, BusGroup)):
-        bap.create_constraint(
+        bap.create_goal_constraint(
             variable_search_function=lambda var: var.related_data["busgroup"] == bus.id,
             weight_calculation_function=lambda var, prb: Fraction(prb.db[prb.variables[var].related_data[
-                "line"]].total_duration , parameters.time_period),
+                "line"]].total_duration, parameters.time_period),
             operator=RelationalOperators.LESS_THAN_EQUAL,
             value=bus.number_of_busses,
             name=f"Bus {bus.name} should not use more than {bus.number_of_busses} busses"
@@ -165,7 +157,7 @@ def main():
     # Satisfy Line passenger demand
 
     for line in bap.db.search_by_function(lambda var: isinstance(var, Line)):
-        bap.create_constraint(
+        bap.create_goal_constraint(
             variable_search_function=lambda var: var.related_data["line"] == line.id,
             weight_calculation_function=lambda var, prb: prb.db[
                 prb.variables[var].related_data["busgroup"]].total_capacity,
@@ -178,7 +170,7 @@ def main():
 
     for segment in bap.db.search_by_function(lambda var: isinstance(var, LineSegment)):
         for line_id in segment.related_lines:
-            bap.create_constraint(
+            bap.create_goal_constraint(
                 variable_search_function=lambda var: var.related_data["line"] == line_id,
                 weight_calculation_function=lambda var, prb: prb.db[
                     prb.variables[var].related_data["busgroup"]].total_capacity,
@@ -190,10 +182,7 @@ def main():
     # Time Constraint
 
     # Objective function
-    bap.create_objective_function(
-        variable_search_function=lambda var: True,
-        weight_calculation_function=lambda var, prb: 1.0,
-    )
+    bap.create_objective_function()
 
     status, solver = solve(bap, 'ORTools', equalizeDenominators=True)
 

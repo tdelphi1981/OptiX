@@ -148,9 +148,14 @@ class OXObjectPot(OXObject):
         Returns:
             bool: True if the object is in the pot, False otherwise.
         """
-        for object in self.objects:
-            if object.id == obj.id:
-                return True
+        if isinstance(obj, UUID):
+            for object in self.objects:
+                if object.id == obj:
+                    return True
+        else:
+            for object in self.objects:
+                if object.id == obj.id:
+                    return True
         return False
 
     @property

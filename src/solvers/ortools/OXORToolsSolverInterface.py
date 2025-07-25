@@ -84,9 +84,6 @@ class OXORToolsSolverInterface(OXSolverInterface):
             OXception: If the constraint contains unsupported elements or float weights
                       without denominator equalization enabled.
         """
-        if isinstance(constraint, OXGoalConstraint):
-            self._create_single_variable(constraint.negative_deviation_variable)
-            self._create_single_variable(constraint.positive_deviation_variable)
         weights = constraint.expression.weights
         rhs = constraint.rhs
         if any(isinstance(weight, float) for weight in weights) or isinstance(rhs, float):
@@ -226,6 +223,11 @@ class OXORToolsSolverInterface(OXSolverInterface):
                 constraint_id: (self.value(self._solver._constraint_expr_mapping[constraint_id]),
                                 self._problem.constraints[constraint_id].relational_operator,
                                 self._problem.constraints[constraint_id].rhs)
+                if constraint_id in self._problem.constraints else (
+                    self.value(self._solver._constraint_expr_mapping[constraint_id]),
+                    self._problem.goal_constraints[constraint_id].relational_operator,
+                    self._problem.goal_constraints[constraint_id].rhs
+                )
                 for constraint_id in self._solver._constraint_mapping
             }
             if isinstance(self._problem, OXLPProblem):

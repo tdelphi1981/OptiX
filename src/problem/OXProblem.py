@@ -840,15 +840,16 @@ class OXGPProblem(OXLPProblem):
         :class:`OXCSPProblem`: Base constraint satisfaction problem class.
         :class:`constraints.OXConstraint.OXGoalConstraint`: Goal constraint with deviation variables.
     """
-    goal_constraints: list[OXGoalConstraint] = field(default_factory=list)
+    goal_constraints: OXConstraintSet = field(default_factory=OXConstraintSet)
 
     def create_goal_constraint(self,
                                variable_search_function: Callable[[OXObject], bool] = None,
-                               weight_calculation_function: Callable[[OXVariable, Self], float | int] = None,
+                               weight_calculation_function: Callable[[UUID, Self], float | int | Fraction] = None,
                                variables: list[UUID] = None,
                                weights: list[float | int] = None,
                                operator: RelationalOperators = RelationalOperators.LESS_THAN_EQUAL,
-                               value: float | int = None):
+                               value: float | int = None,
+                               name: str = None):
         """Create a goal constraint for the goal programming problem.
 
         Creates a goal constraint with associated positive and negative deviation
@@ -898,11 +899,16 @@ class OXGPProblem(OXLPProblem):
             added to the goal_constraints list.
         """
         self.create_constraint(variable_search_function, weight_calculation_function, variables, weights, operator,
-                               value)
+                               value, name=name)
 
-        last_constraint = self.constraints.pop()
-        goal_constraint = last_constraint.to_goal()
-        self.goal_constraints.append(goal_constraint)
+        last_constraint = self.constraints.last_object
+        self.constraints.remove_object(last_constraint)
+        upper_bound = 0
+        for var in last_constraint.expression.variables:
+            if self.variables[var].upper_bound > upper_bound:
+                upper_bound = self.variables[var].upper_bound
+        goal_constraint = last_constraint.to_goal(upper_bound=upper_bound)
+        self.goal_constraints.add_object(goal_constraint)
 
     def create_objective_function(self,
                                   variable_search_function: Callable[[OXObject], bool] = None,
@@ -948,16 +954,23 @@ class OXGPProblem(OXLPProblem):
             from goal constraints.
         """
         variables = []
+        desireds = []
 
         for constraint in self.goal_constraints:
             variables.extend(constraint.undesired_variables)
-
-        weights = [1.0] * len(variables)
-        uuids = [var.id for var in variables]
+            desireds.extend(constraint.desired_variables)
 
         for var in variables:
-            if not var in variables:
+            if not var in self.variables:
                 self.variables.add_object(var)
+
+        for var in desireds:
+            if not var in self.variables:
+                self.variables.add_object(var)
+
+        all_vars = variables #+ desireds
+        weights = [1.0] * len(all_vars)
+        uuids = [var.id for var in all_vars]
 
         self.objective_function = OXpression(variables=uuids, weights=weights)
         self.objective_type = ObjectiveType.MINIMIZE

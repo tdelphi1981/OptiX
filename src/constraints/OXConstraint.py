@@ -104,7 +104,7 @@ class OXConstraint(OXObject):
         """
         return Fraction(self.rhs).denominator
 
-    def to_goal(self) -> "OXGoalConstraint":
+    def to_goal(self, upper_bound: int | float | Fraction = 100) -> "OXGoalConstraint":
         """Convert this constraint to a goal constraint for goal programming.
 
         The conversion sets the relational operator to EQUAL and sets the
@@ -120,10 +120,15 @@ class OXConstraint(OXObject):
         result.expression = self.expression
         result.relational_operator = RelationalOperators.EQUAL
         result.rhs = self.rhs
+        result.name = self.name
         if self.relational_operator in [RelationalOperators.LESS_THAN, RelationalOperators.LESS_THAN_EQUAL]:
             result.negative_deviation_variable.desired = True
+            result.negative_deviation_variable.upper_bound = upper_bound
+            result.positive_deviation_variable.upper_bound = upper_bound
         elif self.relational_operator in [RelationalOperators.GREATER_THAN, RelationalOperators.GREATER_THAN_EQUAL]:
             result.positive_deviation_variable.desired = True
+            result.positive_deviation_variable.upper_bound = upper_bound
+            result.negative_deviation_variable.upper_bound = upper_bound
         return result
 
 
