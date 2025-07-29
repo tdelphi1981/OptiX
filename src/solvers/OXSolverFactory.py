@@ -6,10 +6,12 @@ It acts as a centralized registry for available solvers and provides a unified s
 
 from base import OXception
 from problem.OXProblem import OXCSPProblem, OXLPProblem
+from solvers.gurobi.OXGurobiSolverInterface import OXGurobiSolverInterface
 from solvers.ortools.OXORToolsSolverInterface import OXORToolsSolverInterface
 
 _available_solvers = {
-    'ORTools': OXORToolsSolverInterface
+    'ORTools': OXORToolsSolverInterface,
+    'Gurobi': OXGurobiSolverInterface
 }
 
 

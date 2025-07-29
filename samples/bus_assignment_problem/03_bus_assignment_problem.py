@@ -184,7 +184,7 @@ def main():
     # Objective function
     bap.create_objective_function()
 
-    status, solver = solve(bap, 'ORTools', equalizeDenominators=True)
+    status, solver = solve(bap, 'Gurobi', use_continuous=False, equalizeDenominators=True)
 
     print(f"Status: {status}")
 

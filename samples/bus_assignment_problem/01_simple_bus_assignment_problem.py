@@ -95,7 +95,7 @@ def main():
         weight_calculation_function=lambda var, prb: 1.5,
     )
 
-    status, solver = solve(bap, 'ORTools', equalizeDenominators=True)
+    status, solver = solve(bap, 'Gurobi', use_continuous=False, equalizeDenominators=True)
 
     print(f"Status: {status}")
 
