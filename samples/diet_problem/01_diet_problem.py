@@ -104,7 +104,7 @@ def main():
         objective_type=ObjectiveType.MINIMIZE
     )
 
-    status, solver = solve(dp, 'ORTools', equalizeDenominators=True)
+    status, solver = solve(dp, 'Gurobi', use_continuous=False, equalizeDenominators=True)
 
     print(f"Status: {status}")
 
