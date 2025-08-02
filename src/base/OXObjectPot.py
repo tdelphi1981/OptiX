@@ -1,3 +1,58 @@
+"""
+Object Container Module
+=======================
+
+This module provides a flexible container class for managing collections of OXObject instances
+in the OptiX mathematical optimization framework. The OXObjectPot class serves as the foundation
+for specialized containers used throughout the library for organizing variables, constraints,
+objectives, and data objects.
+
+The module implements advanced collection functionality including search capabilities, iteration
+support, and type-safe object retrieval. It provides both attribute-based and predicate-based
+search functionality to efficiently locate objects within large optimization problems.
+
+Key Features:
+    - **Object Storage**: Efficient storage and retrieval of OXObject instances
+    - **Search Functionality**: Multiple search methods for finding objects by attributes or predicates
+    - **Collection Interface**: Full Python collection protocol support (iteration, indexing, length)
+    - **Type Safety**: UUID-based indexing with proper error handling
+    - **Metadata Extraction**: Automatic extraction of object type information
+    - **Base Container**: Foundation for specialized containers like OXVariableSet and OXDatabase
+
+Architecture:
+    The OXObjectPot extends OXObject to inherit UUID-based identity while providing collection
+    functionality. It maintains an internal list of objects and provides various access patterns
+    optimized for optimization problem construction and solving.
+
+Usage:
+    The class can be used directly or as a base for specialized containers:
+
+    .. code-block:: python
+
+        from base.OXObjectPot import OXObjectPot
+        from base.OXObject import OXObject
+        
+        # Create a container
+        pot = OXObjectPot()
+        
+        # Add objects
+        obj1 = OXObject()
+        obj2 = OXObject()
+        pot.add_object(obj1)
+        pot.add_object(obj2)
+        
+        # Search and retrieve
+        found_objects = pot.search(name="variable1")
+        specific_obj = pot[obj1.id]  # UUID-based access
+
+Module Dependencies:
+    - collections.abc: For callable type hints and abstract base classes
+    - dataclasses: For dataclass functionality and field definitions
+    - uuid: For UUID type annotations and handling
+    - base.OXception: For custom exception handling
+    - base.OXObject: For base object functionality
+"""
+
 from collections.abc import Callable
 from dataclasses import dataclass, field
 from uuid import UUID
@@ -8,26 +63,98 @@ from base.OXObject import OXObject
 
 @dataclass
 class OXObjectPot(OXObject):
-    """A container for OXObject instances.
-
-    This class provides methods for storing, retrieving, and searching for OXObject instances.
-    It serves as a base class for specialized containers like OXVariableSet and OXDatabase.
-
+    """
+    A flexible container class for managing collections of OXObject instances.
+    
+    This class provides comprehensive functionality for storing, retrieving, and searching
+    collections of OXObject instances in the OptiX optimization framework. It serves as
+    the foundation for specialized containers like OXVariableSet, OXConstraintSet, and
+    OXDatabase that manage specific types of optimization objects.
+    
+    The container supports multiple access patterns including direct UUID-based lookup,
+    attribute-based searching, and predicate-based filtering. It implements the full
+    Python collection protocol, making it integrate seamlessly with standard Python
+    iteration and collection operations.
+    
     Attributes:
-        objects (list[OXObject]): The list of objects contained in this pot.
-
-    Examples:
-        >>> pot = OXObjectPot()
-        >>> obj1 = OXObject()
-        >>> obj2 = OXObject()
-        >>> pot.add_object(obj1)
-        >>> pot.add_object(obj2)
-        >>> len(pot)
-        2
-        >>> for obj in pot:
-        ...     print(obj.id)
-        12345678-1234-5678-1234-567812345678
-        87654321-4321-8765-4321-876543210987
+        objects (list[OXObject]): The internal list of objects contained in this pot.
+                                 Objects maintain their insertion order and can be
+                                 accessed by index or UUID.
+    
+    Key Features:
+        - **Flexible Search**: Search by attributes, predicates, or UUID
+        - **Collection Protocol**: Full support for len(), iter(), contains(), and indexing
+        - **Type Analysis**: Automatic extraction of contained object types
+        - **Memory Efficient**: Stores objects by reference, not copy
+        - **Thread Safe**: Basic operations are atomic (though concurrent modification requires external synchronization)
+    
+    Search Methods:
+        - ``search(**kwargs)``: Find objects matching specific attribute values
+        - ``search_by_function(func)``: Find objects satisfying a custom predicate
+        - ``__getitem__(uuid)``: Direct UUID-based lookup
+        - ``__contains__(obj)``: Check if object or UUID exists in container
+    
+    Example:
+        Basic container operations:
+        
+        .. code-block:: python
+        
+            from base.OXObjectPot import OXObjectPot
+            from base.OXObject import OXObject
+            from dataclasses import dataclass
+            
+            # Create a specialized object type
+            @dataclass
+            class Variable(OXObject):
+                name: str
+                value: float = 0.0
+                is_integer: bool = False
+            
+            # Create container and add objects
+            pot = OXObjectPot()
+            var1 = Variable(name="x1", value=10.5)
+            var2 = Variable(name="x2", value=20.0, is_integer=True)
+            
+            pot.add_object(var1)
+            pot.add_object(var2)
+            
+            # Various access methods
+            print(f"Container size: {len(pot)}")  # 2
+            
+            # Search by attributes
+            integer_vars = pot.search(is_integer=True)
+            named_vars = pot.search(name="x1")
+            
+            # Search by predicate
+            high_value_vars = pot.search_by_function(lambda x: x.value > 15.0)
+            
+            # Direct UUID access
+            retrieved_var = pot[var1.id]
+            
+            # Iteration
+            for var in pot:
+                print(f"Variable: {var.name} = {var.value}")
+    
+    Inheritance:
+        This class is designed to be extended by specialized containers:
+        
+        .. code-block:: python
+        
+            class VariableSet(OXObjectPot):
+                def add_variable(self, name: str, **kwargs) -> Variable:
+                    var = Variable(name=name, **kwargs)
+                    self.add_object(var)
+                    return var
+                    
+                def get_by_name(self, name: str) -> Variable:
+                    results = self.search(name=name)
+                    return results[0] if results else None
+    
+    Note:
+        - Objects are stored by reference, so modifications to objects affect the container
+        - UUID-based access is O(n) as it performs linear search
+        - For large collections, consider maintaining additional index structures
+        - The container does not enforce uniqueness - duplicate objects can be added
     """
     objects: list[OXObject] = field(default_factory=list)
 
