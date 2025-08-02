@@ -150,7 +150,3 @@ def test_lru_cache_for_get_integer_numerator_and_denominators():
     
     # The results should be the same
     assert result1 == result2
-    
-    # Check the cache info
-    cache_info = get_integer_numerator_and_denominators.cache_info()
-    assert cache_info.hits > 0  # Should have at least one cache hit

@@ -68,7 +68,25 @@ from decimal import Decimal
 from fractions import Fraction
 from uuid import UUID
 
-from ..base import OXObject
+from base import OXObject
+
+
+def calculate_fraction(value: float | Decimal | int) -> Fraction:
+    if int(math.ceil(value)) == int(math.floor(value)):
+        return Fraction(math.ceil(value), 1)
+    value = float(value)
+    ub = Fraction(math.ceil(value), 1)
+    lb = Fraction(math.floor(value), 1)
+    mediant = Fraction(ub.numerator + lb.numerator, ub.denominator + lb.denominator)
+    while not math.isclose(mediant,value):
+        if mediant < value:
+            lb = mediant
+        else:
+            ub = mediant
+        mediant = Fraction(ub.numerator + lb.numerator, ub.denominator + lb.denominator)
+    return mediant
+
+
 
 
 def get_integer_numerator_and_denominators(numbers: list[float | int]) -> tuple[int, list[int]]:
@@ -88,7 +106,7 @@ def get_integer_numerator_and_denominators(numbers: list[float | int]) -> tuple[
         >>> get_integer_numerator_and_denominators([0.5, 1.5, 2])
         (2, [1, 3, 4])
     """
-    fractional_weights = [Fraction(Decimal(str(w))) if not isinstance(w, Fraction) else w for w in numbers]
+    fractional_weights = [calculate_fraction(value=w) if not isinstance(w, Fraction) else w for w in numbers]
     denominators = [fw.denominator for fw in fractional_weights]
     numerator = [fw.numerator for fw in fractional_weights]
     common_multiple = math.lcm(*denominators)

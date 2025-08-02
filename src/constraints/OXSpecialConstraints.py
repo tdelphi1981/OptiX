@@ -70,7 +70,7 @@ Example:
 from dataclasses import dataclass, field
 from uuid import UUID
 
-from ..base import OXObject
+from base import OXObject
 
 
 @dataclass

@@ -62,9 +62,9 @@ from dataclasses import dataclass, field
 from enum import StrEnum
 from fractions import Fraction
 
-from ..base import OXObject, OXception
+from base import OXObject, OXception
 from .OXpression import OXpression
-from ..variables.OXDeviationVar import OXDeviationVar
+from variables.OXDeviationVar import OXDeviationVar
 
 
 class RelationalOperators(StrEnum):

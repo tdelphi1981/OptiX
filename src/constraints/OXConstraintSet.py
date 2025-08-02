@@ -54,7 +54,7 @@ Example:
 
 from dataclasses import dataclass
 
-from ..base import OXObjectPot, OXObject, OXception
+from base import OXObjectPot, OXObject, OXception
 from .OXConstraint import OXConstraint
 
 
