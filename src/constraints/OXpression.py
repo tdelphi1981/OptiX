@@ -1,10 +1,74 @@
+"""
+Mathematical Expression Module for OptiX Optimization Framework
+================================================================
+
+This module provides classes and utilities for representing and manipulating
+mathematical expressions in optimization problems. It implements linear
+combinations of variables with precise arithmetic handling for coefficients.
+
+The module serves as a foundation for constraint and objective function
+definitions, providing robust handling of variable coefficients through
+fraction-based arithmetic to avoid floating-point precision issues.
+
+Classes:
+    OXpression: Mathematical expression representing linear combinations of variables
+
+Functions:
+    get_integer_numerator_and_denominators: Utility for converting floating-point
+        coefficients to integer values with common denominators
+
+Key Features:
+    - UUID-based variable referencing for serialization compatibility
+    - Fraction-based arithmetic for precise coefficient handling
+    - Automatic conversion between floating-point and integer representations
+    - Support for iterating over variable-coefficient pairs
+    - Integration with the OptiX constraint and objective systems
+
+Module Dependencies:
+    - math: For mathematical operations (LCM calculation)
+    - dataclasses: For structured expression definitions
+    - decimal: For precise decimal arithmetic
+    - fractions: For rational number arithmetic
+    - uuid: For variable identification
+    - base: For core OptiX object system integration
+
+Example:
+    Creating and manipulating mathematical expressions:
+
+    .. code-block:: python
+
+        from constraints import OXpression
+        from variables import OXVariable
+        import uuid
+        
+        # Create variables
+        x = OXVariable(name="x", lower_bound=0)
+        y = OXVariable(name="y", lower_bound=0)
+        z = OXVariable(name="z", lower_bound=0)
+        
+        # Create expression: 2.5x + 1.5y + 3z
+        expr = OXpression(
+            variables=[x.id, y.id, z.id],
+            weights=[2.5, 1.5, 3.0]
+        )
+        
+        # Access expression properties
+        print(f"Number of variables: {expr.number_of_variables}")  # 3
+        print(f"Integer weights: {expr.integer_weights}")  # [5, 3, 6]
+        print(f"Common denominator: {expr.integer_denominator}")  # 2
+        
+        # Iterate over variable-weight pairs
+        for var_id, weight in expr:
+            print(f"Variable {var_id}: coefficient {weight}")
+"""
+
 import math
 from dataclasses import dataclass, field
 from decimal import Decimal
 from fractions import Fraction
 from uuid import UUID
 
-from base import OXObject
+from ..base import OXObject
 
 
 def get_integer_numerator_and_denominators(numbers: list[float | int]) -> tuple[int, list[int]]:

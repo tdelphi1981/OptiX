@@ -1,41 +1,69 @@
-"""Constraints package for the OptiX optimization framework.
+"""
+Constraints Package for OptiX Optimization Framework
+=====================================================
 
-This package contains classes for representing constraints in optimization problems.
-It provides support for linear constraints, goal constraints for goal programming,
-mathematical expressions, and special non-linear constraints.
+This package provides comprehensive constraint modeling capabilities for mathematical
+optimization problems. It implements linear constraints, goal programming constraints,
+special non-linear constraints, and mathematical expression handling for the OptiX
+optimization framework.
 
-Classes:
-    OXConstraint: Standard linear constraint with left-hand side expression and right-hand side value.
-    OXConstraintSet: Specialized container for managing collections of OXConstraint objects.
-    OXGoalConstraint: Goal constraint for goal programming with deviation variables.
-    RelationalOperators: Enumeration of comparison operators (>, >=, =, <, <=).
-    OXpression: Mathematical expression representing linear combinations of variables.
-    OXSpecialConstraint: Base class for non-linear and special constraints.
-    OXNonLinearEqualityConstraint: Base class for non-linear equality constraints.
-    OXMultiplicativeEqualityConstraint: Constraint for variable multiplication.
-    OXDivisionEqualityConstraint: Constraint for integer division operations.
-    OXModuloEqualityConstraint: Constraint for modulo operations.
-    OXSummationEqualityConstraint: Constraint for variable summation.
-    OXConditionalConstraint: Constraint for conditional logic.
+The package is organized around the following key components:
 
-Functions:
-    get_integer_numerator_and_denominators: Utility function to convert floating-point
-        weights to integer values with a common denominator.
+Architecture:
+    - **Linear Constraints**: Standard constraint definitions with relational operators
+    - **Goal Programming**: Specialized constraints with deviation variables for multi-objective optimization
+    - **Special Constraints**: Non-linear and complex mathematical relationships
+    - **Expression System**: Mathematical expression handling with precise arithmetic
+    - **Container Management**: Type-safe collections for organizing constraint sets
 
-Examples:
-    >>> from constraints import OXConstraint, OXpression, RelationalOperators
-    >>> # Create a linear constraint: 2x + 3y <= 10
-    >>> expr = OXpression(variables=[x.id, y.id], weights=[2, 3])
-    >>> constraint = OXConstraint(
-    ...     expression=expr,
-    ...     relational_operator=RelationalOperators.LESS_THAN_EQUAL,
-    ...     rhs=10
-    ... )
-    
-    >>> # Create a goal constraint for goal programming
-    >>> goal = constraint.to_goal()
-    >>> print(goal.negative_deviation_variable.desired)
-    True
+Key Features:
+    - Support for all standard relational operators (>, >=, =, <, <=)
+    - Goal programming with positive and negative deviation variables
+    - Non-linear constraints for multiplication, division, modulo, and conditional logic
+    - Fraction-based arithmetic for precise coefficient handling
+    - UUID-based variable referencing for serialization compatibility
+    - Type-safe constraint collections with metadata querying
+
+Constraint Types Covered:
+    - **Linear Constraints**: Standard mathematical relationships between variables
+    - **Goal Constraints**: Multi-objective optimization with deviation minimization
+    - **Special Constraints**: Non-linear operations (multiplication, division, modulo)
+    - **Conditional Constraints**: Logical implications and conditional relationships
+    - **Expression System**: Linear combinations with precise coefficient handling
+
+Usage:
+    Import specific constraint classes and utilities as needed:
+
+    .. code-block:: python
+
+        from constraints import (
+            OXConstraint, OXGoalConstraint, OXConstraintSet,
+            OXpression, RelationalOperators,
+            OXMultiplicativeEqualityConstraint
+        )
+        from variables import OXVariable
+        
+        # Create variables
+        x = OXVariable(name="x", lower_bound=0, upper_bound=100)
+        y = OXVariable(name="y", lower_bound=0, upper_bound=100)
+        
+        # Create linear constraint: 2x + 3y <= 50
+        expr = OXpression(variables=[x.id, y.id], weights=[2, 3])
+        constraint = OXConstraint(
+            expression=expr,
+            relational_operator=RelationalOperators.LESS_THAN_EQUAL,
+            rhs=50,
+            name="Resource constraint"
+        )
+        
+        # Convert to goal constraint for goal programming
+        goal_constraint = constraint.to_goal()
+
+Notes:
+    - All constraints use UUID-based variable references for serialization
+    - Fraction arithmetic ensures precise coefficient handling
+    - Special constraints require constraint programming solvers
+    - Goal programming enables multi-objective optimization scenarios
 """
 
 from .OXConstraint import OXConstraint, OXGoalConstraint, RelationalOperators
@@ -50,3 +78,26 @@ from .OXSpecialConstraints import (
     OXSummationEqualityConstraint,
     OXConditionalConstraint
 )
+
+__all__ = [
+    # Base constraint classes
+    "OXConstraint",
+    "OXGoalConstraint", 
+    "RelationalOperators",
+    
+    # Constraint management
+    "OXConstraintSet",
+    
+    # Mathematical expressions
+    "OXpression",
+    "get_integer_numerator_and_denominators",
+    
+    # Special constraints
+    "OXSpecialConstraint",
+    "OXNonLinearEqualityConstraint",
+    "OXMultiplicativeEqualityConstraint",
+    "OXDivisionEqualityConstraint",
+    "OXModuloEqualityConstraint",
+    "OXSummationEqualityConstraint",
+    "OXConditionalConstraint",
+]

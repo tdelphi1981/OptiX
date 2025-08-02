@@ -1,7 +1,76 @@
+"""
+Special Constraints Module for OptiX Optimization Framework
+============================================================
+
+This module provides specialized constraint classes for handling non-linear and
+complex mathematical relationships in optimization problems. These constraints
+extend beyond standard linear programming to support constraint programming
+and mixed-integer programming scenarios.
+
+The module implements various types of special constraints that cannot be expressed
+as simple linear relationships, including multiplicative operations, division,
+modulo arithmetic, summation operations, and conditional logic.
+
+Classes:
+    OXSpecialConstraint: Base class for all special constraint types
+    OXNonLinearEqualityConstraint: Base class for non-linear equality constraints
+    OXMultiplicativeEqualityConstraint: Constraint for variable multiplication operations
+    OXDivisionEqualityConstraint: Constraint for integer division operations
+    OXModuloEqualityConstraint: Constraint for modulo arithmetic operations
+    OXSummationEqualityConstraint: Constraint for variable summation operations
+    OXConditionalConstraint: Constraint for conditional logic and implications
+
+Key Features:
+    - Support for non-linear mathematical operations
+    - UUID-based variable referencing for serialization compatibility
+    - Integration with constraint programming solvers
+    - Conditional logic and implication modeling
+    - Type-safe constraint definitions with dataclass structure
+
+Module Dependencies:
+    - dataclasses: For structured constraint definitions
+    - uuid: For variable identification and referencing
+    - base: For core OptiX object system integration
+
+Example:
+    Creating and using special constraints for complex relationships:
+
+    .. code-block:: python
+
+        from constraints import (
+            OXMultiplicativeEqualityConstraint,
+            OXDivisionEqualityConstraint,
+            OXConditionalConstraint
+        )
+        from variables import OXVariable
+        
+        # Create variables
+        x = OXVariable(name="x", lower_bound=0, upper_bound=100)
+        y = OXVariable(name="y", lower_bound=0, upper_bound=100)
+        z = OXVariable(name="z", lower_bound=0, upper_bound=10000)
+        quotient = OXVariable(name="quotient", lower_bound=0, upper_bound=50)
+        
+        # Create multiplication constraint: z = x * y
+        mult_constraint = OXMultiplicativeEqualityConstraint(
+            input_variables=[x.id, y.id],
+            output_variable=z.id
+        )
+        
+        # Create division constraint: quotient = x // 2
+        div_constraint = OXDivisionEqualityConstraint(
+            input_variable=x.id,
+            denominator=2,
+            output_variable=quotient.id
+        )
+        
+        # These constraints would be added to a constraint programming problem
+        # for solving with appropriate solvers like OR-Tools CP-SAT
+"""
+
 from dataclasses import dataclass, field
 from uuid import UUID
 
-from base import OXObject
+from ..base import OXObject
 
 
 @dataclass

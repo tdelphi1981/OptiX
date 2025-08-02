@@ -1,39 +1,61 @@
-"""OXConstraintSet - Specialized container for managing optimization constraints.
+"""
+Constraint Set Module for OptiX Optimization Framework
+=======================================================
 
-This module provides the OXConstraintSet class, which extends OXObjectPot to create
-a specialized container for managing collections of OXConstraint objects. It provides
-type-safe operations for adding, removing, and querying constraints in an optimization
-problem.
+This module provides a specialized container class for managing collections of
+constraints in optimization problems. It extends the base OXObjectPot functionality
+to create type-safe constraint collections with enhanced query capabilities.
+
+The module implements a container pattern specifically designed for OXConstraint
+objects, ensuring type safety while providing efficient storage, retrieval, and
+organization of constraints in optimization models.
 
 Classes:
-    OXConstraintSet: A specialized container for managing OXConstraint objects.
+    OXConstraintSet: Type-safe container for managing collections of OXConstraint objects
 
-Examples:
-    >>> from constraints import OXConstraint, OXConstraintSet, OXpression, RelationalOperators
-    >>> # Create a constraint set
-    >>> constraint_set = OXConstraintSet()
-    >>> 
-    >>> # Create some constraints
-    >>> expr1 = OXpression(variables=[var1.id, var2.id], weights=[2, 3])
-    >>> constraint1 = OXConstraint(
-    ...     expression=expr1,
-    ...     relational_operator=RelationalOperators.LESS_THAN_EQUAL,
-    ...     rhs=10,
-    ...     name="Capacity constraint"
-    ... )
-    >>> 
-    >>> # Add constraints to the set
-    >>> constraint_set.add_object(constraint1)
-    >>> 
-    >>> # Query constraints by related data
-    >>> capacity_constraints = constraint_set.query(name="Capacity constraint")
-    >>> production_constraints = constraint_set.query(type="production")
+Key Features:
+    - Type-safe constraint management with runtime validation
+    - Metadata-based constraint querying and filtering
+    - Integration with the OXObjectPot container system
+    - Support for constraint categorization and organization
+    - Efficient iteration and manipulation of constraint collections
+
+Module Dependencies:
+    - dataclasses: For structured container definitions
+    - base: For core OptiX object system and container patterns
+    - constraints: For OXConstraint class integration
+
+Example:
+    Basic constraint set usage for organizing constraints by category:
+
+    .. code-block:: python
+
+        from constraints import OXConstraint, OXConstraintSet, OXpression, RelationalOperators
+        
+        # Create a constraint set for capacity constraints
+        capacity_set = OXConstraintSet(name="Production Capacity Constraints")
+        
+        # Create and categorize constraints
+        for i, constraint in enumerate(production_constraints):
+            constraint.related_data["category"] = "capacity"
+            constraint.related_data["priority"] = "high" if i < 5 else "medium"
+            constraint.related_data["department"] = f"dept_{i % 3}"
+            capacity_set.add_object(constraint)
+        
+        # Query constraints by metadata
+        high_priority = capacity_set.query(priority="high")
+        dept_constraints = capacity_set.query(department="dept_0")
+        capacity_constraints = capacity_set.query(category="capacity")
+        
+        # Iterate through all constraints
+        for constraint in capacity_set:
+            print(f"Constraint: {constraint.name} - Priority: {constraint.related_data.get('priority')}")
 """
 
 from dataclasses import dataclass
 
-from base import OXObjectPot, OXObject, OXception
-from constraints import OXConstraint
+from ..base import OXObjectPot, OXObject, OXception
+from .OXConstraint import OXConstraint
 
 
 @dataclass
