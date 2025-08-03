@@ -156,7 +156,7 @@ class OXception(Exception):
         relative_path = error_file_path.relative_to(current_path)
         self.file_name = str(relative_path)
         self.method_name = frm.f_back.f_code.co_name
-        self.params = frm.f_back.f_locals
+        self.params = {k:v for k,v in frm.f_back.f_locals.items()}
         super().__init__(self.message)
 
     def to_json(self):

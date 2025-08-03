@@ -1,13 +1,13 @@
 from uuid import UUID
 
-from src.base.OXObject import OXObject
+from base.OXObject import OXObject
 
 
 def test_default_initialization():
     """Test that OXObject initializes with default values."""
     obj = OXObject()
     assert isinstance(obj.id, UUID)
-    assert obj.class_name == "base.OXObject"
+    assert obj.class_name == "base.OXObject.OXObject"
 
 
 def test_custom_id_initialization():
@@ -15,7 +15,7 @@ def test_custom_id_initialization():
     custom_id = UUID("12345678-1234-5678-1234-567812345678")
     obj = OXObject(id=custom_id)
     assert obj.id == custom_id
-    assert obj.class_name == "base.OXObject"
+    assert obj.class_name == "base.OXObject.OXObject"
 
 
 def test_string_representation():
@@ -56,9 +56,9 @@ def test_equality_with_same_id():
 def test_post_init_sets_class_name():
     """Test that __post_init__ sets the class_name attribute correctly."""
     obj = OXObject()
-    assert obj.class_name == "base.OXObject"
+    assert obj.class_name == "base.OXObject.OXObject"
     
     # Reset class_name and call __post_init__ manually
     obj.class_name = ""
     obj.__post_init__()
-    assert obj.class_name == "base.OXObject"
+    assert obj.class_name == "base.OXObject.OXObject"

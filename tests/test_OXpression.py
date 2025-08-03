@@ -1,6 +1,6 @@
 from uuid import UUID
 
-from src.constraints.OXpression import OXpression, get_integer_numerator_and_denominators
+from src.constraints.OXpression import OXpression, get_integer_numerator_and_denominators, calculate_fraction
 
 
 def test_get_integer_numerator_and_denominators():
@@ -147,6 +147,16 @@ def test_lru_cache_for_get_integer_numerator_and_denominators():
     # Call the function twice with the same arguments
     result1 = get_integer_numerator_and_denominators([0.5, 1.5, 2])
     result2 = get_integer_numerator_and_denominators([0.5, 1.5, 2])
-    
+
     # The results should be the same
     assert result1 == result2
+
+
+def test_farey_algorithm():
+    """Test that the get_integer_numerator_and_denominators function uses LRU cache."""
+    # Call the function twice with the same arguments
+    result1 = calculate_fraction(17/28)
+
+    assert result1.numerator==17
+    assert result1.denominator==28
+

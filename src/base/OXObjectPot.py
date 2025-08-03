@@ -177,7 +177,7 @@ class OXObjectPot(OXObject):
         for object in self.objects:
             should_include = True
             for key, value in kwargs.items():
-                if not hasattr(object, key) and getattr(object, key) != value:
+                if not hasattr(object, key) or getattr(object, key) != value:
                     should_include = False
                     break
             if should_include:

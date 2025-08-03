@@ -147,8 +147,8 @@ def main():
     for bus in bap.db.search_by_function(lambda var: isinstance(var, BusGroup)):
         bap.create_goal_constraint(
             variable_search_function=lambda var: var.related_data["busgroup"] == bus.id,
-            weight_calculation_function=lambda var, prb: Fraction(prb.db[prb.variables[var].related_data[
-                "line"]].total_duration, parameters.time_period),
+            weight_calculation_function=lambda var, prb: prb.db[prb.variables[var].related_data[
+                "line"]].total_duration / parameters.time_period,
             operator=RelationalOperators.LESS_THAN_EQUAL,
             value=bus.number_of_busses,
             name=f"Bus {bus.name} should not use more than {bus.number_of_busses} busses"
@@ -184,7 +184,7 @@ def main():
     # Objective function
     bap.create_objective_function()
 
-    status, solver = solve(bap, 'Gurobi', use_continuous=False, equalizeDenominators=True)
+    status, solver = solve(bap, 'ORTools', equalizeDenominators=True)
 
     print(f"Status: {status}")
 

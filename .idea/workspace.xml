@@ -5,12 +5,13 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="8079d7c8-d88b-4860-b52c-e25ebcf044e3" name="Changes" comment="Add OXORToolsSolverInterface implementation for variable and constraint management">
-      <change beforePath="$PROJECT_DIR$/.gitignore" beforeDir="false" afterPath="$PROJECT_DIR$/.gitignore" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/constraints/OXConstraint.py" beforeDir="false" afterPath="$PROJECT_DIR$/src/constraints/OXConstraint.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/constraints/OXConstraintSet.py" beforeDir="false" afterPath="$PROJECT_DIR$/src/constraints/OXConstraintSet.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/constraints/OXSpecialConstraints.py" beforeDir="false" afterPath="$PROJECT_DIR$/src/constraints/OXSpecialConstraints.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/constraints/OXpression.py" beforeDir="false" afterPath="$PROJECT_DIR$/src/constraints/OXpression.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/samples/bus_assignment_problem/03_bus_assignment_problem.py" beforeDir="false" afterPath="$PROJECT_DIR$/samples/bus_assignment_problem/03_bus_assignment_problem.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/base/OXObjectPot.py" beforeDir="false" afterPath="$PROJECT_DIR$/src/base/OXObjectPot.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/base/OXception.py" beforeDir="false" afterPath="$PROJECT_DIR$/src/base/OXception.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/tests/test_OXConstraint.py" beforeDir="false" afterPath="$PROJECT_DIR$/tests/test_OXConstraint.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/tests/test_OXObject.py" beforeDir="false" afterPath="$PROJECT_DIR$/tests/test_OXObject.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/tests/test_OXProblem.py" beforeDir="false" afterPath="$PROJECT_DIR$/tests/test_OXProblem.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/tests/test_OXpression.py" beforeDir="false" afterPath="$PROJECT_DIR$/tests/test_OXpression.py" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
@@ -60,14 +61,14 @@
   <component name="PropertiesComponent"><![CDATA[{
   "keyToString": {
     "Python tests.Python tests in test_OXData.py.executor": "Debug",
-    "Python tests.Python tests in tests.executor": "Debug",
+    "Python tests.Python tests in tests.executor": "Run",
     "Python.01_diet_problem.executor": "Run",
     "Python.01_simple_bus_assignment_problem.executor": "Run",
     "Python.02_simple_bus_assignment_problem.executor": "Run",
     "Python.03_bus_assignment_problem.executor": "Run",
     "RunOnceActivity.ShowReadmeOnStart": "true",
     "RunOnceActivity.git.unshallow": "true",
-    "git-widget-placeholder": "tolga",
+    "git-widget-placeholder": "main",
     "junie.onboarding.icon.badge.shown": "true",
     "node.js.detected.package.eslint": "true",
     "node.js.detected.package.tslint": "true",
@@ -212,8 +213,8 @@
     </configuration>
     <recent_temporary>
       <list>
-        <item itemvalue="Python.01_diet_problem" />
         <item itemvalue="Python.03_bus_assignment_problem" />
+        <item itemvalue="Python.01_diet_problem" />
         <item itemvalue="Python.02_simple_bus_assignment_problem" />
         <item itemvalue="Python.01_simple_bus_assignment_problem" />
         <item itemvalue="Python tests.Python tests in test_OXData.py" />
@@ -278,6 +279,7 @@
       <workItem from="1753809144852" duration="4126000" />
       <workItem from="1753865906909" duration="7000" />
       <workItem from="1754137440263" duration="1888000" />
+      <workItem from="1754217681514" duration="2164000" />
     </task>
     <task id="LOCAL-00001" summary="Add initial implementation of core OptiX framework  &#10;&#10;This commit introduces foundational components for the OptiX framework, including utility functions, base classes (e.g., `OXObject`, `OXVariable`), and test coverage for these modules. Additionally, it sets up project structure with `pyproject.toml`, `.gitignore`, and IntelliJ IDEA settings.">
       <option name="closed" value="true" />
@@ -480,19 +482,14 @@
     <breakpoint-manager>
       <breakpoints>
         <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
-          <url>file://$PROJECT_DIR$/src/solvers/gurobi/OXGurobiSolverInterface.py</url>
-          <line>143</line>
-          <option name="timeStamp" value="1" />
+          <url>file://$PROJECT_DIR$/tests/test_OXception.py</url>
+          <line>7</line>
+          <option name="timeStamp" value="13" />
         </line-breakpoint>
         <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
-          <url>file://$PROJECT_DIR$/src/solvers/OXSolverFactory.py</url>
-          <line>42</line>
-          <option name="timeStamp" value="2" />
-        </line-breakpoint>
-        <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
-          <url>file://$PROJECT_DIR$/tests/test_OXpression.py</url>
-          <line>98</line>
-          <option name="timeStamp" value="3" />
+          <url>file://$PROJECT_DIR$/tests/test_OXception.py</url>
+          <line>10</line>
+          <option name="timeStamp" value="14" />
         </line-breakpoint>
       </breakpoints>
     </breakpoint-manager>
@@ -504,9 +501,9 @@
   </component>
   <component name="com.intellij.coverage.CoverageDataManagerImpl">
     <SUITE FILE_PATH="coverage/OptiX$01_diet_problem.coverage" NAME="01_diet_problem Coverage Results" MODIFIED="1753813350786" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/samples/diet_problem" />
-    <SUITE FILE_PATH="coverage/OptiX$.coverage" NAME=" Coverage Results" MODIFIED="1754138943948" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="" />
+    <SUITE FILE_PATH="coverage/OptiX$.coverage" NAME=" Coverage Results" MODIFIED="1754219823431" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="" />
     <SUITE FILE_PATH="coverage/OptiX$02_simple_bus_assignment_problem.coverage" NAME="02_simple_bus_assignment_problem Coverage Results" MODIFIED="1753813045663" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/samples/bus_assignment_problem" />
-    <SUITE FILE_PATH="coverage/OptiX$03_bus_assignment_problem.coverage" NAME="03_bus_assignment_problem Coverage Results" MODIFIED="1753813246395" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/samples/bus_assignment_problem" />
+    <SUITE FILE_PATH="coverage/OptiX$03_bus_assignment_problem.coverage" NAME="03_bus_assignment_problem Coverage Results" MODIFIED="1754218113093" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/samples/bus_assignment_problem" />
     <SUITE FILE_PATH="coverage/OptiX$01_simple_bus_assignment_problem.coverage" NAME="01_simple_bus_assignment_problem Coverage Results" MODIFIED="1753812914203" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/samples/bus_assignment_problem" />
   </component>
 </project>

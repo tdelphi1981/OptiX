@@ -1,3 +1,5 @@
+from uuid import UUID
+
 import pytest
 
 from base import OXception
@@ -69,7 +71,7 @@ def test_create_constraint():
 
     # Check that the constraint was created correctly
     assert len(problem.constraints) == 1
-    constraint = problem.constraints[0]
+    constraint = problem.constraints.last_object
     assert isinstance(constraint, OXConstraint)
     assert constraint.expression.variables == var_ids
     assert constraint.expression.weights == [1, 2]
@@ -89,8 +91,8 @@ def test_create_constraint_with_search_function():
     def search_func(var):
         return True  # Include all variables
 
-    def weight_func(var, prob):
-        return var.upper_bound  # Weight by upper bound
+    def weight_func(var_id:UUID, prob):
+        return prob.variables[var_id].upper_bound  # Weight by upper bound
 
     # Create a constraint
     problem.create_constraint(
@@ -102,7 +104,7 @@ def test_create_constraint_with_search_function():
 
     # Check that the constraint was created correctly
     assert len(problem.constraints) == 1
-    constraint = problem.constraints[0]
+    constraint = problem.constraints.last_object
     assert isinstance(constraint, OXConstraint)
     assert len(constraint.expression.variables) == 2
     assert constraint.expression.weights == [10, 20]
@@ -284,7 +286,7 @@ def test_create_goal_constraint():
     assert len(problem.goal_constraints) == 1
     assert len(problem.constraints) == 0  # The constraint is moved to goal_constraints
 
-    goal = problem.goal_constraints[0]
+    goal = problem.goal_constraints.last_object
     assert goal.expression.variables == var_ids
     assert goal.expression.weights == [1, 2]
     assert goal.relational_operator == RelationalOperators.EQUAL
