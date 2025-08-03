@@ -136,7 +136,7 @@ html_js_files = [
 
 # -- Options for LaTeX output ------------------------------------------------
 
-latex_engine = 'pdflatex'
+latex_engine = 'xelatex'
 
 latex_elements = {
     # The paper size ('letterpaper' or 'a4paper').
@@ -147,6 +147,89 @@ latex_elements = {
 
     # Additional stuff for the LaTeX preamble.
     'preamble': r'''
+% Modern fonts with comprehensive fallbacks
+\usepackage{fontspec}
+\usepackage{unicode-math}
+\defaultfontfeatures{Ligatures=TeX}
+
+% Main font with fallbacks
+\IfFontExistsTF{Inter}{
+  \setmainfont{Inter}[
+    UprightFont = *-Regular,
+    BoldFont = *-Bold,
+    ItalicFont = *-Italic,
+    BoldItalicFont = *-BoldItalic
+  ]
+}{
+  \IfFontExistsTF{SF Pro Text}{
+    \setmainfont{SF Pro Text}
+  }{
+    \IfFontExistsTF{Segoe UI}{
+      \setmainfont{Segoe UI}
+    }{
+      \IfFontExistsTF{Helvetica Neue}{
+        \setmainfont{Helvetica Neue}
+      }{
+        % Final fallback to system default
+      }
+    }
+  }
+}
+
+% Sans font with fallbacks
+\IfFontExistsTF{Inter}{
+  \setsansfont{Inter}[
+    UprightFont = *-Regular,
+    BoldFont = *-Bold,
+    ItalicFont = *-Italic,
+    BoldItalicFont = *-BoldItalic
+  ]
+}{
+  \IfFontExistsTF{SF Pro Display}{
+    \setsansfont{SF Pro Display}
+  }{
+    \IfFontExistsTF{Segoe UI}{
+      \setsansfont{Segoe UI}
+    }{
+      \IfFontExistsTF{Arial}{
+        \setsansfont{Arial}
+      }{
+        % Final fallback to system default
+      }
+    }
+  }
+}
+
+% Monospace font with fallbacks
+\IfFontExistsTF{JetBrains Mono}{
+  \setmonofont{JetBrains Mono}[
+    Scale=0.85,
+    UprightFont = *-Regular,
+    BoldFont = *-Bold,
+    ItalicFont = *-Italic,
+    BoldItalicFont = *-BoldItalic
+  ]
+}{
+  \IfFontExistsTF{Fira Code}{
+    \setmonofont{Fira Code}[Scale=0.85]
+  }{
+    \IfFontExistsTF{SF Mono}{
+      \setmonofont{SF Mono}[Scale=0.85]
+    }{
+      \IfFontExistsTF{Consolas}{
+        \setmonofont{Consolas}[Scale=0.85]
+      }{
+        \IfFontExistsTF{Monaco}{
+          \setmonofont{Monaco}[Scale=0.85]
+        }{
+          % Final fallback to system default monospace
+        }
+      }
+    }
+  }
+}
+
+% Essential packages
 \usepackage{amsmath,amsfonts,amssymb}
 \usepackage{graphicx}
 \usepackage{fancyhdr}
@@ -155,12 +238,34 @@ latex_elements = {
 \usepackage{tcolorbox}
 \usepackage{listings}
 \usepackage{hyperref}
+\usepackage{tikz}
+\usepackage{pgfplots}
+\usepackage{booktabs}
+\usepackage{multirow}
+\usepackage{array}
+\usepackage{microtype}
+\usepackage{soul}
 
-% Define custom colors
-\definecolor{optixblue}{RGB}{41,128,185}
-\definecolor{optixgreen}{RGB}{39,174,96}
-\definecolor{optixorange}{RGB}{230,126,34}
-\definecolor{optixred}{RGB}{231,76,60}
+% Emoji support for XeLaTeX
+% Note: XeLaTeX handles Unicode emojis directly through fontspec
+% Most system fonts include basic emoji support
+
+% Modern color scheme - 2024 palette
+\definecolor{optixblue}{RGB}{0,102,255}
+\definecolor{optixcyan}{RGB}{0,217,255}
+\definecolor{optixpurple}{RGB}{102,126,234}
+\definecolor{optixgreen}{RGB}{0,200,150}
+\definecolor{optixorange}{RGB}{255,184,0}
+\definecolor{optixred}{RGB}{255,71,87}
+\definecolor{optixdark}{RGB}{10,14,39}
+\definecolor{optixdarker}{RGB}{5,8,22}
+\definecolor{optixlight}{RGB}{247,249,252}
+\definecolor{optixlighter}{RGB}{255,255,255}
+\definecolor{optixgray}{RGB}{108,114,147}
+\definecolor{optixgraydark}{RGB}{75,85,116}
+\definecolor{optixbg}{RGB}{248,250,252}
+\definecolor{optixaccent1}{RGB}{79,172,254}
+\definecolor{optixaccent2}{RGB}{245,87,108}
 
 % Configure hyperref
 \hypersetup{
@@ -168,47 +273,296 @@ latex_elements = {
     linkcolor=optixblue,
     filecolor=optixgreen,
     urlcolor=optixblue,
-    citecolor=optixred
+    citecolor=optixred,
+    pdftitle={OptiX Mathematical Optimization Framework},
+    pdfauthor={Tolga BERBER, Beyzanur SİYAH},
+    pdfsubject={Mathematical Optimization Library Documentation},
+    pdfkeywords={optimization, linear programming, constraint satisfaction}
 }
 
-% Custom title page
+% Ultra-modern title page with geometric design
 \makeatletter
 \renewcommand{\maketitle}{%
   \begin{titlepage}%
-    \null\vfill
+    \newgeometry{margin=0cm}
+    \begin{tikzpicture}[remember picture,overlay]
+      % Modern gradient background
+      \fill[optixdarker] (current page.north west) rectangle (current page.south east);
+      
+      % Geometric shapes and gradients
+      \begin{scope}[blend mode=multiply, opacity=0.8]
+        \fill[optixblue] (current page.north west) 
+          -- ([xshift=8cm]current page.north west) 
+          -- ([xshift=12cm,yshift=-8cm]current page.north west) 
+          -- ([yshift=-12cm]current page.north west) 
+          -- cycle;
+      \end{scope}
+      
+      \begin{scope}[blend mode=screen, opacity=0.6]
+        \fill[optixcyan] ([xshift=5cm,yshift=-3cm]current page.north east) circle (4cm);
+        \fill[optixpurple] ([xshift=-8cm,yshift=-15cm]current page.north east) circle (6cm);
+      \end{scope}
+      
+      % Subtle dot pattern
+      \foreach \x in {0,0.5,...,21} {
+        \foreach \y in {0,0.5,...,29.7} {
+          \fill[white, opacity=0.02] (\x,\y) circle (0.5pt);
+        }
+      }
+      
+      % Glass morphism effect containers
+      \begin{scope}[blend mode=normal]
+        % Main content container
+        \fill[white, opacity=0.05] 
+          ([xshift=2cm,yshift=-8cm]current page.north west) 
+          rectangle ([xshift=-2cm,yshift=4cm]current page.south east);
+        \draw[white, opacity=0.2, line width=1pt] 
+          ([xshift=2cm,yshift=-8cm]current page.north west) 
+          rectangle ([xshift=-2cm,yshift=4cm]current page.south east);
+      \end{scope}
+    \end{tikzpicture}
+    
+    % Content positioning
+    \vspace*{6cm}
     \begin{center}%
-      {\Huge\bfseries\color{optixblue} OptiX Framework}\\[1cm]
-      {\LARGE Mathematical Optimization Library}\\[2cm]
-      {\Large Documentation}\\[1cm]
-      {\large Version \py@release}\\[2cm]
-      {\large \@author}\\[1cm]
-      {\large \@date}
+      % Logo with modern styling
+      {\color{white}
+        \includegraphics[width=0.25\textwidth]{optix_logo_large.png}
+      }\\[2cm]
+      
+      % Main title with modern typography
+      {\fontsize{56}{68}\selectfont\bfseries
+       \color{white}
+       \textls[150]{OPTIX}}\\[0.8cm]
+      
+      % Subtitle with accent
+      {\fontsize{18}{22}\selectfont
+       \color{optixcyan}
+       \textls[100]{MATHEMATICAL OPTIMIZATION FRAMEWORK}}\\[3cm]
+      
+      % Modern info card
+      \begin{tikzpicture}
+        \node[
+          rectangle,
+          rounded corners=20pt,
+          fill=white,
+          fill opacity=0.95,
+          text opacity=1,
+          drop shadow={
+            shadow xshift=0pt,
+            shadow yshift=-8pt,
+            shadow blur radius=20pt,
+            fill opacity=0.3
+          },
+          minimum width=12cm,
+          minimum height=6cm
+        ] {
+          \begin{minipage}{10cm}
+            \centering
+            {\fontsize{24}{30}\selectfont\bfseries\color{optixdark}
+             Documentation}\\[1cm]
+            {\fontsize{14}{18}\selectfont\color{optixgraydark}
+             Version \py@release}\\[0.8cm]
+            {\fontsize{12}{16}\selectfont\color{optixgraydark}
+             \@author}\\[0.5cm]
+            {\fontsize{12}{16}\selectfont\color{optixgray}
+             \@date}
+          \end{minipage}
+        };
+      \end{tikzpicture}
     \end{center}%
-    \vfill\null
+    \restoregeometry
   \end{titlepage}%
 }
 \makeatother
 
-% Custom headers and footers
+% Ultra-modern headers and footers
 \pagestyle{fancy}
 \fancyhf{}
-\fancyhead[LE,RO]{\thepage}
-\fancyhead[LO,RE]{\leftmark}
-\fancyfoot[C]{OptiX Mathematical Optimization Framework}
+% Header with modern styling
+\fancyhead[LE]{%
+  \begin{tikzpicture}[baseline=(current bounding box.center)]
+    \node[
+      rectangle,
+      rounded corners=8pt,
+      fill=optixblue,
+      text=white,
+      font=\bfseries\small,
+      inner sep=8pt,
+      minimum height=16pt
+    ] {\thepage};
+  \end{tikzpicture}%
+  \hspace{10pt}%
+  {\color{optixgraydark}\small\leftmark}%
+}
+\fancyhead[RO]{%
+  {\color{optixgraydark}\small\rightmark}%
+  \hspace{10pt}%
+  \begin{tikzpicture}[baseline=(current bounding box.center)]
+    \node[
+      rectangle,
+      rounded corners=8pt,
+      fill=optixblue,
+      text=white,
+      font=\bfseries\small,
+      inner sep=8pt,
+      minimum height=16pt
+    ] {\thepage};
+  \end{tikzpicture}%
+}
+% Modern footer
+\fancyfoot[C]{%
+  \begin{tikzpicture}
+    \node[
+      rectangle,
+      rounded corners=12pt,
+      fill=optixbg,
+      draw=optixblue,
+      draw opacity=0.3,
+      text=optixgraydark,
+      font=\footnotesize,
+      inner sep=6pt
+    ] {OptiX Mathematical Optimization Framework};
+  \end{tikzpicture}%
+}
+\renewcommand{\headrulewidth}{0pt}
+\renewcommand{\footrulewidth}{0pt}
 
-% Code highlighting
+% Ultra-modern code highlighting
 \lstset{
-    basicstyle=\ttfamily\small,
+    basicstyle=\ttfamily\footnotesize,
     keywordstyle=\color{optixblue}\bfseries,
-    commentstyle=\color{gray}\itshape,
+    commentstyle=\color{optixgray}\itshape,
     stringstyle=\color{optixgreen},
-    numberstyle=\tiny\color{gray},
+    numberstyle=\tiny\color{optixgray},
     numbers=left,
     frame=single,
+    framerule=0pt,
     breaklines=true,
     showstringspaces=false,
     tabsize=4,
-    backgroundcolor=\color{gray!10}
+    backgroundcolor=\color{optixdarker},
+    basicstyle=\color{optixlighter}\ttfamily\footnotesize,
+    keywordstyle=\color{optixcyan}\bfseries,
+    commentstyle=\color{optixgray}\itshape,
+    stringstyle=\color{optixgreen},
+    numberstyle=\tiny\color{optixgray},
+    rulecolor=\color{optixblue},
+    xleftmargin=0pt,
+    framexleftmargin=15pt,
+    framexrightmargin=0pt,
+    framextopmargin=8pt,
+    framexbottommargin=8pt,
+    aboveskip=1.5cm,
+    belowskip=1cm,
+    captionpos=t
+}
+
+% Ultra-modern tcolorbox settings
+\tcbuselibrary{skins,breakable}
+\newtcolorbox{modernbox}[2][]{
+  enhanced,
+  colback=white,
+  colframe=optixblue,
+  fonttitle=\bfseries\color{white},
+  title=#2,
+  arc=12pt,
+  boxrule=2pt,
+  left=8pt,
+  right=8pt,
+  top=8pt,
+  bottom=8pt,
+  breakable,
+  #1
+}
+
+% Ultra-modern section formatting
+\usepackage{titlesec}
+\titleformat{\chapter}[display]
+  {\normalfont\huge\bfseries\color{optixdark}}
+  {\tikz[baseline=(current bounding box.center)]{
+     \node[
+       rectangle,
+       rounded corners=8pt,
+       fill=optixblue,
+       text=white,
+       font=\Large\bfseries,
+       inner sep=12pt
+     ] {\chaptertitlename\ \thechapter};
+   }}
+  {20pt}
+  {\Huge\color{optixdark}}
+
+\titleformat{\section}
+  {\normalfont\Large\bfseries\color{optixdark}}
+  {\tikz[baseline=(current bounding box.center)]{
+     \node[
+       circle,
+       fill=optixblue,
+       text=white,
+       font=\bfseries,
+       inner sep=8pt,
+       minimum size=24pt
+     ] {\thesection};
+   }\hspace{10pt}}
+  {0pt}
+  {}
+
+\titleformat{\subsection}
+  {\normalfont\large\bfseries\color{optixpurple}}
+  {\tikz[baseline=(current bounding box.center)]{
+     \node[
+       rectangle,
+       rounded corners=4pt,
+       fill=optixpurple,
+       text=white,
+       font=\small\bfseries,
+       inner sep=4pt,
+       minimum height=16pt
+     ] {\thesubsection};
+   }\hspace{8pt}}
+  {0pt}
+  {}
+
+% Modern table styling with glassmorphism
+\renewcommand{\arraystretch}{1.4}
+\arrayrulecolor{optixblue!30}
+
+% Modern admonitions
+\newtcolorbox{note}{
+  enhanced,
+  colback=optixblue!5,
+  colframe=optixblue,
+  leftrule=4pt,
+  rightrule=0pt,
+  toprule=0pt,
+  bottomrule=0pt,
+  arc=8pt,
+  outer arc=8pt,
+  fonttitle=\bfseries\color{optixblue},
+  title=Note,
+  left=8pt,
+  right=8pt,
+  top=8pt,
+  bottom=8pt
+}
+
+\newtcolorbox{warning}{
+  enhanced,
+  colback=optixorange!5,
+  colframe=optixorange,
+  leftrule=4pt,
+  rightrule=0pt,
+  toprule=0pt,
+  bottomrule=0pt,
+  arc=8pt,
+  outer arc=8pt,
+  fonttitle=\bfseries\color{optixorange},
+  title=Warning,
+  left=8pt,
+  right=8pt,
+  top=8pt,
+  bottom=8pt
 }
 ''',
 

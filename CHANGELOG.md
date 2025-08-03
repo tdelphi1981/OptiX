@@ -14,9 +14,11 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Special constraints support (`OXSpecialConstraints`)
 - Solver factory pattern for easy solver selection
 - Bus assignment problem example demonstrating real-world usage
+- Diet problem optimization example showcasing classic linear programming
 - Enhanced constraint value tracking and evaluation
 - Comprehensive package structure with proper `__init__.py` files
 - Extended test coverage for all major components
+- Comprehensive API documentation across all modules
 
 ### Enhanced
 - Problem classes now support constraint satisfaction problems (CSP)
@@ -24,11 +26,15 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Enhanced expression handling in `OXpression`
 - Better serialization support for complex data structures
 - Extended utility functions for class loading and management
+- Documentation coverage for base, data, constraints, OXpression, serialization, utilities, variables, solvers, and test modules
+- Sample problem documentation with detailed API references
 
 ### Fixed
+- Core framework bugs and improved test functionality
 - Variable and constraint management in solver interfaces
 - Solution retrieval and value tracking
 - Database integration and object relationships
+- Fraction calculation and import paths in constraints module
 
 ## [0.1.0] - 2024-06-01
 

@@ -1,28 +1,39 @@
 /* Custom CSS for OptiX Documentation */
 
 /* Import Google Fonts */
-@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Fira+Code:wght@300;400;500&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=JetBrains+Mono:wght@300;400;500;600&display=swap');
 
-/* Color Variables */
+/* Color Variables - Modern palette */
 :root {
-    --optix-primary: #2980B9;
-    --optix-secondary: #27AE60;
-    --optix-accent: #E67E22;
-    --optix-danger: #E74C3C;
-    --optix-dark: #2C3E50;
-    --optix-light: #ECF0F1;
-    --optix-gray: #95A5A6;
-    --optix-white: #FFFFFF;
+    --optix-primary: #0066FF;
+    --optix-secondary: #00D9FF;
+    --optix-accent: #FF6B6B;
+    --optix-success: #00C896;
+    --optix-warning: #FFB800;
+    --optix-danger: #FF4757;
+    --optix-dark: #0A0E27;
+    --optix-darker: #050816;
+    --optix-light: #F7F9FC;
+    --optix-lighter: #FFFFFF;
+    --optix-gray: #6C7293;
+    --optix-gray-light: #E4E6EF;
     
-    /* Gradients */
-    --optix-gradient-primary: linear-gradient(135deg, #2980B9 0%, #3498DB 100%);
-    --optix-gradient-secondary: linear-gradient(135deg, #27AE60 0%, #2ECC71 100%);
-    --optix-gradient-accent: linear-gradient(135deg, #E67E22 0%, #F39C12 100%);
+    /* Gradients - Modern vibrant gradients */
+    --optix-gradient-primary: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    --optix-gradient-secondary: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+    --optix-gradient-accent: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);
+    --optix-gradient-success: linear-gradient(135deg, #43e97b 0%, #38f9d7 100%);
+    --optix-gradient-dark: linear-gradient(135deg, #0A0E27 0%, #050816 100%);
     
-    /* Shadows */
-    --optix-shadow-sm: 0 2px 4px rgba(0,0,0,0.1);
-    --optix-shadow-md: 0 4px 8px rgba(0,0,0,0.15);
-    --optix-shadow-lg: 0 8px 16px rgba(0,0,0,0.2);
+    /* Shadows - Softer, more modern shadows */
+    --optix-shadow-sm: 0 2px 4px rgba(10, 14, 39, 0.08);
+    --optix-shadow-md: 0 4px 16px rgba(10, 14, 39, 0.12);
+    --optix-shadow-lg: 0 8px 32px rgba(10, 14, 39, 0.16);
+    --optix-shadow-xl: 0 16px 48px rgba(10, 14, 39, 0.24);
+    
+    /* Glassmorphism effect */
+    --optix-glass: rgba(255, 255, 255, 0.05);
+    --optix-glass-border: rgba(255, 255, 255, 0.1);
 }
 
 /* Typography */
@@ -34,17 +45,19 @@ body {
 
 /* Code blocks */
 code, pre, .highlight {
-    font-family: 'Fira Code', 'Monaco', 'Consolas', monospace !important;
+    font-family: 'JetBrains Mono', 'Fira Code', 'Monaco', 'Consolas', monospace !important;
     font-feature-settings: "liga" 1, "calt" 1;
+    font-variant-ligatures: contextual;
 }
 
 /* Headers */
 h1, h2, h3, h4, h5, h6 {
     font-family: 'Inter', sans-serif !important;
-    font-weight: 600;
+    font-weight: 700;
     color: var(--optix-dark);
-    margin-top: 2rem;
+    margin-top: 2.5rem;
     margin-bottom: 1rem;
+    letter-spacing: -0.02em;
 }
 
 h1 {
@@ -52,32 +65,39 @@ h1 {
     -webkit-background-clip: text;
     -webkit-text-fill-color: transparent;
     background-clip: text;
-    font-size: 2.5rem;
-    margin-bottom: 1.5rem;
+    font-size: 3rem;
+    font-weight: 800;
+    margin-bottom: 2rem;
+    line-height: 1.2;
 }
 
 h2 {
-    color: var(--optix-primary);
-    border-bottom: 2px solid var(--optix-light);
-    padding-bottom: 0.5rem;
-    font-size: 2rem;
+    color: var(--optix-dark);
+    border-bottom: 3px solid transparent;
+    border-image: var(--optix-gradient-accent) 1;
+    padding-bottom: 0.75rem;
+    font-size: 2.25rem;
+    font-weight: 700;
 }
 
 h3 {
-    color: var(--optix-secondary);
-    font-size: 1.5rem;
+    color: var(--optix-primary);
+    font-size: 1.75rem;
+    font-weight: 600;
 }
 
 /* Navigation customization */
 .wy-nav-side {
-    background: linear-gradient(180deg, var(--optix-dark) 0%, #34495E 100%) !important;
+    background: var(--optix-gradient-dark) !important;
     width: 320px !important;
+    box-shadow: 4px 0 24px rgba(0, 0, 0, 0.1) !important;
 }
 
 .wy-side-nav-search {
-    background: var(--optix-gradient-primary) !important;
-    border-bottom: none !important;
-    padding: 1.5rem 1rem !important;
+    background: transparent !important;
+    border-bottom: 1px solid var(--optix-glass-border) !important;
+    padding: 2rem 1.5rem !important;
+    backdrop-filter: blur(10px);
 }
 
 .wy-side-nav-search input[type=text] {
@@ -95,10 +115,12 @@ h3 {
 }
 
 .wy-menu-vertical li.current a {
-    background: var(--optix-gradient-secondary) !important;
-    border-right: 4px solid var(--optix-accent) !important;
-    color: white !important;
-    font-weight: 500 !important;
+    background: var(--optix-glass) !important;
+    border-left: 4px solid var(--optix-secondary) !important;
+    border-right: none !important;
+    color: var(--optix-secondary) !important;
+    font-weight: 600 !important;
+    backdrop-filter: blur(10px);
 }
 
 .wy-menu-vertical li.current > a:hover {
@@ -106,9 +128,11 @@ h3 {
 }
 
 .wy-menu-vertical a {
-    color: #BDC3C7 !important;
-    transition: all 0.3s ease !important;
-    padding: 8px 16px !important;
+    color: rgba(255, 255, 255, 0.7) !important;
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1) !important;
+    padding: 10px 20px !important;
+    font-size: 14px !important;
+    letter-spacing: 0.01em;
 }
 
 .wy-menu-vertical a:hover {
@@ -119,7 +143,8 @@ h3 {
 /* Content area */
 .wy-nav-content {
     max-width: none !important;
-    background: linear-gradient(135deg, #f8f9fa 0%, #ffffff 100%) !important;
+    background: var(--optix-light) !important;
+    min-height: 100vh;
 }
 
 .wy-nav-content-wrap {
@@ -134,10 +159,22 @@ h3 {
 .highlight {
     background: #f8f9fa !important;
     border: 1px solid #e9ecef !important;
-    border-radius: 8px !important;
-    padding: 1rem !important;
-    margin: 1rem 0 !important;
-    box-shadow: var(--optix-shadow-sm) !important;
+    border-radius: 12px !important;
+    padding: 1.5rem !important;
+    margin: 1.5rem 0 !important;
+    box-shadow: var(--optix-shadow-md) !important;
+    position: relative;
+    overflow: hidden;
+}
+
+.highlight::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 3px;
+    background: var(--optix-gradient-accent);
 }
 
 .highlight pre {
@@ -146,17 +183,19 @@ h3 {
     margin: 0 !important;
     padding: 0 !important;
     font-size: 14px !important;
-    line-height: 1.5 !important;
+    line-height: 1.6 !important;
+    color: #2d3748 !important;
 }
 
 /* Inline code */
 code.literal {
-    background: rgba(41, 128, 185, 0.1) !important;
+    background: rgba(0, 102, 255, 0.1) !important;
     color: var(--optix-primary) !important;
-    padding: 2px 6px !important;
-    border-radius: 4px !important;
+    padding: 3px 8px !important;
+    border-radius: 6px !important;
     font-weight: 500 !important;
-    border: 1px solid rgba(41, 128, 185, 0.2) !important;
+    border: 1px solid rgba(0, 102, 255, 0.2) !important;
+    font-size: 0.9em !important;
 }
 
 /* Admonitions */

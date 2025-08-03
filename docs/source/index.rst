@@ -1,7 +1,7 @@
 OptiX - Mathematical Optimization Framework
 ==========================================
 
-.. image:: ../_static/optix_logo.svg
+.. image:: ../_static/optix_logo_large.png
    :alt: OptiX Logo
    :align: center
    :class: optix-logo

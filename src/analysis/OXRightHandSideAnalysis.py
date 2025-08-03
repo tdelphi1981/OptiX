@@ -4,18 +4,25 @@ Right Hand Side Analysis Module
 
 This module provides comprehensive analysis tools for Right Hand Side (RHS) values of
 constraints across different scenarios in OptiX optimization problems. It leverages
-UUID-based constraint access and built-in scenario management to perform systematic
-sensitivity analysis on constraint bounds and their impact on optimization outcomes.
+UUID-based constraint access and the enhanced scenario management system that supports
+both data object scenarios and constraint-specific scenarios for systematic sensitivity
+analysis on constraint bounds and their impact on optimization outcomes.
 
 The module implements detailed constraint-level analysis, tracking how changes in RHS
 values across scenarios affect solution feasibility, shadow prices, and binding status
-of constraints in the optimization model.
+of constraints in the optimization model. With the addition of constraint scenarios,
+it enables more precise RHS sensitivity analysis by allowing constraints to have their
+own scenario-specific parameters independent of data objects.
 
 Key Features:
     - **UUID-Based Constraint Analysis**: Direct constraint access using OptiX's UUID
       system for precise constraint identification and tracking across scenarios
-    - **Scenario-Based RHS Tracking**: Systematic analysis of how RHS values change
-      across different scenarios and their impact on optimization outcomes
+    - **Dual Scenario Support**: Comprehensive analysis across both data object scenarios
+      and constraint-specific scenarios, enabling fine-grained RHS sensitivity analysis
+    - **Constraint-Level Scenarios**: Direct support for constraint scenarios allowing
+      RHS values, operators, and names to vary independently across scenarios
+    - **Automatic Scenario Discovery**: Intelligent discovery of all unique scenarios
+      from both data objects and constraints for comprehensive analysis coverage
     - **Constraint Sensitivity Analysis**: Identification of constraints with highest
       sensitivity to RHS changes and their effect on objective function values
     - **Binding Status Analysis**: Tracking of constraint binding status changes across
@@ -32,7 +39,7 @@ Architecture:
     detailed tracking of RHS value changes and their optimization impacts.
 
 Example:
-    Basic RHS analysis across scenarios:
+    RHS analysis with constraint scenarios:
 
     .. code-block:: python
 
@@ -40,28 +47,36 @@ Example:
         from problem.OXProblem import OXLPProblem
         from data.OXData import OXData
         
-        # Create problem with RHS scenario data
+        # Create problem
         problem = OXLPProblem()
         # ... set up variables ...
         
-        # Create capacity data with scenarios
+        # Method 1: Data-driven scenarios (traditional approach)
         capacity_data = OXData()
         capacity_data.max_capacity = 100
         capacity_data.create_scenario("Expanded", max_capacity=150)
         capacity_data.create_scenario("Reduced", max_capacity=80)
         problem.db.add_object(capacity_data)
         
-        # Create constraint with scenario-dependent RHS
-        constraint = problem.create_constraint([x, y], [1, 1], "<=", capacity_data.max_capacity)
+        # Create constraint with data-dependent RHS
+        constraint1 = problem.create_constraint([x, y], [1, 1], "<=", capacity_data.max_capacity)
         
-        # Perform RHS analysis
+        # Method 2: Constraint-specific scenarios (enhanced approach)
+        constraint2 = problem.create_constraint([x, y], [2, 3], "<=", 200)
+        constraint2.create_scenario("High_Capacity", rhs=250, name="Peak capacity")
+        constraint2.create_scenario("Low_Capacity", rhs=150, name="Off-peak capacity")
+        constraint2.create_scenario("Emergency", rhs=300, name="Emergency capacity")
+        
+        # Perform RHS analysis (analyzes both data and constraint scenarios)
         analyzer = OXRightHandSideAnalysis(problem, 'ORTools')
         results = analyzer.analyze()
         
         # Access constraint-specific results
-        constraint_analysis = results.get_constraint_analysis(constraint.id)
-        print(f"RHS range: {constraint_analysis['rhs_range']}")
-        print(f"Binding scenarios: {constraint_analysis['binding_scenarios']}")
+        for constraint_id, analysis in results.constraint_analyses.items():
+            print(f"Constraint: {analysis.constraint_name}")
+            print(f"  RHS values: {analysis.rhs_values}")
+            print(f"  Binding scenarios: {analysis.binding_scenarios}")
+            print(f"  Sensitivity score: {analysis.sensitivity_score:.3f}")
 
 Module Dependencies:
     - base: OptiX core exception handling and validation framework
@@ -80,7 +95,7 @@ from uuid import UUID
 
 from base import OXObject, OXception
 from problem.OXProblem import OXLPProblem, OXGPProblem, OXCSPProblem
-from solvers.OXSolverFactory import solve_all_scenarios
+from solvers.OXSolverFactory import solve_all_scenarios, solve
 from solvers.OXSolverInterface import OXSolutionStatus
 from constraints.OXConstraint import OXConstraint, RelationalOperators
 
@@ -265,10 +280,11 @@ class OXRightHandSideAnalysis:
     to track individual constraints across scenarios and provides detailed insights
     into RHS sensitivity, binding status, and optimization impact analysis.
     
-    The analyzer automatically discovers constraints in the problem, tracks their RHS
-    values across all scenarios, solves the optimization problem for each scenario
-    configuration, and provides comprehensive analysis of constraint behavior and
-    sensitivity to RHS changes.
+    The analyzer supports both data object scenarios and constraint-specific scenarios,
+    enabling more precise RHS analysis. It automatically discovers all scenarios from
+    both sources, tracks RHS values that may come from constraint scenarios or data
+    scenarios, solves the optimization problem for each unique scenario configuration,
+    and provides comprehensive analysis of constraint behavior and sensitivity to RHS changes.
     
     Key Capabilities:
         - **UUID-Based Constraint Tracking**: Uses OptiX's UUID system for precise
@@ -313,6 +329,34 @@ class OXRightHandSideAnalysis:
             top_sensitive = results.get_top_sensitive_constraints(1)[0]
             print(f"Most sensitive: {top_sensitive.constraint_name}")
             print(f"Sensitivity score: {top_sensitive.sensitivity_score:.3f}")
+        
+        Analysis with constraint-specific scenarios:
+        
+        .. code-block:: python
+        
+            # Create constraints with their own scenarios
+            capacity_constraint = problem.create_constraint([x, y], [1, 1], "<=", 100)
+            capacity_constraint.create_scenario("Peak_Hours", rhs=150, name="Peak capacity")
+            capacity_constraint.create_scenario("Off_Peak", rhs=80, name="Off-peak capacity")
+            capacity_constraint.create_scenario("Maintenance", rhs=50, name="Maintenance mode")
+            
+            budget_constraint = problem.create_constraint([x, y], [5, 10], "<=", 1000)
+            budget_constraint.create_scenario("High_Budget", rhs=1500)
+            budget_constraint.create_scenario("Low_Budget", rhs=800)
+            
+            # Analyze all constraint scenarios
+            analyzer = OXRightHandSideAnalysis(problem, 'ORTools')
+            results = analyzer.analyze()
+            
+            # Results will include all unique scenarios from constraints
+            print(f"Total scenarios analyzed: {results.scenario_count}")
+            print(f"Scenarios: {list(results.scenario_feasibility.keys())}")
+            
+            # Constraint-specific analysis
+            cap_analysis = results.get_constraint_analysis(capacity_constraint.id)
+            print(f"\\nCapacity constraint RHS values:")
+            for scenario, rhs in cap_analysis.rhs_values.items():
+                print(f"  {scenario}: {rhs}")
         
         Targeted analysis of specific constraints:
         
@@ -364,9 +408,6 @@ class OXRightHandSideAnalysis:
         if len(problem.constraints) == 0:
             raise OXception("Problem must have constraints for RHS analysis")
         
-        if len(problem.db) == 0:
-            raise OXception("Problem database must contain data objects with scenarios")
-        
         self.problem = problem
         self.solver = solver
         self.solver_kwargs = kwargs
@@ -376,8 +417,9 @@ class OXRightHandSideAnalysis:
         """
         Extract RHS value for a constraint in a specific scenario.
         
-        This method handles the complexity of extracting RHS values that may depend
-        on scenario data objects in the problem database.
+        This method handles the complexity of extracting RHS values from both constraint-level
+        scenarios and data object scenarios in the problem database. It prioritizes constraint
+        scenarios over data scenarios for more precise analysis.
         
         Args:
             constraint (OXConstraint): The constraint to analyze.
@@ -386,12 +428,19 @@ class OXRightHandSideAnalysis:
         Returns:
             float: The RHS value for the constraint in the given scenario.
         """
-        # Store original scenario states
-        original_scenarios = {}
+        # Store original scenario states for both constraint and data objects
+        original_constraint_scenario = constraint.active_scenario
+        original_data_scenarios = {}
         for data_obj in self.problem.db:
-            original_scenarios[data_obj.id] = data_obj.active_scenario
+            original_data_scenarios[data_obj.id] = data_obj.active_scenario
         
         try:
+            # First, check if constraint has this scenario
+            if scenario_name in constraint.scenarios:
+                constraint.active_scenario = scenario_name
+            else:
+                constraint.active_scenario = "Default"
+            
             # Set all data objects to the target scenario
             for data_obj in self.problem.db:
                 if scenario_name in data_obj.scenarios:
@@ -399,16 +448,117 @@ class OXRightHandSideAnalysis:
                 else:
                     data_obj.active_scenario = "Default"
             
-            # Extract RHS value (may depend on scenario data)
+            # Extract RHS value (may depend on both constraint and data scenarios)
             rhs_value = constraint.rhs
             
             return float(rhs_value)
             
         finally:
             # Restore original scenario states
+            constraint.active_scenario = original_constraint_scenario
             for data_obj in self.problem.db:
-                if data_obj.id in original_scenarios:
-                    data_obj.active_scenario = original_scenarios[data_obj.id]
+                if data_obj.id in original_data_scenarios:
+                    data_obj.active_scenario = original_data_scenarios[data_obj.id]
+    
+    def _discover_all_scenarios(self) -> Set[str]:
+        """
+        Discover all unique scenarios across data objects and constraints.
+        
+        This method scans both the problem database and all constraints to find
+        all unique scenario names, enabling comprehensive analysis that includes
+        both data-driven and constraint-specific scenarios.
+        
+        Returns:
+            Set[str]: Set of all unique scenario names found.
+        """
+        all_scenarios = set()
+        
+        # Discover scenarios from data objects
+        for data_obj in self.problem.db:
+            all_scenarios.update(data_obj.scenarios.keys())
+        
+        # Discover scenarios from constraints
+        for constraint in self.problem.constraints:
+            all_scenarios.update(constraint.scenarios.keys())
+        
+        return all_scenarios
+    
+    def _solve_all_scenarios_with_constraints(self) -> Dict[str, dict]:
+        """
+        Solve the problem for all scenarios, including constraint-specific scenarios.
+        
+        This method extends the standard solve_all_scenarios functionality to properly
+        handle constraint scenarios by synchronizing both data objects and constraints
+        to their respective scenario states before solving.
+        
+        Returns:
+            Dict[str, dict]: Dictionary mapping scenario names to solving results.
+        """
+        # Discover all unique scenarios (data + constraints)
+        all_scenarios = self._discover_all_scenarios()
+        
+        if len(all_scenarios) == 0:
+            raise OXception("No scenarios found in data objects or constraints")
+        
+        # Store original active scenarios for restoration
+        original_data_scenarios = {}
+        for data_obj in self.problem.db:
+            original_data_scenarios[data_obj.id] = data_obj.active_scenario
+        
+        original_constraint_scenarios = {}
+        for constraint in self.problem.constraints:
+            original_constraint_scenarios[constraint.id] = constraint.active_scenario
+        
+        # Solve for each scenario
+        scenario_results = {}
+        
+        try:
+            for scenario_name in sorted(all_scenarios):
+                # Set all data objects to the current scenario
+                for data_obj in self.problem.db:
+                    if scenario_name in data_obj.scenarios:
+                        data_obj.active_scenario = scenario_name
+                    else:
+                        data_obj.active_scenario = "Default"
+                
+                # Set all constraints to the current scenario
+                for constraint in self.problem.constraints:
+                    if scenario_name in constraint.scenarios:
+                        constraint.active_scenario = scenario_name
+                    else:
+                        constraint.active_scenario = "Default"
+                
+                # Solve the problem with current scenario configuration
+                try:
+                    status, solver_obj = solve(self.problem, self.solver, **self.solver_kwargs)
+                    # Get first solution if multiple exist
+                    solution = None
+                    for sol in solver_obj:
+                        solution = sol
+                        break
+                    scenario_results[scenario_name] = {
+                        'status': status,
+                        'solution': solution
+                    }
+                except Exception:
+                    # Capture individual scenario errors without stopping the process
+                    scenario_results[scenario_name] = {
+                        'status': OXSolutionStatus.ERROR,
+                        'solution': None
+                    }
+                    
+        finally:
+            # Restore original active scenarios for data objects
+            for data_obj in self.problem.db:
+                if data_obj.id in original_data_scenarios:
+                    data_obj.active_scenario = original_data_scenarios[data_obj.id]
+            
+            # Restore original active scenarios for constraints
+            for constraint in self.problem.constraints:
+                if constraint.id in original_constraint_scenarios:
+                    constraint.active_scenario = original_constraint_scenarios[constraint.id]
+        
+        return scenario_results
     
     def _calculate_constraint_sensitivity(self, constraint_analysis: OXConstraintRHSAnalysis, 
                                         scenario_objectives: Dict[str, float]) -> float:
@@ -478,8 +628,8 @@ class OXRightHandSideAnalysis:
             >>> results = analyzer.analyze()
             >>> print(f"Most sensitive constraint: {results.get_top_sensitive_constraints(1)[0].constraint_name}")
         """
-        # Solve all scenarios
-        scenario_results = solve_all_scenarios(self.problem, self.solver, **self.solver_kwargs)
+        # Solve all scenarios including constraint-specific scenarios
+        scenario_results = self._solve_all_scenarios_with_constraints()
         
         if not scenario_results:
             raise OXception("No scenarios found for RHS analysis")

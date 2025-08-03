@@ -318,10 +318,10 @@ def solve_all_scenarios(problem: OXCSPProblem, solver: str, **kwargs):
     Multi-scenario optimization solving interface with comprehensive scenario management.
     
     This function orchestrates the execution of optimization problems across all available
-    scenarios within the problem's database, providing a systematic approach to scenario-based
-    optimization and sensitivity analysis. It automatically discovers all unique scenarios
-    across all data objects in the problem database and solves the optimization problem
-    for each scenario configuration.
+    scenarios within the problem's database and constraints, providing a systematic approach
+    to scenario-based optimization and sensitivity analysis. It automatically discovers all
+    unique scenarios across both data objects and constraints, then solves the optimization
+    problem for each scenario configuration with proper synchronization.
     
     The function implements a comprehensive multi-scenario solving pipeline that handles
     scenario discovery, data object synchronization, iterative solving, and result
@@ -331,15 +331,17 @@ def solve_all_scenarios(problem: OXCSPProblem, solver: str, **kwargs):
     Solving Pipeline:
         The function orchestrates a standardized multi-scenario solving workflow:
         
-        1. **Scenario Discovery**: Automatically scans all data objects in the problem
-           database to identify all unique scenario names across the entire dataset
+        1. **Scenario Discovery**: Automatically scans both data objects in the problem
+           database and all constraints to identify all unique scenario names across the
+           entire problem, enabling comprehensive coverage of all parameter variations
         2. **Scenario Validation**: Validates that at least one scenario exists and
-           provides meaningful error messages for empty databases or missing scenarios
-        3. **Iterative Solving**: For each discovered scenario, synchronizes all data objects
-           to the same scenario and executes the standard solve() function with identical
-           parameters and configuration
-        4. **State Management**: Preserves original data object states and restores them
-           after multi-scenario solving to prevent unintended side effects
+           provides meaningful error messages for empty scenario sets
+        3. **Iterative Solving**: For each discovered scenario, synchronizes both data objects
+           and constraints to the same scenario and executes the standard solve() function
+           with identical parameters and configuration
+        4. **State Management**: Preserves original scenario states for both data objects
+           and constraints, then restores them after multi-scenario solving to prevent
+           unintended side effects
         5. **Result Aggregation**: Collects all scenario solutions into a comprehensive
            dictionary structure for easy analysis and comparison
         6. **Error Handling**: Provides robust error handling for individual scenario
@@ -348,9 +350,9 @@ def solve_all_scenarios(problem: OXCSPProblem, solver: str, **kwargs):
     Args:
         problem (OXCSPProblem): The optimization problem instance to solve across all scenarios.
                                Must be a properly configured OptiX problem with defined variables,
-                               constraints, and (for LP/GP problems) objective functions. The
-                               problem's database (problem.db) must contain data objects with
-                               scenario definitions for multi-scenario optimization.
+                               constraints, and (for LP/GP problems) objective functions. Scenarios
+                               can be defined in data objects (problem.db), constraints, or both
+                               for comprehensive multi-scenario optimization.
                                
         solver (str): The identifier of the optimization solver to use for all scenario
                      solving operations. Must match a key in the _available_solvers registry.
@@ -387,8 +389,7 @@ def solve_all_scenarios(problem: OXCSPProblem, solver: str, **kwargs):
     Raises:
         OXception: Raised in the following scenarios:
                   - The specified solver is not available in the solver registry
-                  - The problem database is empty (no data objects available)
-                  - No scenarios are found across all data objects in the database
+                  - No scenarios are found across all data objects and constraints
                   - Critical errors occur during scenario discovery or state management
                   
         Individual scenario solving errors are captured and returned as part of the results
@@ -396,7 +397,7 @@ def solve_all_scenarios(problem: OXCSPProblem, solver: str, **kwargs):
         succeeded or failed without terminating the entire multi-scenario solving process.
         
     Example:
-        Basic multi-scenario solving with scenario analysis:
+        Multi-scenario solving with both data and constraint scenarios:
         
         .. code-block:: python
         
@@ -404,40 +405,45 @@ def solve_all_scenarios(problem: OXCSPProblem, solver: str, **kwargs):
             from data.OXData import OXData
             from solvers.OXSolverFactory import solve_all_scenarios
             
-            # Create problem with scenario-enabled data
+            # Create problem
             problem = OXLPProblem()
             
             # Create decision variables
             x = problem.create_decision_variable("x", 0, 100)
             y = problem.create_decision_variable("y", 0, 100)
             
-            # Create data object with multiple scenarios
+            # Method 1: Data object scenarios
             demand_data = OXData()
             demand_data.demand = 100
             demand_data.cost_per_unit = 2.0
-            
-            # Define scenarios
             demand_data.create_scenario("High_Demand", demand=150, cost_per_unit=2.5)
             demand_data.create_scenario("Low_Demand", demand=75, cost_per_unit=1.8)
-            demand_data.create_scenario("Economic_Downturn", demand=50, cost_per_unit=1.5)
-            
-            # Add data to problem database
             problem.db.add_object(demand_data)
             
-            # Create constraints using data object
-            problem.create_constraint([x, y], [1, 1], "<=", demand_data.demand)
+            # Create constraint using data object
+            constraint1 = problem.create_constraint([x, y], [1, 1], "<=", demand_data.demand)
+            
+            # Method 2: Constraint-specific scenarios
+            constraint2 = problem.create_constraint([x, y], [2, 1], "<=", 200)
+            constraint2.create_scenario("Tight_Resource", rhs=150, name="Limited resources")
+            constraint2.create_scenario("Abundant_Resource", rhs=300, name="Expanded resources")
             
             # Create objective function
             problem.create_objective_function([x, y], [demand_data.cost_per_unit, 3], "maximize")
             
-            # Solve across all scenarios
+            # Solve across all scenarios (both data and constraint scenarios)
             scenario_results = solve_all_scenarios(problem, 'ORTools', maxTime=300)
             
-            # Analyze results across scenarios
+            # Results include scenarios from both sources
+            print(f"Total scenarios: {len(scenario_results)}")
+            print(f"Scenarios found: {list(scenario_results.keys())}")
+            # Output: ['Abundant_Resource', 'High_Demand', 'Low_Demand', 'Tight_Resource']
+            
+            # Analyze results across all scenarios
             for scenario_name, result in scenario_results.items():
                 print(f"\\nScenario: {scenario_name}")
                 if result['status'] == OXSolutionStatus.OPTIMAL:
-                    solution = result['solution'][0]
+                    solution = result['solution']
                     print(f"  Status: Optimal")
                     print(f"  Objective Value: {solution.objective_function_value}")
                     print(f"  Variables: {solution.decision_variable_values}")
@@ -524,21 +530,30 @@ def solve_all_scenarios(problem: OXCSPProblem, solver: str, **kwargs):
     if solver not in _available_solvers:
         raise OXception(f"Solver not available : {solver}")
 
-    if len(problem.db) == 0:
-        raise OXception("Problem database is empty - no data objects with scenarios found")
-
-    # Discover all unique scenarios across all data objects
+    # Discover all unique scenarios across data objects and constraints
     all_scenarios = set()
+    
+    # Discover scenarios from data objects
     for data_obj in problem.db:
         all_scenarios.update(data_obj.scenarios.keys())
-
+    
+    # Discover scenarios from constraints
+    if hasattr(problem, 'constraints'):
+        for constraint in problem.constraints:
+            all_scenarios.update(constraint.scenarios.keys())
+    
     if len(all_scenarios) == 0:
-        raise OXception("No scenarios found in any data objects")
+        raise OXception("No scenarios found in data objects or constraints")
 
     # Store original active scenarios for restoration
-    original_scenarios = {}
+    original_data_scenarios = {}
     for data_obj in problem.db:
-        original_scenarios[data_obj.id] = data_obj.active_scenario
+        original_data_scenarios[data_obj.id] = data_obj.active_scenario
+    
+    original_constraint_scenarios = {}
+    if hasattr(problem, 'constraints'):
+        for constraint in problem.constraints:
+            original_constraint_scenarios[constraint.id] = constraint.active_scenario
 
     # Solve for each scenario
     scenario_results = {}
@@ -552,6 +567,15 @@ def solve_all_scenarios(problem: OXCSPProblem, solver: str, **kwargs):
                 else:
                     # Keep default scenario if this scenario doesn't exist for this object
                     data_obj.active_scenario = "Default"
+            
+            # Set all constraints to the current scenario
+            if hasattr(problem, 'constraints'):
+                for constraint in problem.constraints:
+                    if scenario_name in constraint.scenarios:
+                        constraint.active_scenario = scenario_name
+                    else:
+                        # Keep default scenario if this scenario doesn't exist for this constraint
+                        constraint.active_scenario = "Default"
 
             # Solve the problem with current scenario configuration
             try:
@@ -569,9 +593,15 @@ def solve_all_scenarios(problem: OXCSPProblem, solver: str, **kwargs):
                 }
 
     finally:
-        # Restore original active scenarios
+        # Restore original active scenarios for data objects
         for data_obj in problem.db:
-            if data_obj.id in original_scenarios:
-                data_obj.active_scenario = original_scenarios[data_obj.id]
+            if data_obj.id in original_data_scenarios:
+                data_obj.active_scenario = original_data_scenarios[data_obj.id]
+        
+        # Restore original active scenarios for constraints
+        if hasattr(problem, 'constraints'):
+            for constraint in problem.constraints:
+                if constraint.id in original_constraint_scenarios:
+                    constraint.active_scenario = original_constraint_scenarios[constraint.id]
 
     return scenario_results

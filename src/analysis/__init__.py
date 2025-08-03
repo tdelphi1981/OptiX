@@ -12,6 +12,7 @@ parameter configurations and enabling data-driven decision making.
 
 Available Analysis Tools:
     - OXObjectiveFunctionAnalysis: Comprehensive objective function analysis across scenarios
+    - OXRightHandSideAnalysis: Right Hand Side constraint analysis with UUID-based tracking
     - OXSensitivityAnalysis: Parameter sensitivity analysis (future implementation)
     - OXScenarioComparison: Detailed scenario comparison tools (future implementation)
 
@@ -20,7 +21,7 @@ Example:
     
     .. code-block:: python
     
-        from analysis import OXObjectiveFunctionAnalysis
+        from analysis import OXObjectiveFunctionAnalysis, OXRightHandSideAnalysis
         from problem.OXProblem import OXLPProblem
         
         # Create and configure your optimization problem
@@ -28,18 +29,26 @@ Example:
         # ... set up variables, constraints, objective function with scenario data ...
         
         # Perform objective function analysis
-        analyzer = OXObjectiveFunctionAnalysis(problem, 'ORTools')
-        results = analyzer.analyze()
+        obj_analyzer = OXObjectiveFunctionAnalysis(problem, 'ORTools')
+        obj_results = obj_analyzer.analyze()
+        
+        # Perform RHS constraint analysis
+        rhs_analyzer = OXRightHandSideAnalysis(problem, 'ORTools')
+        rhs_results = rhs_analyzer.analyze()
         
         # Access analysis results
-        print(f"Best scenario: {results.best_scenario}")
-        print(f"Average objective value: {results.statistics['mean']:.2f}")
-        print(f"Success rate: {results.success_rate:.1%}")
+        print(f"Best scenario: {obj_results.best_scenario}")
+        print(f"Critical constraints: {len(rhs_results.critical_constraints)}")
+        print(f"Success rate: {obj_results.success_rate:.1%}")
 """
 
 from .OXObjectiveFunctionAnalysis import OXObjectiveFunctionAnalysis, OXObjectiveFunctionAnalysisResult
+from .OXRightHandSideAnalysis import OXRightHandSideAnalysis, OXRightHandSideAnalysisResult, OXConstraintRHSAnalysis
 
 __all__ = [
     'OXObjectiveFunctionAnalysis',
-    'OXObjectiveFunctionAnalysisResult'
+    'OXObjectiveFunctionAnalysisResult',
+    'OXRightHandSideAnalysis', 
+    'OXRightHandSideAnalysisResult',
+    'OXConstraintRHSAnalysis'
 ]
