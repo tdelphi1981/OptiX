@@ -1,8 +1,88 @@
-"""OR-Tools solver interface for the OptiX optimization framework.
+"""
+OR-Tools Solver Interface Module
+=================================
 
-This module provides a concrete implementation of the OXSolverInterface
-using Google's OR-Tools CP-SAT solver. It supports constraint satisfaction
-problems (CSP) and linear programming (LP) problems with various constraint types.
+This module provides a comprehensive implementation of the OXSolverInterface using Google's
+OR-Tools CP-SAT solver for the OptiX optimization framework. It enables solving constraint
+satisfaction problems (CSP), linear programming (LP), and goal programming (GP) problems
+with advanced constraint types and optimization capabilities.
+
+The module serves as a bridge between OptiX's high-level problem modeling interface and
+OR-Tools' powerful constraint programming solver, providing seamless integration with
+the framework's unified solving architecture.
+
+Key Features:
+    - **Constraint Programming**: Full CP-SAT solver integration for discrete optimization
+    - **Variable Types**: Support for boolean, integer, and bounded decision variables  
+    - **Linear Constraints**: Complete relational operator support (=, <=, >=, <, >)
+    - **Special Constraints**: Advanced non-linear constraints including multiplication,
+      division, modulo, summation, and conditional (if-then-else) logic
+    - **Multi-Solution Support**: Configurable solution enumeration with callback mechanisms
+    - **Float Handling**: Automatic denominator equalization for fractional coefficients
+    - **Time Management**: Configurable solving time limits and early termination
+    - **Solution Analysis**: Comprehensive solution data extraction and validation
+
+Supported Problem Types:
+    - **OXCSPProblem**: Constraint satisfaction problems with feasibility focus
+    - **OXLPProblem**: Linear programming problems with optimization objectives
+    - **OXGPProblem**: Goal programming problems with multi-objective optimization
+
+Architecture:
+    - **Variable Mapping**: Efficient UUID-based mapping between OptiX and OR-Tools variables
+    - **Constraint Translation**: Automatic conversion of OptiX constraints to CP-SAT format
+    - **Solution Callbacks**: Extensible callback system for multi-solution collection
+    - **Parameter Management**: Flexible solver parameter configuration system
+
+Example:
+    Basic usage for solving a constraint satisfaction problem:
+
+    .. code-block:: python
+
+        from problem.OXProblem import OXCSPProblem
+        from solvers.ortools import OXORToolsSolverInterface
+        
+        # Create and configure problem
+        problem = OXCSPProblem()
+        x = problem.create_decision_variable("x", 0, 10)
+        y = problem.create_decision_variable("y", 0, 10)
+        problem.create_constraint([x, y], [1, 1], "<=", 15)
+        
+        # Create solver with custom parameters
+        solver = OXORToolsSolverInterface(
+            equalizeDenominators=True,
+            solutionCount=5,
+            maxTime=300
+        )
+        
+        # Solve and access results
+        solver.create_variables(problem)
+        solver.create_constraints(problem)
+        status = solver.solve(problem)
+        
+        for solution in solver:
+            print(f"Variables: {solution.decision_variable_values}")
+
+Advanced Features:
+    The solver supports sophisticated constraint types through special constraint handling:
+    
+    - **Multiplicative Constraints**: Product relationships between variables
+    - **Division/Modulo Constraints**: Integer division and remainder operations  
+    - **Conditional Constraints**: If-then-else logic with indicator variables
+    - **Summation Constraints**: Explicit sum relationships for complex expressions
+
+Performance Considerations:
+    - OR-Tools CP-SAT is optimized for discrete optimization problems
+    - Float coefficients are automatically converted to integers when possible
+    - Solution enumeration uses efficient callback mechanisms to minimize memory usage
+    - Time limits prevent infinite solving on difficult problem instances
+
+Module Dependencies:
+    - ortools.sat.python.cp_model: Core OR-Tools CP-SAT solver functionality
+    - base: OptiX exception handling framework
+    - constraints: OptiX constraint and expression definitions
+    - problem: OptiX problem type definitions and interfaces
+    - solvers: OptiX solver interface base classes and solution structures
+    - variables: OptiX decision variable definitions and management
 """
 import math
 import sys
@@ -23,17 +103,100 @@ from variables.OXVariable import OXVariable
 
 
 class OXORToolsSolverInterface(OXSolverInterface):
-    """OR-Tools CP-SAT solver interface implementation.
+    """
+    Concrete implementation of OptiX solver interface using Google OR-Tools CP-SAT solver.
     
-    This class provides a concrete implementation of the OXSolverInterface
-    using Google's OR-Tools CP-SAT solver. It supports various constraint types
-    and optimization problems.
+    This class provides a comprehensive bridge between OptiX's problem modeling framework
+    and Google's OR-Tools Constraint Programming solver. It handles the complete lifecycle
+    of problem solving from variable and constraint creation through solution extraction
+    and analysis.
+    
+    The implementation leverages OR-Tools' CP-SAT solver, which excels at discrete optimization
+    problems including constraint satisfaction, integer programming, and mixed-integer 
+    programming. The class automatically handles type conversions, constraint translations,
+    and solution callbacks to provide seamless integration with OptiX workflows.
+    
+    Key Capabilities:
+        - **Variable Management**: Automatic creation and mapping of boolean and integer variables
+        - **Constraint Translation**: Comprehensive support for linear and special constraint types
+        - **Multi-Solution Handling**: Configurable solution enumeration with callback system
+        - **Parameter Configuration**: Flexible solver parameter management for performance tuning
+        - **Solution Analysis**: Complete solution data extraction including constraint violations
+        
+    Solver Parameters:
+        The class accepts various initialization parameters to customize solver behavior:
+        
+        - **equalizeDenominators** (bool): When True, enables automatic conversion of float
+          coefficients to integers using common denominator calculation. This allows OR-Tools
+          to handle fractional weights that would otherwise be rejected. Default: False
+          
+        - **solutionCount** (int): Maximum number of solutions to collect during enumeration.
+          Higher values enable finding multiple feasible solutions but increase solving time.
+          Default: 1
+          
+        - **maxTime** (int): Maximum solving time in seconds before termination. Prevents
+          infinite solving on difficult instances. Default: 600 seconds (10 minutes)
     
     Attributes:
-        _model (CpModel): The OR-Tools CP-SAT model.
-        _var_mapping (dict): Mapping from OX variable IDs to OR-Tools variables.
-        _constraint_mapping (dict): Mapping from constraint IDs to OR-Tools constraints.
-        _constraint_expr_mapping (dict): Mapping from constraint IDs to their expressions.
+        _model (CpModel): The underlying OR-Tools CP-SAT model instance that stores all
+                         variables, constraints, and objectives for the optimization problem.
+        _var_mapping (Dict[str, IntVar|BoolVar]): Bidirectional mapping from OptiX variable
+                                                 UUIDs to their corresponding OR-Tools variable
+                                                 objects for efficient lookup during solving.
+        _constraint_mapping (Dict[str, Constraint]): Mapping from OptiX constraint UUIDs to
+                                                     OR-Tools constraint objects for tracking
+                                                     and solution analysis purposes.
+        _constraint_expr_mapping (Dict[str, LinearExpr]): Mapping from constraint UUIDs to
+                                                          their mathematical expressions for
+                                                          solution value calculation.
+                                                          
+    Type Support:
+        - **Boolean Variables**: Automatically detected from 0-1 bounds, mapped to BoolVar
+        - **Integer Variables**: Bounded integer variables with custom ranges, mapped to IntVar
+        - **Linear Expressions**: Sum of variables with integer or float coefficients
+        - **Special Constraints**: Non-linear relationships handled through CP-SAT primitives
+        
+    Example:
+        Comprehensive solver setup and configuration:
+        
+        .. code-block:: python
+        
+            # Create solver with advanced configuration
+            solver = OXORToolsSolverInterface(
+                equalizeDenominators=True,  # Handle fractional coefficients
+                solutionCount=10,           # Find up to 10 solutions
+                maxTime=1800               # 30-minute time limit
+            )
+            
+            # Setup problem
+            solver.create_variables(problem)
+            solver.create_constraints(problem)
+            solver.create_special_constraints(problem)
+            
+            if isinstance(problem, OXLPProblem):
+                solver.create_objective(problem)
+            
+            # Solve and analyze
+            status = solver.solve(problem)
+            
+            if status == OXSolutionStatus.OPTIMAL:
+                for i, solution in enumerate(solver):
+                    print(f"Solution {i+1}: {solution.decision_variable_values}")
+                    print(f"Objective: {solution.objective_function_value}")
+                    
+            # Access solver statistics
+            logs = solver.get_solver_logs()
+            
+    Warning:
+        OR-Tools CP-SAT requires integer coefficients for all constraints and objectives.
+        When using float coefficients, the equalizeDenominators parameter must be enabled
+        to perform automatic conversion, or an OXception will be raised during constraint
+        creation.
+        
+    Note:
+        This implementation is optimized for discrete optimization problems. For continuous
+        optimization or large-scale linear programming, consider using the Gurobi solver
+        interface which may provide better performance for those problem types.
     """
 
     def __init__(self, **kwargs):
