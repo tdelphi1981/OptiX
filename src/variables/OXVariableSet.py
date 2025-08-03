@@ -86,13 +86,13 @@ class OXVariableSet(OXObjectPot):
             'x1'
         """
 
-        def query_function(object: OXObject):
-            if isinstance(object, OXVariable):
+        def query_function(obj: OXObject):
+            if isinstance(obj, OXVariable):
                 number_of_keys_found = 0
                 for key, value in kwargs.items():
-                    if key in object.related_data:
+                    if key in obj.related_data:
                         number_of_keys_found += 1
-                        if object.related_data[key] != value:
+                        if obj.related_data[key] != value:
                             return False
                 if number_of_keys_found == 0:
                     return False

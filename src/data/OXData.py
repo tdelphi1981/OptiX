@@ -1,9 +1,70 @@
+"""
+OXData Module
+=============
+
+This module provides the base data object class for the OptiX optimization framework.
+It implements scenario-based data management capabilities that allow optimization
+problems to handle multiple data variants (e.g., optimistic, pessimistic, realistic
+scenarios) using the same model structure.
+
+The module is designed to enable sensitivity analysis and what-if scenario modeling
+by maintaining multiple attribute value sets while preserving the object's core
+structure and relationships.
+
+Key Features:
+    - **Scenario Management**: Support for multiple named scenarios with different attribute values
+    - **Dynamic Attribute Access**: Automatic scenario-aware attribute resolution
+    - **Type Safety**: Built on dataclasses with proper type annotations
+    - **Base Integration**: Extends OXObject for UUID-based identity and framework integration
+
+Architecture:
+    The OXData class uses Python's ``__getattribute__`` method to implement transparent
+    scenario switching. When an attribute is accessed, the system first checks the active
+    scenario for that attribute, falling back to the object's base attributes if not found.
+
+Example:
+    Basic usage of OXData with multiple scenarios:
+
+    .. code-block:: python
+
+        from data.OXData import OXData
+        
+        # Create a data object with base values
+        demand_data = OXData()
+        demand_data.quantity = 100
+        demand_data.cost = 50.0
+        
+        # Create scenarios for sensitivity analysis
+        demand_data.create_scenario("High_Demand", quantity=150, cost=55.0)
+        demand_data.create_scenario("Low_Demand", quantity=75, cost=45.0)
+        
+        # Switch between scenarios
+        print(demand_data.quantity)  # 100 (Default scenario)
+        
+        demand_data.active_scenario = "High_Demand"
+        print(demand_data.quantity)  # 150
+        
+        demand_data.active_scenario = "Low_Demand"
+        print(demand_data.quantity)  # 75
+
+Module Dependencies:
+    - dataclasses: For structured data object definitions
+    - typing: For type annotations and generics
+    - base: For OXObject base class and exception handling
+
+Notes:
+    - Scenario names are case-sensitive and should follow consistent naming conventions
+    - The "Default" scenario is automatically created when the first custom scenario is added
+    - Certain fields (id, class_name, active_scenario, scenarios) are excluded from scenario management
+"""
+
 from dataclasses import dataclass, field, fields
 from typing import Any
 
 from base import OXObject, OXception
 
-#: List of field names that are not part of scenarios
+#: List of field names that are excluded from scenario management to prevent infinite loops
+#: and maintain object integrity. These fields are always accessed from the base object.
 NON_SCENARIO_FIELDS = ["active_scenario", "scenarios", "id", "class_name"]
 
 
