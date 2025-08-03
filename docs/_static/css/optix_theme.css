@@ -1,0 +1,334 @@
+/* OptiX Theme Specific Styles */
+
+/* Logo and branding */
+.optix-logo {
+    max-width: 180px;
+    height: auto;
+    margin: 1rem auto;
+    display: block;
+    filter: brightness(1.1);
+}
+
+/* Custom sections for different problem types */
+.problem-type-section {
+    background: linear-gradient(135deg, rgba(255,255,255,0.9) 0%, rgba(248,249,250,0.9) 100%);
+    border-radius: 12px;
+    padding: 2rem;
+    margin: 2rem 0;
+    box-shadow: var(--optix-shadow-lg);
+    border: 1px solid rgba(41, 128, 185, 0.1);
+}
+
+.problem-type-section.csp {
+    border-left: 6px solid #9B59B6;
+    background: linear-gradient(135deg, rgba(155, 89, 182, 0.05) 0%, rgba(255,255,255,0.9) 100%);
+}
+
+.problem-type-section.lp {
+    border-left: 6px solid var(--optix-primary);
+    background: linear-gradient(135deg, rgba(41, 128, 185, 0.05) 0%, rgba(255,255,255,0.9) 100%);
+}
+
+.problem-type-section.gp {
+    border-left: 6px solid var(--optix-secondary);
+    background: linear-gradient(135deg, rgba(39, 174, 96, 0.05) 0%, rgba(255,255,255,0.9) 100%);
+}
+
+/* Solver badges */
+.solver-badge {
+    display: inline-block;
+    padding: 6px 12px;
+    border-radius: 20px;
+    font-size: 0.85rem;
+    font-weight: 600;
+    margin: 4px;
+    color: white;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+.solver-badge.ortools {
+    background: linear-gradient(135deg, #FF6B35 0%, #F7931E 100%);
+}
+
+.solver-badge.gurobi {
+    background: linear-gradient(135deg, #DC143C 0%, #B22222 100%);
+}
+
+.solver-badge.extensible {
+    background: linear-gradient(135deg, #8E44AD 0%, #9B59B6 100%);
+}
+
+/* Feature cards */
+.feature-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: 2rem;
+    margin: 2rem 0;
+}
+
+.feature-card {
+    background: white;
+    border-radius: 12px;
+    padding: 2rem;
+    box-shadow: var(--optix-shadow-md);
+    border: 1px solid rgba(0,0,0,0.05);
+    transition: all 0.3s ease;
+    position: relative;
+    overflow: hidden;
+}
+
+.feature-card::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 4px;
+    background: var(--optix-gradient-primary);
+}
+
+.feature-card:hover {
+    transform: translateY(-4px);
+    box-shadow: var(--optix-shadow-lg);
+}
+
+.feature-card h3 {
+    color: var(--optix-primary);
+    margin-top: 0;
+    font-size: 1.3rem;
+    font-weight: 600;
+}
+
+.feature-card p {
+    color: #666;
+    line-height: 1.6;
+    margin-bottom: 0;
+}
+
+/* Mathematics styling */
+.math {
+    background: rgba(41, 128, 185, 0.05);
+    padding: 4px 8px;
+    border-radius: 4px;
+    border: 1px solid rgba(41, 128, 185, 0.1);
+}
+
+.math.display {
+    display: block;
+    text-align: center;
+    margin: 1.5rem 0;
+    padding: 1rem;
+    background: rgba(41, 128, 185, 0.03);
+    border-radius: 8px;
+    border: 1px solid rgba(41, 128, 185, 0.1);
+}
+
+/* Performance metrics table */
+.performance-table {
+    width: 100%;
+    border-collapse: collapse;
+    margin: 2rem 0;
+    background: white;
+    border-radius: 8px;
+    overflow: hidden;
+    box-shadow: var(--optix-shadow-md);
+}
+
+.performance-table th {
+    background: var(--optix-gradient-primary);
+    color: white;
+    padding: 1rem;
+    text-align: left;
+    font-weight: 600;
+}
+
+.performance-table td {
+    padding: 0.75rem 1rem;
+    border-bottom: 1px solid #eee;
+}
+
+.performance-table tbody tr:hover {
+    background: rgba(41, 128, 185, 0.05);
+}
+
+/* Status indicators */
+.status-indicator {
+    display: inline-block;
+    width: 12px;
+    height: 12px;
+    border-radius: 50%;
+    margin-right: 8px;
+}
+
+.status-indicator.optimal {
+    background: var(--optix-secondary);
+}
+
+.status-indicator.feasible {
+    background: var(--optix-accent);
+}
+
+.status-indicator.infeasible {
+    background: var(--optix-danger);
+}
+
+/* Code example containers */
+.code-example {
+    position: relative;
+    margin: 2rem 0;
+}
+
+.code-example-header {
+    background: var(--optix-gradient-primary);
+    color: white;
+    padding: 0.75rem 1rem;
+    border-radius: 8px 8px 0 0;
+    font-weight: 600;
+    font-size: 0.9rem;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+
+.code-example-header::before {
+    content: "📝";
+    margin-right: 8px;
+}
+
+.code-example .highlight {
+    margin: 0;
+    border-radius: 0 0 8px 8px;
+    border-top: none;
+}
+
+/* Installation steps */
+.install-steps {
+    counter-reset: step;
+}
+
+.install-step {
+    counter-increment: step;
+    background: white;
+    border: 2px solid #e9ecef;
+    border-radius: 12px;
+    padding: 2rem;
+    margin: 1.5rem 0;
+    position: relative;
+    padding-left: 4rem;
+}
+
+.install-step::before {
+    content: counter(step);
+    position: absolute;
+    left: 1rem;
+    top: 50%;
+    transform: translateY(-50%);
+    background: var(--optix-gradient-primary);
+    color: white;
+    width: 2rem;
+    height: 2rem;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: 600;
+    font-size: 1.1rem;
+}
+
+.install-step h3 {
+    margin-top: 0;
+    color: var(--optix-primary);
+}
+
+/* API reference styling */
+.api-section {
+    background: #f8f9fa;
+    border-radius: 8px;
+    padding: 2rem;
+    margin: 2rem 0;
+    border-left: 4px solid var(--optix-primary);
+}
+
+.api-section h4 {
+    color: var(--optix-primary);
+    margin-top: 0;
+    font-family: 'Fira Code', monospace;
+    font-size: 1.1rem;
+}
+
+/* Navigation breadcrumbs */
+.wy-breadcrumbs li {
+    background: none;
+}
+
+.wy-breadcrumbs li a {
+    color: var(--optix-primary);
+    text-decoration: none;
+}
+
+.wy-breadcrumbs li a:hover {
+    color: var(--optix-secondary);
+    text-decoration: underline;
+}
+
+/* Search highlighting */
+.highlighted {
+    background: linear-gradient(135deg, rgba(230, 126, 34, 0.3) 0%, rgba(243, 156, 18, 0.2) 100%);
+    padding: 2px 4px;
+    border-radius: 3px;
+    font-weight: 500;
+}
+
+/* Responsive adjustments */
+@media screen and (max-width: 768px) {
+    .feature-grid {
+        grid-template-columns: 1fr;
+        gap: 1rem;
+    }
+    
+    .feature-card {
+        padding: 1.5rem;
+    }
+    
+    .install-step {
+        padding: 1.5rem;
+        padding-left: 3rem;
+    }
+    
+    .install-step::before {
+        width: 1.5rem;
+        height: 1.5rem;
+        font-size: 0.9rem;
+    }
+    
+    .problem-type-section {
+        padding: 1.5rem;
+    }
+}
+
+/* Print styles */
+@media print {
+    .wy-nav-side,
+    .wy-nav-content-wrap .wy-breadcrumbs,
+    .rst-footer-buttons,
+    .copybtn {
+        display: none !important;
+    }
+    
+    .wy-nav-content {
+        margin-left: 0 !important;
+        max-width: none !important;
+    }
+    
+    .rst-content {
+        color: black !important;
+    }
+    
+    .feature-card,
+    .problem-type-section,
+    .code-example {
+        break-inside: avoid !important;
+        page-break-inside: avoid !important;
+    }
+}

@@ -1,0 +1,25 @@
+<svg width="400" height="120" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <linearGradient id="grad1" x1="0%" y1="0%" x2="100%" y2="0%">
+      <stop offset="0%" style="stop-color:#2980B9;stop-opacity:1" />
+      <stop offset="100%" style="stop-color:#3498DB;stop-opacity:1" />
+    </linearGradient>
+    <linearGradient id="grad2" x1="0%" y1="0%" x2="100%" y2="0%">
+      <stop offset="0%" style="stop-color:#27AE60;stop-opacity:1" />
+      <stop offset="100%" style="stop-color:#2ECC71;stop-opacity:1" />
+    </linearGradient>
+  </defs>
+  
+  <!-- Background -->
+  <rect width="400" height="120" fill="white" rx="10"/>
+  
+  <!-- Geometric shapes representing optimization -->
+  <circle cx="50" cy="60" r="25" fill="url(#grad1)" opacity="0.8"/>
+  <polygon points="90,35 110,35 120,60 110,85 90,85 80,60" fill="url(#grad2)" opacity="0.8"/>
+  <rect x="140" y="40" width="30" height="40" fill="url(#grad1)" opacity="0.6" transform="rotate(15 155 60)"/>
+  
+  <!-- OptiX Text -->
+  <text x="200" y="50" font-family="Inter, Arial, sans-serif" font-size="36" font-weight="700" fill="url(#grad1)">OptiX</text>
+  <text x="200" y="75" font-family="Inter, Arial, sans-serif" font-size="14" font-weight="400" fill="#7F8C8D">Mathematical Optimization Framework</text>
+  <text x="200" y="95" font-family="Inter, Arial, sans-serif" font-size="12" font-weight="300" fill="#95A5A6">CSP • LP • GP • Multi-Solver Architecture</text>
+</svg>

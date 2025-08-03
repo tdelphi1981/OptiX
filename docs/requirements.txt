@@ -1,0 +1,36 @@
+# Documentation build requirements for OptiX
+# Install with: pip install -r requirements.txt
+
+# Core Sphinx packages
+sphinx>=7.0.0
+sphinx-rtd-theme>=1.3.0
+sphinx-copybutton>=0.5.0
+sphinx-tabs>=3.4.0
+myst-parser>=2.0.0
+
+# Additional Sphinx extensions
+sphinx-autobuild>=2021.3.14
+sphinx-autodoc-typehints>=1.24.0
+sphinxcontrib-bibtex>=2.5.0
+sphinxcontrib-mermaid>=0.9.0
+sphinxext-opengraph>=0.8.0
+
+# Documentation utilities
+docutils>=0.17.0
+Pygments>=2.15.0
+Jinja2>=3.1.0
+
+# LaTeX support (for PDF generation)
+# Note: These are Python packages, but you'll also need a LaTeX distribution
+# such as TeX Live or MiKTeX installed on your system
+latexcodec>=2.0.0
+
+# Development and testing
+coverage>=7.0.0
+pytest>=7.0.0
+
+# Optional: Enhanced features
+recommonmark>=0.7.0  # For CommonMark markdown support
+sphinx-design>=0.5.0  # For advanced design elements
+sphinx-notfound-page>=0.8.0  # Custom 404 pages
+furo>=2023.0.0  # Alternative modern theme (optional)

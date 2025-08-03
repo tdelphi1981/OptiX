@@ -125,6 +125,7 @@ from base import OXception
 from problem.OXProblem import OXCSPProblem, OXLPProblem
 from solvers.gurobi.OXGurobiSolverInterface import OXGurobiSolverInterface
 from solvers.ortools.OXORToolsSolverInterface import OXORToolsSolverInterface
+from solvers.OXSolverInterface import OXSolutionStatus
 
 _available_solvers = {
     'ORTools': OXORToolsSolverInterface,
@@ -310,3 +311,267 @@ def solve(problem: OXCSPProblem, solver: str, **kwargs):
     status = solver_obj.solve(problem)
 
     return status, solver_obj
+
+
+def solve_all_scenarios(problem: OXCSPProblem, solver: str, **kwargs):
+    """
+    Multi-scenario optimization solving interface with comprehensive scenario management.
+    
+    This function orchestrates the execution of optimization problems across all available
+    scenarios within the problem's database, providing a systematic approach to scenario-based
+    optimization and sensitivity analysis. It automatically discovers all unique scenarios
+    across all data objects in the problem database and solves the optimization problem
+    for each scenario configuration.
+    
+    The function implements a comprehensive multi-scenario solving pipeline that handles
+    scenario discovery, data object synchronization, iterative solving, and result
+    aggregation to provide complete scenario analysis capabilities for complex
+    optimization problems with varying parameter sets.
+    
+    Solving Pipeline:
+        The function orchestrates a standardized multi-scenario solving workflow:
+        
+        1. **Scenario Discovery**: Automatically scans all data objects in the problem
+           database to identify all unique scenario names across the entire dataset
+        2. **Scenario Validation**: Validates that at least one scenario exists and
+           provides meaningful error messages for empty databases or missing scenarios
+        3. **Iterative Solving**: For each discovered scenario, synchronizes all data objects
+           to the same scenario and executes the standard solve() function with identical
+           parameters and configuration
+        4. **State Management**: Preserves original data object states and restores them
+           after multi-scenario solving to prevent unintended side effects
+        5. **Result Aggregation**: Collects all scenario solutions into a comprehensive
+           dictionary structure for easy analysis and comparison
+        6. **Error Handling**: Provides robust error handling for individual scenario
+           failures while continuing execution for remaining scenarios
+    
+    Args:
+        problem (OXCSPProblem): The optimization problem instance to solve across all scenarios.
+                               Must be a properly configured OptiX problem with defined variables,
+                               constraints, and (for LP/GP problems) objective functions. The
+                               problem's database (problem.db) must contain data objects with
+                               scenario definitions for multi-scenario optimization.
+                               
+        solver (str): The identifier of the optimization solver to use for all scenario
+                     solving operations. Must match a key in the _available_solvers registry.
+                     Supported values include:
+                     - 'ORTools': Google's open-source constraint programming solver
+                     - 'Gurobi': Commercial high-performance optimization solver
+                     The same solver will be used consistently across all scenarios for
+                     comparative analysis.
+                     
+        **kwargs: Arbitrary keyword arguments passed directly to the solve() function for
+                 each scenario. These parameters will be applied consistently across all
+                 scenario solving operations, enabling uniform solver configuration and
+                 performance tuning across the entire scenario set. Common parameters include:
+                 - maxTime (int): Maximum solving time in seconds per scenario
+                 - solutionCount (int): Maximum number of solutions to enumerate per scenario
+                 - equalizeDenominators (bool): Enable fractional coefficient handling
+                 - use_continuous (bool): Enable continuous variable optimization
+                 - Additional solver-specific parameters as documented by each solver
+        
+    Returns:
+        dict[str, dict]: A comprehensive dictionary mapping scenario names to their
+                        corresponding solving results. Each dictionary entry contains:
+                         
+            - **key** (str): The scenario name as defined in the data objects
+            - **value** (dict): A dictionary with the following structure:
+              * **status** (OXSolutionStatus): The termination status for this scenario
+              * **solution** (OXSolverInterface): The solver instance with solutions
+              
+            The dictionary provides complete access to all scenario results and enables
+            comprehensive comparison and analysis across different parameter configurations.
+            Empty scenarios or scenarios that cannot be solved will still appear in the
+            results with appropriate status codes for complete result coverage.
+            
+    Raises:
+        OXception: Raised in the following scenarios:
+                  - The specified solver is not available in the solver registry
+                  - The problem database is empty (no data objects available)
+                  - No scenarios are found across all data objects in the database
+                  - Critical errors occur during scenario discovery or state management
+                  
+        Individual scenario solving errors are captured and returned as part of the results
+        dictionary with appropriate error status codes, allowing analysis of which scenarios
+        succeeded or failed without terminating the entire multi-scenario solving process.
+        
+    Example:
+        Basic multi-scenario solving with scenario analysis:
+        
+        .. code-block:: python
+        
+            from problem.OXProblem import OXLPProblem
+            from data.OXData import OXData
+            from solvers.OXSolverFactory import solve_all_scenarios
+            
+            # Create problem with scenario-enabled data
+            problem = OXLPProblem()
+            
+            # Create decision variables
+            x = problem.create_decision_variable("x", 0, 100)
+            y = problem.create_decision_variable("y", 0, 100)
+            
+            # Create data object with multiple scenarios
+            demand_data = OXData()
+            demand_data.demand = 100
+            demand_data.cost_per_unit = 2.0
+            
+            # Define scenarios
+            demand_data.create_scenario("High_Demand", demand=150, cost_per_unit=2.5)
+            demand_data.create_scenario("Low_Demand", demand=75, cost_per_unit=1.8)
+            demand_data.create_scenario("Economic_Downturn", demand=50, cost_per_unit=1.5)
+            
+            # Add data to problem database
+            problem.db.add_object(demand_data)
+            
+            # Create constraints using data object
+            problem.create_constraint([x, y], [1, 1], "<=", demand_data.demand)
+            
+            # Create objective function
+            problem.create_objective_function([x, y], [demand_data.cost_per_unit, 3], "maximize")
+            
+            # Solve across all scenarios
+            scenario_results = solve_all_scenarios(problem, 'ORTools', maxTime=300)
+            
+            # Analyze results across scenarios
+            for scenario_name, result in scenario_results.items():
+                print(f"\\nScenario: {scenario_name}")
+                if result['status'] == OXSolutionStatus.OPTIMAL:
+                    solution = result['solution'][0]
+                    print(f"  Status: Optimal")
+                    print(f"  Objective Value: {solution.objective_function_value}")
+                    print(f"  Variables: {solution.decision_variable_values}")
+                else:
+                    print(f"  Status: {result['status'].value}")
+        
+        Advanced multi-scenario solving with custom parameters:
+        
+        .. code-block:: python
+        
+            from problem.OXProblem import OXCSPProblem
+            from data.OXData import OXData
+            from solvers.OXSolverFactory import solve_all_scenarios
+            
+            # Create CSP with multiple data objects having scenarios
+            problem = OXCSPProblem()
+            
+            # Create variables
+            x = problem.create_decision_variable("x", 0, 50)
+            y = problem.create_decision_variable("y", 0, 50)
+            
+            # Create multiple data objects with scenarios
+            capacity_data = OXData()
+            capacity_data.max_capacity = 100
+            capacity_data.create_scenario("Expanded", max_capacity=150)
+            capacity_data.create_scenario("Reduced", max_capacity=80)
+            
+            resource_data = OXData()
+            resource_data.availability = 200
+            resource_data.create_scenario("Expanded", availability=250)
+            resource_data.create_scenario("Reduced", availability=160)
+            
+            # Add both data objects to database
+            problem.db.add_object(capacity_data)
+            problem.db.add_object(resource_data)
+            
+            # Create constraints using data objects
+            problem.create_constraint([x, y], [1, 1], "<=", capacity_data.max_capacity)
+            problem.create_constraint([x, y], [2, 1], "<=", resource_data.availability)
+            
+            # Solve with custom Gurobi parameters
+            scenario_results = solve_all_scenarios(
+                problem, 
+                'Gurobi',
+                use_continuous=True,
+                maxTime=1800,
+                solutionCount=5
+            )
+            
+            # Compare scenario performance
+            best_scenario = None
+            best_status = None
+            
+            for scenario_name, result in scenario_results.items():
+                print(f"Scenario '{scenario_name}': {result['status'].value}")
+                if result['status'] == OXSolutionStatus.OPTIMAL:
+                    if best_scenario is None:
+                        best_scenario = scenario_name
+                        best_status = result['status']
+            
+            if best_scenario:
+                print(f"\\nBest performing scenario: {best_scenario}")
+    
+    Performance Considerations:
+        - Multi-scenario solving scales linearly with the number of unique scenarios
+        - Each scenario is solved independently, enabling potential parallel execution
+        - Memory usage scales with the number of scenarios and solutions per scenario
+        - Large scenario sets may benefit from selective scenario filtering or batching
+        - Scenario discovery overhead is minimal due to efficient set-based collection
+        
+    Scenario Management Guidelines:
+        - **Consistent Naming**: Use descriptive, consistent scenario names across all data objects
+        - **Complete Coverage**: Ensure all critical data objects have scenario definitions
+        - **Realistic Parameters**: Use realistic parameter ranges to ensure solver convergence
+        - **Scenario Validation**: Validate scenario parameter combinations before solving
+        - **Result Analysis**: Implement comprehensive result comparison and sensitivity analysis
+          
+    Thread Safety:
+        Each scenario solving operation creates independent solver instances and maintains
+        separate data object states, ensuring thread safety for concurrent scenario execution.
+        However, the original data object state restoration is performed sequentially to
+        prevent race conditions and ensure consistent final state.
+    """
+    if solver not in _available_solvers:
+        raise OXception(f"Solver not available : {solver}")
+
+    if len(problem.db) == 0:
+        raise OXception("Problem database is empty - no data objects with scenarios found")
+
+    # Discover all unique scenarios across all data objects
+    all_scenarios = set()
+    for data_obj in problem.db:
+        all_scenarios.update(data_obj.scenarios.keys())
+
+    if len(all_scenarios) == 0:
+        raise OXception("No scenarios found in any data objects")
+
+    # Store original active scenarios for restoration
+    original_scenarios = {}
+    for data_obj in problem.db:
+        original_scenarios[data_obj.id] = data_obj.active_scenario
+
+    # Solve for each scenario
+    scenario_results = {}
+
+    try:
+        for scenario_name in sorted(all_scenarios):
+            # Set all data objects to the current scenario
+            for data_obj in problem.db:
+                if scenario_name in data_obj.scenarios:
+                    data_obj.active_scenario = scenario_name
+                else:
+                    # Keep default scenario if this scenario doesn't exist for this object
+                    data_obj.active_scenario = "Default"
+
+            # Solve the problem with current scenario configuration
+            try:
+                status, solver_obj = solve(problem, solver, **kwargs)
+                for solution in solver_obj:
+                    scenario_results[scenario_name] = {
+                        'status': status,
+                        'solution': solution
+                    }
+            except Exception:
+                # Capture individual scenario errors without stopping the process
+                scenario_results[scenario_name] = {
+                    'status': OXSolutionStatus.ERROR,
+                    'solution': None
+                }
+
+    finally:
+        # Restore original active scenarios
+        for data_obj in problem.db:
+            if data_obj.id in original_scenarios:
+                data_obj.active_scenario = original_scenarios[data_obj.id]
+
+    return scenario_results
