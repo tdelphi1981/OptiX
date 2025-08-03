@@ -1,0 +1,512 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="AutoImportSettings">
+    <option name="autoReloadType" value="SELECTIVE" />
+  </component>
+  <component name="ChangeListManager">
+    <list default="true" id="8079d7c8-d88b-4860-b52c-e25ebcf044e3" name="Changes" comment="Add OXORToolsSolverInterface implementation for variable and constraint management">
+      <change beforePath="$PROJECT_DIR$/.gitignore" beforeDir="false" afterPath="$PROJECT_DIR$/.gitignore" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/constraints/OXConstraint.py" beforeDir="false" afterPath="$PROJECT_DIR$/src/constraints/OXConstraint.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/constraints/OXConstraintSet.py" beforeDir="false" afterPath="$PROJECT_DIR$/src/constraints/OXConstraintSet.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/constraints/OXSpecialConstraints.py" beforeDir="false" afterPath="$PROJECT_DIR$/src/constraints/OXSpecialConstraints.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/constraints/OXpression.py" beforeDir="false" afterPath="$PROJECT_DIR$/src/constraints/OXpression.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/tests/test_OXpression.py" beforeDir="false" afterPath="$PROJECT_DIR$/tests/test_OXpression.py" afterDir="false" />
+    </list>
+    <option name="SHOW_DIALOG" value="false" />
+    <option name="HIGHLIGHT_CONFLICTS" value="true" />
+    <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
+    <option name="LAST_RESOLUTION" value="IGNORE" />
+  </component>
+  <component name="FileTemplateManagerImpl">
+    <option name="RECENT_TEMPLATES">
+      <list>
+        <option value="Python Script" />
+      </list>
+    </option>
+  </component>
+  <component name="Git.Settings">
+    <option name="RECENT_BRANCH_BY_REPOSITORY">
+      <map>
+        <entry key="$PROJECT_DIR$" value="main" />
+      </map>
+    </option>
+    <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
+  </component>
+  <component name="GitLabMergeRequestFiltersHistory">{
+  &quot;lastFilter&quot;: {
+    &quot;state&quot;: &quot;OPENED&quot;,
+    &quot;assignee&quot;: {
+      &quot;type&quot;: &quot;org.jetbrains.plugins.gitlab.mergerequest.ui.filters.GitLabMergeRequestsFiltersValue.MergeRequestsMemberFilterValue.MergeRequestsAssigneeFilterValue&quot;,
+      &quot;username&quot;: &quot;tolgaberber&quot;,
+      &quot;fullname&quot;: &quot;Tolga BERBER&quot;
+    }
+  }
+}</component>
+  <component name="GitLabMergeRequestsSettings">{
+  &quot;selectedUrlAndAccountId&quot;: {
+    &quot;first&quot;: &quot;git@uygur.ktu.edu.tr:tblisansustu/optix.git&quot;,
+    &quot;second&quot;: &quot;5e166063-629b-40a5-9b6b-e048ab6099cb&quot;
+  }
+}</component>
+  <component name="ProjectColorInfo">{
+  &quot;associatedIndex&quot;: 4
+}</component>
+  <component name="ProjectId" id="2tf4o3tzoDRiUyt4TkDRdbnQKdS" />
+  <component name="ProjectViewState">
+    <option name="hideEmptyMiddlePackages" value="true" />
+    <option name="showLibraryContents" value="true" />
+  </component>
+  <component name="PropertiesComponent"><![CDATA[{
+  "keyToString": {
+    "Python tests.Python tests in test_OXData.py.executor": "Debug",
+    "Python tests.Python tests in tests.executor": "Debug",
+    "Python.01_diet_problem.executor": "Run",
+    "Python.01_simple_bus_assignment_problem.executor": "Run",
+    "Python.02_simple_bus_assignment_problem.executor": "Run",
+    "Python.03_bus_assignment_problem.executor": "Run",
+    "RunOnceActivity.ShowReadmeOnStart": "true",
+    "RunOnceActivity.git.unshallow": "true",
+    "git-widget-placeholder": "tolga",
+    "junie.onboarding.icon.badge.shown": "true",
+    "node.js.detected.package.eslint": "true",
+    "node.js.detected.package.tslint": "true",
+    "node.js.selected.package.eslint": "(autodetect)",
+    "node.js.selected.package.tslint": "(autodetect)",
+    "nodejs_package_manager_path": "npm",
+    "settings.editor.selected.configurable": "com.jetbrains.python.configuration.PyActiveSdkModuleConfigurable",
+    "to.speed.mode.migration.done": "true",
+    "vue.rearranger.settings.migration": "true"
+  },
+  "keyToStringList": {
+    "com.intellij.ide.scratch.ScratchImplUtil$2/New Scratch File": [
+      "JSON"
+    ]
+  }
+}]]></component>
+  <component name="RunManager" selected="Python tests.Python tests in tests">
+    <configuration name="01_diet_problem" type="PythonConfigurationType" factoryName="Python" temporary="true" nameIsGenerated="true">
+      <module name="OptiX" />
+      <option name="ENV_FILES" value="" />
+      <option name="INTERPRETER_OPTIONS" value="" />
+      <option name="PARENT_ENVS" value="true" />
+      <envs>
+        <env name="PYTHONUNBUFFERED" value="1" />
+      </envs>
+      <option name="SDK_HOME" value="" />
+      <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$/samples/diet_problem" />
+      <option name="IS_MODULE_SDK" value="true" />
+      <option name="ADD_CONTENT_ROOTS" value="true" />
+      <option name="ADD_SOURCE_ROOTS" value="true" />
+      <EXTENSION ID="PythonCoverageRunConfigurationExtension" runner="coverage.py" />
+      <option name="SCRIPT_NAME" value="$PROJECT_DIR$/samples/diet_problem/01_diet_problem.py" />
+      <option name="PARAMETERS" value="" />
+      <option name="SHOW_COMMAND_LINE" value="false" />
+      <option name="EMULATE_TERMINAL" value="false" />
+      <option name="MODULE_MODE" value="false" />
+      <option name="REDIRECT_INPUT" value="false" />
+      <option name="INPUT_FILE" value="" />
+      <method v="2" />
+    </configuration>
+    <configuration name="01_simple_bus_assignment_problem" type="PythonConfigurationType" factoryName="Python" temporary="true" nameIsGenerated="true">
+      <module name="OptiX" />
+      <option name="ENV_FILES" value="" />
+      <option name="INTERPRETER_OPTIONS" value="" />
+      <option name="PARENT_ENVS" value="true" />
+      <envs>
+        <env name="PYTHONUNBUFFERED" value="1" />
+      </envs>
+      <option name="SDK_HOME" value="" />
+      <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$/samples/bus_assignment_problem" />
+      <option name="IS_MODULE_SDK" value="true" />
+      <option name="ADD_CONTENT_ROOTS" value="true" />
+      <option name="ADD_SOURCE_ROOTS" value="true" />
+      <EXTENSION ID="PythonCoverageRunConfigurationExtension" runner="coverage.py" />
+      <option name="SCRIPT_NAME" value="$PROJECT_DIR$/samples/bus_assignment_problem/01_simple_bus_assignment_problem.py" />
+      <option name="PARAMETERS" value="" />
+      <option name="SHOW_COMMAND_LINE" value="false" />
+      <option name="EMULATE_TERMINAL" value="false" />
+      <option name="MODULE_MODE" value="false" />
+      <option name="REDIRECT_INPUT" value="false" />
+      <option name="INPUT_FILE" value="" />
+      <method v="2" />
+    </configuration>
+    <configuration name="02_simple_bus_assignment_problem" type="PythonConfigurationType" factoryName="Python" temporary="true" nameIsGenerated="true">
+      <module name="OptiX" />
+      <option name="ENV_FILES" value="" />
+      <option name="INTERPRETER_OPTIONS" value="" />
+      <option name="PARENT_ENVS" value="true" />
+      <envs>
+        <env name="PYTHONUNBUFFERED" value="1" />
+      </envs>
+      <option name="SDK_HOME" value="" />
+      <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$/samples/bus_assignment_problem" />
+      <option name="IS_MODULE_SDK" value="true" />
+      <option name="ADD_CONTENT_ROOTS" value="true" />
+      <option name="ADD_SOURCE_ROOTS" value="true" />
+      <EXTENSION ID="PythonCoverageRunConfigurationExtension" runner="coverage.py" />
+      <option name="SCRIPT_NAME" value="$PROJECT_DIR$/samples/bus_assignment_problem/02_simple_bus_assignment_problem.py" />
+      <option name="PARAMETERS" value="" />
+      <option name="SHOW_COMMAND_LINE" value="false" />
+      <option name="EMULATE_TERMINAL" value="false" />
+      <option name="MODULE_MODE" value="false" />
+      <option name="REDIRECT_INPUT" value="false" />
+      <option name="INPUT_FILE" value="" />
+      <method v="2" />
+    </configuration>
+    <configuration name="03_bus_assignment_problem" type="PythonConfigurationType" factoryName="Python" temporary="true" nameIsGenerated="true">
+      <module name="OptiX" />
+      <option name="ENV_FILES" value="" />
+      <option name="INTERPRETER_OPTIONS" value="" />
+      <option name="PARENT_ENVS" value="true" />
+      <envs>
+        <env name="PYTHONUNBUFFERED" value="1" />
+      </envs>
+      <option name="SDK_HOME" value="" />
+      <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$/samples/bus_assignment_problem" />
+      <option name="IS_MODULE_SDK" value="true" />
+      <option name="ADD_CONTENT_ROOTS" value="true" />
+      <option name="ADD_SOURCE_ROOTS" value="true" />
+      <EXTENSION ID="PythonCoverageRunConfigurationExtension" runner="coverage.py" />
+      <option name="SCRIPT_NAME" value="$PROJECT_DIR$/samples/bus_assignment_problem/03_bus_assignment_problem.py" />
+      <option name="PARAMETERS" value="" />
+      <option name="SHOW_COMMAND_LINE" value="false" />
+      <option name="EMULATE_TERMINAL" value="false" />
+      <option name="MODULE_MODE" value="false" />
+      <option name="REDIRECT_INPUT" value="false" />
+      <option name="INPUT_FILE" value="" />
+      <method v="2" />
+    </configuration>
+    <configuration name="Python tests in test_OXData.py" type="tests" factoryName="Autodetect" temporary="true" nameIsGenerated="true">
+      <module name="OptiX" />
+      <option name="ENV_FILES" value="" />
+      <option name="INTERPRETER_OPTIONS" value="" />
+      <option name="PARENT_ENVS" value="true" />
+      <option name="SDK_HOME" value="" />
+      <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$/tests" />
+      <option name="IS_MODULE_SDK" value="true" />
+      <option name="ADD_CONTENT_ROOTS" value="true" />
+      <option name="ADD_SOURCE_ROOTS" value="true" />
+      <EXTENSION ID="PythonCoverageRunConfigurationExtension" runner="coverage.py" />
+      <option name="_new_additionalArguments" value="&quot;&quot;" />
+      <option name="_new_target" value="&quot;$PROJECT_DIR$/tests/test_OXData.py&quot;" />
+      <option name="_new_targetType" value="&quot;PATH&quot;" />
+      <method v="2" />
+    </configuration>
+    <configuration name="Python tests in tests" type="tests" factoryName="Autodetect" nameIsGenerated="true">
+      <module name="OptiX" />
+      <option name="ENV_FILES" value="" />
+      <option name="INTERPRETER_OPTIONS" value="" />
+      <option name="PARENT_ENVS" value="true" />
+      <option name="SDK_HOME" value="" />
+      <option name="SDK_NAME" value="Poetry (OptiX)" />
+      <option name="WORKING_DIRECTORY" value="" />
+      <option name="IS_MODULE_SDK" value="false" />
+      <option name="ADD_CONTENT_ROOTS" value="true" />
+      <option name="ADD_SOURCE_ROOTS" value="true" />
+      <EXTENSION ID="PythonCoverageRunConfigurationExtension" runner="coverage.py" />
+      <option name="_new_additionalArguments" value="&quot;&quot;" />
+      <option name="_new_target" value="&quot;$PROJECT_DIR$/tests&quot;" />
+      <option name="_new_targetType" value="&quot;PATH&quot;" />
+      <method v="2" />
+    </configuration>
+    <recent_temporary>
+      <list>
+        <item itemvalue="Python.01_diet_problem" />
+        <item itemvalue="Python.03_bus_assignment_problem" />
+        <item itemvalue="Python.02_simple_bus_assignment_problem" />
+        <item itemvalue="Python.01_simple_bus_assignment_problem" />
+        <item itemvalue="Python tests.Python tests in test_OXData.py" />
+      </list>
+    </recent_temporary>
+  </component>
+  <component name="SharedIndexes">
+    <attachedChunks>
+      <set>
+        <option value="bundled-js-predefined-d6986cc7102b-09060db00ec0-JavaScript-PY-251.26927.90" />
+        <option value="bundled-python-sdk-41e8cd69c857-64d779b69b7a-com.jetbrains.pycharm.pro.sharedIndexes.bundled-PY-251.26927.90" />
+      </set>
+    </attachedChunks>
+  </component>
+  <component name="SpellCheckerSettings" RuntimeDictionaries="0" Folders="0" CustomDictionaries="0" DefaultDictionary="application-level" UseSingleDictionary="true" transferred="true" />
+  <component name="TaskManager">
+    <task active="true" id="Default" summary="Default task">
+      <changelist id="8079d7c8-d88b-4860-b52c-e25ebcf044e3" name="Changes" comment="" />
+      <created>1734434710838</created>
+      <option name="number" value="Default" />
+      <option name="presentableId" value="Default" />
+      <updated>1734434710838</updated>
+      <workItem from="1734434711846" duration="126000" />
+      <workItem from="1740729968125" duration="260000" />
+      <workItem from="1740730232481" duration="3261000" />
+      <workItem from="1740978577352" duration="5158000" />
+      <workItem from="1741584728211" duration="1351000" />
+      <workItem from="1741586091810" duration="3123000" />
+      <workItem from="1741612125675" duration="2971000" />
+      <workItem from="1741670379586" duration="5350000" />
+      <workItem from="1741710763990" duration="602000" />
+      <workItem from="1742189150605" duration="14000" />
+      <workItem from="1742189173404" duration="3927000" />
+      <workItem from="1742276839751" duration="5171000" />
+      <workItem from="1742367422236" duration="71000" />
+      <workItem from="1742367623533" duration="6000" />
+      <workItem from="1743498031157" duration="232000" />
+      <workItem from="1744005441586" duration="5709000" />
+      <workItem from="1744911968564" duration="911000" />
+      <workItem from="1746615842636" duration="6080000" />
+      <workItem from="1746735038304" duration="1585000" />
+      <workItem from="1748934014202" duration="3278000" />
+      <workItem from="1748938112882" duration="3074000" />
+      <workItem from="1748947128947" duration="15000" />
+      <workItem from="1748972852905" duration="29000" />
+      <workItem from="1749105292309" duration="5493000" />
+      <workItem from="1749621714447" duration="34000" />
+      <workItem from="1749621755695" duration="107000" />
+      <workItem from="1749621870799" duration="2356000" />
+      <workItem from="1749624239010" duration="3000" />
+      <workItem from="1749728140383" duration="4890000" />
+      <workItem from="1749734788745" duration="719000" />
+      <workItem from="1749799493360" duration="86000" />
+      <workItem from="1749799613059" duration="1249000" />
+      <workItem from="1750138833407" duration="3388000" />
+      <workItem from="1750142231623" duration="5804000" />
+      <workItem from="1750169693445" duration="46000" />
+      <workItem from="1753119379230" duration="8000" />
+      <workItem from="1753440248916" duration="351000" />
+      <workItem from="1753440611882" duration="7196000" />
+      <workItem from="1753646750789" duration="21000" />
+      <workItem from="1753809144852" duration="4126000" />
+      <workItem from="1753865906909" duration="7000" />
+      <workItem from="1754137440263" duration="1888000" />
+    </task>
+    <task id="LOCAL-00001" summary="Add initial implementation of core OptiX framework  &#10;&#10;This commit introduces foundational components for the OptiX framework, including utility functions, base classes (e.g., `OXObject`, `OXVariable`), and test coverage for these modules. Additionally, it sets up project structure with `pyproject.toml`, `.gitignore`, and IntelliJ IDEA settings.">
+      <option name="closed" value="true" />
+      <created>1740983203341</created>
+      <option name="number" value="00001" />
+      <option name="presentableId" value="LOCAL-00001" />
+      <option name="project" value="LOCAL" />
+      <updated>1740983203341</updated>
+    </task>
+    <task id="LOCAL-00002" summary="Add OXData and query functionality enhancements  &#10;&#10;Introduce `OXData` class for scenario-driven data handling with dynamic attributes based on active scenarios. Refactor the query functionality from `OXVariableSet` to `OXObjectPot` for broader applicability across object collections. Add initial tests for `OXData` to ensure correct scenario creation, serialization, and deserialization behavior.">
+      <option name="closed" value="true" />
+      <created>1741671079931</created>
+      <option name="number" value="00002" />
+      <option name="presentableId" value="LOCAL-00002" />
+      <option name="project" value="LOCAL" />
+      <updated>1741671079931</updated>
+    </task>
+    <task id="LOCAL-00003" summary="Add support for constraints and expressions frameworks&#10;&#10;Introduced foundational classes for defining mathematical constraints (`OXConstraint`, `OXGoalConstraint`) and expressions (`OXpression`) essential for problem modeling. These classes handle relational operators, deviations, and conversion between fractional and integer forms. This is a groundwork addition for robust constraint-based problem-solving.">
+      <option name="closed" value="true" />
+      <created>1741674295608</created>
+      <option name="number" value="00003" />
+      <option name="presentableId" value="LOCAL-00003" />
+      <option name="project" value="LOCAL" />
+      <updated>1741674295608</updated>
+    </task>
+    <task id="LOCAL-00004" summary="Add OXProblem structure and improve querying functionality&#10;&#10;Introduced the OXProblem class hierarchy, including OXLPProblem and OXGPProblem, to handle problem definitions in the system. Enhanced querying logic by moving it from OXObjectPot to OXVariableSet and replacing it with a `get_object_types` method in OXObjectPot for cleaner modularity. These changes improve problem-solving capabilities and data retrieval precision.">
+      <option name="closed" value="true" />
+      <created>1742191806386</created>
+      <option name="number" value="00004" />
+      <option name="presentableId" value="LOCAL-00004" />
+      <option name="project" value="LOCAL" />
+      <updated>1742191806386</updated>
+    </task>
+    <task id="LOCAL-00005" summary="Add constraint creation and retrieval methods to OXProblem&#10;&#10;Introduce `create_constraint` for flexible constraint creation with validation, using variables, weights, and operators. Add `__getitem__` for accessing constraints by UUID. Also, define `ObjectiveType` for clear objective function types.">
+      <option name="closed" value="true" />
+      <created>1742193099144</created>
+      <option name="number" value="00005" />
+      <option name="presentableId" value="LOCAL-00005" />
+      <option name="project" value="LOCAL" />
+      <updated>1742193099144</updated>
+    </task>
+    <task id="LOCAL-00006" summary="Add new methods for variable, constraint, and objective handling&#10;&#10;Introduce `create_variables_from_db`, `create_objective_function`, and `_check_parameters` to enhance flexibility in variable, constraint, and objective processing. Added goal constraint management via `create_goal_constraint` in `OXGPProblem`. Refactored related methods for better reusability and error handling.">
+      <option name="closed" value="true" />
+      <created>1744005586475</created>
+      <option name="number" value="00006" />
+      <option name="presentableId" value="LOCAL-00006" />
+      <option name="project" value="LOCAL" />
+      <updated>1744005586475</updated>
+    </task>
+    <task id="LOCAL-00007" summary="Add comprehensive documentation and initial project setup&#10;&#10;Introduce detailed docstrings across various classes and functions&#10;to enhance code readability and understanding. Add new files such&#10;as README.md, CHANGELOG.md, and CONTRIBUTING.md to document project&#10;guidelines, usage, and changelog history. Update dependencies and &#10;tooling in pyproject.toml for better development experience.">
+      <option name="closed" value="true" />
+      <created>1744017616997</created>
+      <option name="number" value="00007" />
+      <option name="presentableId" value="LOCAL-00007" />
+      <option name="project" value="LOCAL" />
+      <updated>1744017616997</updated>
+    </task>
+    <task id="LOCAL-00008" summary="Add Sphinx documentation structure for OptiX&#10;&#10;Set up Sphinx for documentation generation, including configuration, makefiles, and project structure. Added essential `.rst` files for usage, installation, contributing, and changelog, along with `.gitignore` for ignoring build artifacts. Includes support for auto-generating API documentation.">
+      <option name="closed" value="true" />
+      <created>1744017648965</created>
+      <option name="number" value="00008" />
+      <option name="presentableId" value="LOCAL-00008" />
+      <option name="project" value="LOCAL" />
+      <updated>1744017648965</updated>
+    </task>
+    <task id="LOCAL-00009" summary="Update dependencies in pyproject.toml and organize dev tools&#10;&#10;Moved development dependencies to main dependencies section for consistency and clarity. Updated versions for `sphinx`, `myst-parser`, and related tools to reflect new standards. This improves dependency management and ensures compatibility.">
+      <option name="closed" value="true" />
+      <created>1744912870033</created>
+      <option name="number" value="00009" />
+      <option name="presentableId" value="LOCAL-00009" />
+      <option name="project" value="LOCAL" />
+      <updated>1744912870033</updated>
+    </task>
+    <task id="LOCAL-00010" summary="Refactor problem classes and add corresponding tests&#10;&#10;Renamed and modularized problem classes into `OXCSPProblem`, `OXLPProblem`, and `OXGPProblem` with added functionality for constraints and objective functions. Simplified variable creation logic and added validation for parameters. Included unit tests to validate database-driven variable creation and error handling.">
+      <option name="closed" value="true" />
+      <created>1746621729581</created>
+      <option name="number" value="00010" />
+      <option name="presentableId" value="LOCAL-00010" />
+      <option name="project" value="LOCAL" />
+      <updated>1746621729581</updated>
+    </task>
+    <task id="LOCAL-00011" summary="Add UML diagram for project structure&#10;&#10;Introduce a UML diagram to visually represent the project's class structure and relationships. This aids in understanding the system architecture and facilitates future development efforts.">
+      <option name="closed" value="true" />
+      <created>1748938886603</created>
+      <option name="number" value="00011" />
+      <option name="presentableId" value="LOCAL-00011" />
+      <option name="project" value="LOCAL" />
+      <updated>1748938886603</updated>
+    </task>
+    <task id="LOCAL-00012" summary="Add OXSpecialConstraints with various constraint types&#10;&#10;Introduce a new module `OXSpecialConstraints.py` containing specialized constraint classes like `OXNonLinearEqualityConstraint`, `OXMultiplicativeEqualityConstraint`, `OXDivisionEqualityConstraint`, `OXModuloEqualityConstraint`, `OXSummationEqualityConstraint`, and `OXConditionalConstraint`. These classes extend the existing constraint framework to support more complex problem definitions.">
+      <option name="closed" value="true" />
+      <created>1748940512791</created>
+      <option name="number" value="00012" />
+      <option name="presentableId" value="LOCAL-00012" />
+      <option name="project" value="LOCAL" />
+      <updated>1748940512791</updated>
+    </task>
+    <task id="LOCAL-00013" summary="Add special constraint creation methods and update OXObjectPot&#10;&#10;Implemented new functions for creating various special constraints such as MultiplicativeEquality, DivisionEquality, ModulusEquality, SummationEquality, and ConditionalConstraint. Updated OXObjectPot to include methods for retrieving the last and first objects in the list.">
+      <option name="closed" value="true" />
+      <created>1749110793828</created>
+      <option name="number" value="00013" />
+      <option name="presentableId" value="LOCAL-00013" />
+      <option name="project" value="LOCAL" />
+      <updated>1749110793828</updated>
+    </task>
+    <task id="LOCAL-00014" summary="Add special constraint creation methods and update OXProblem structure&#10;&#10;Implemented functions for creating various special constraints including MultiplicativeEquality, DivisionEquality, ModulusEquality, SummationEquality, and ConditionalConstraint. Updated the OXProblem class to support these new constraints and improved the decision variable creation process.">
+      <option name="closed" value="true" />
+      <created>1749624194718</created>
+      <option name="number" value="00014" />
+      <option name="presentableId" value="LOCAL-00014" />
+      <option name="project" value="LOCAL" />
+      <updated>1749624194718</updated>
+    </task>
+    <task id="LOCAL-00015" summary="Add unit tests for OXception, OXConstraint, and OXSpecialConstraints">
+      <option name="closed" value="true" />
+      <created>1749729634223</created>
+      <option name="number" value="00015" />
+      <option name="presentableId" value="LOCAL-00015" />
+      <option name="project" value="LOCAL" />
+      <updated>1749729634223</updated>
+    </task>
+    <task id="LOCAL-00016" summary="Add OXSolverInterface class with methods for variable and constraint management">
+      <option name="closed" value="true" />
+      <created>1749735499668</created>
+      <option name="number" value="00016" />
+      <option name="presentableId" value="LOCAL-00016" />
+      <option name="project" value="LOCAL" />
+      <updated>1749735499668</updated>
+    </task>
+    <task id="LOCAL-00017" summary="Add OXSolverInterface enhancements and XML configuration files">
+      <option name="closed" value="true" />
+      <created>1750140248154</created>
+      <option name="number" value="00017" />
+      <option name="presentableId" value="LOCAL-00017" />
+      <option name="project" value="LOCAL" />
+      <updated>1750140248154</updated>
+    </task>
+    <task id="LOCAL-00018" summary="Add OXORToolsSolverInterface implementation for variable and constraint management">
+      <option name="closed" value="true" />
+      <created>1750147962876</created>
+      <option name="number" value="00018" />
+      <option name="presentableId" value="LOCAL-00018" />
+      <option name="project" value="LOCAL" />
+      <updated>1750147962876</updated>
+    </task>
+    <task id="LOCAL-00019" summary="Add OXORToolsSolverInterface implementation for variable and constraint management">
+      <option name="closed" value="true" />
+      <created>1750148037776</created>
+      <option name="number" value="00019" />
+      <option name="presentableId" value="LOCAL-00019" />
+      <option name="project" value="LOCAL" />
+      <updated>1750148037776</updated>
+    </task>
+    <option name="localTasksCounter" value="20" />
+    <servers />
+  </component>
+  <component name="TypeScriptGeneratedFilesManager">
+    <option name="version" value="3" />
+  </component>
+  <component name="Vcs.Log.Tabs.Properties">
+    <option name="TAB_STATES">
+      <map>
+        <entry key="MAIN">
+          <value>
+            <State />
+          </value>
+        </entry>
+      </map>
+    </option>
+  </component>
+  <component name="VcsManagerConfiguration">
+    <MESSAGE value="Update dependencies in pyproject.toml and organize dev tools&#10;&#10;Moved development dependencies to main dependencies section for consistency and clarity. Updated versions for `sphinx`, `myst-parser`, and related tools to reflect new standards. This improves dependency management and ensures compatibility." />
+    <MESSAGE value="Refactor problem classes and add corresponding tests&#10;&#10;Renamed and modularized problem classes into `OXCSPProblem`, `OXLPProblem`, and `OXGPProblem` with added functionality for constraints and objective functions. Simplified variable creation logic and added validation for parameters. Included unit tests to validate database-driven variable creation and error handling." />
+    <MESSAGE value="Add UML diagram for project structure&#10;&#10;Introduce a UML diagram to visually represent the project's class structure and relationships. This aids in understanding the system architecture and facilitates future development efforts." />
+    <MESSAGE value="Add OXSpecialConstraints with various constraint types&#10;&#10;Introduce a new module `OXSpecialConstraints.py` containing specialized constraint classes like `OXNonLinearEqualityConstraint`, `OXMultiplicativeEqualityConstraint`, `OXDivisionEqualityConstraint`, `OXModuloEqualityConstraint`, `OXSummationEqualityConstraint`, and `OXConditionalConstraint`. These classes extend the existing constraint framework to support more complex problem definitions." />
+    <MESSAGE value="Add `OXSpecialConstraint` and update `OXCSPProblem` for specialized constraints" />
+    <MESSAGE value="Add SpecialConstraintType Enum to OXCSPProblem&#10;&#10;Introduce `SpecialConstraintType` as an enumeration within the `OXCSPProblem` class to categorize specialized constraints. This addition enhances the framework's flexibility by supporting various constraint types like MultiplicativeEquality, DivisionEquality, ModulusEquality, SummationEquality, and ConditionalConstraint. This change aligns with recent enhancements in constraint handling and supports more complex problem definitions." />
+    <MESSAGE value="Add `SpecialConstraintType` and `create_special_contstraint` method to OXCSPProblem" />
+    <MESSAGE value="### Add special constraints and update UML diagram&#10;&#10;- Added `SpecialConstraintType` enumeration in `OXProblem.py`&#10;- Updated `OXCSPProblem` class with `specials` list and `create_special_contstraint` method&#10;- Updated UML diagram to reflect changes in class structure" />
+    <MESSAGE value="Introduce `SpecialConstraintType` and `create_special_constraint` method in `OXCSPProblem`." />
+    <MESSAGE value="**Add special constraints framework with new types and methods in OXCSPProblem**" />
+    <MESSAGE value="Add `SpecialConstraintType` enumeration and initial implementation for creating special constraints in `OXCSPProblem`. Update project UML diagram to reflect changes." />
+    <MESSAGE value="Add `OXSpecialConstraint` with special constraint types and update UML diagram" />
+    <MESSAGE value="Add special constraint handling to `OXCSPProblem` and update UML diagram." />
+    <MESSAGE value="Add `OXSpecialConstraint` class and update `OXCSPProblem` to support specialized constraints." />
+    <MESSAGE value="Add special constraint creation method to `OXCSPProblem` and update UML diagram" />
+    <MESSAGE value="### Add Special Constraint Type and Update Methods in OXCSPProblem&#10;&#10;This commit adds a new `SpecialConstraintType` enumeration and updates the `OXCSPProblem` class to include special constraint functionality. The `" />
+    <MESSAGE value="Add SpecialConstraintType and related methods in OXCSPProblem&#10;&#10;Extend the OXCSPProblem class to include a new attribute `specials` for specialized constraints and add the method `create_special_contstraint` to facilitate their creation. Update the UML diagram to reflect these changes." />
+    <MESSAGE value="Add special constraint creation methods and update OXProblem structure" />
+    <MESSAGE value="```plaintext&#10;Add functions for creating special constraints in OXProblem.py and update OXObjectPot.py&#10;&#10;- Added helper functions to create multiplicative, division, modulo, summation, and conditional constraints.&#10;- Updated OXObjectPot.py to include properties for retrieving the last and first objects.&#10;```&#10;&#10;**Created Question**:&#10;[Diff]&#10;```diff&#10;diff --git a/src/variables/OXVariableSet.py b/src/variables/OXVariableSet.py&#10;index 1234567..89abcde 100644&#10;--- a/src/variables/OXVariableSet.py&#10;+++ b/src/variables/OXVariableSet.py&#10;@@ -1,4 +1,5 @@&#10; from abc import ABC, abstractmethod&#10;+from typing import List&#10; &#10; &#10; class OXVariableSet(ABC):&#10;@@ -10,6 +11,7 @@ class OXVariableSet(ABC):&#10; &#10;     @abstractmethod&#10;     def add_variable(self, variable: 'OXVariable') -&gt; None:&#10;+        &quot;&quot;&quot;Add a new OXVariable to the set.&quot;&quot;&quot;&#10;         pass&#10; &#10;     @abstractmethod&#10;@@ -20,5 +22,16 @@ class OXVariableSet(ABC):&#10;         &quot;&quot;&quot;Remove an OXVariable from the set by its ID.&quot;&quot;&quot;&#10;         pass&#10; &#10;+    @abstractmethod&#10;+    def get_variable_by_id(self, variable_id: str) -&gt; 'OXVariable':&#10;+        &quot;&quot;&quot;Retrieve a specific OXVariable by its unique identifier.&quot;&quot;&quot;&#10;+        pass&#10;+&#10;+    @abstractmethod&#10;+    def get_variables_by_type(self, variable_type: str) -&gt; List['OXVariable']:&#10;+        &quot;&quot;&quot;Retrieve all OXVariables of a specific type.&quot;&quot;&quot;&#10;+        pass&#10;+&#10;+    @abstractmethod&#10;+    def get_all_variables(self) -&gt; List['OXVariable']:&#10;+        &quot;&quot;&quot;Retrieve all variables currently in the set.&quot;&quot;&quot;&#10;```&#10;&#10;**Created Answer**:&#10;```plaintext&#10;Add methods to retrieve variables by ID and type in OXVariableSet&#10;&#10;- Introduced `get_variable_by_id` for fetching a variable by its unique identifier.&#10;- Added `get_variables_by_type` to retrieve all variables of a specific type.&#10;- Included `get_all_variables` to fetch all variables in the set.&#10;```" />
+    <MESSAGE value="Add special constraint creation methods and update OXObjectPot&#10;&#10;Implemented new functions for creating various special constraints such as MultiplicativeEquality, DivisionEquality, ModulusEquality, SummationEquality, and ConditionalConstraint. Updated OXObjectPot to include methods for retrieving the last and first objects in the list." />
+    <MESSAGE value="Add special constraint creation methods and update OXProblem structure&#10;&#10;Implemented functions for creating various special constraints including MultiplicativeEquality, DivisionEquality, ModulusEquality, SummationEquality, and ConditionalConstraint. Updated the OXProblem class to support these new constraints and improved the decision variable creation process." />
+    <MESSAGE value="Add unit tests for OXception, OXConstraint, and OXSpecialConstraints" />
+    <MESSAGE value="Add OXSolverInterface class with methods for variable and constraint management" />
+    <MESSAGE value="Add OXSolverInterface enhancements and XML configuration files" />
+    <MESSAGE value="Add OXORToolsSolverInterface implementation for variable and constraint management" />
+    <option name="LAST_COMMIT_MESSAGE" value="Add OXORToolsSolverInterface implementation for variable and constraint management" />
+  </component>
+  <component name="XDebuggerManager">
+    <breakpoint-manager>
+      <breakpoints>
+        <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
+          <url>file://$PROJECT_DIR$/src/solvers/gurobi/OXGurobiSolverInterface.py</url>
+          <line>143</line>
+          <option name="timeStamp" value="1" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
+          <url>file://$PROJECT_DIR$/src/solvers/OXSolverFactory.py</url>
+          <line>42</line>
+          <option name="timeStamp" value="2" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
+          <url>file://$PROJECT_DIR$/tests/test_OXpression.py</url>
+          <line>98</line>
+          <option name="timeStamp" value="3" />
+        </line-breakpoint>
+      </breakpoints>
+    </breakpoint-manager>
+    <watches-manager>
+      <configuration name="tests">
+        <watch expression="var_description" />
+      </configuration>
+    </watches-manager>
+  </component>
+  <component name="com.intellij.coverage.CoverageDataManagerImpl">
+    <SUITE FILE_PATH="coverage/OptiX$01_diet_problem.coverage" NAME="01_diet_problem Coverage Results" MODIFIED="1753813350786" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/samples/diet_problem" />
+    <SUITE FILE_PATH="coverage/OptiX$.coverage" NAME=" Coverage Results" MODIFIED="1754138943948" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="" />
+    <SUITE FILE_PATH="coverage/OptiX$02_simple_bus_assignment_problem.coverage" NAME="02_simple_bus_assignment_problem Coverage Results" MODIFIED="1753813045663" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/samples/bus_assignment_problem" />
+    <SUITE FILE_PATH="coverage/OptiX$03_bus_assignment_problem.coverage" NAME="03_bus_assignment_problem Coverage Results" MODIFIED="1753813246395" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/samples/bus_assignment_problem" />
+    <SUITE FILE_PATH="coverage/OptiX$01_simple_bus_assignment_problem.coverage" NAME="01_simple_bus_assignment_problem Coverage Results" MODIFIED="1753812914203" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/samples/bus_assignment_problem" />
+  </component>
+</project>

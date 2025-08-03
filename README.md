@@ -1,14 +1,16 @@
 # OptiX
 
-OptiX is a Python library for mathematical optimization problems, particularly focused on linear programming (LP) and goal programming (GP).
+OptiX is a comprehensive Python framework for mathematical optimization problems, supporting linear programming (LP), goal programming (GP), and constraint satisfaction problems (CSP).
 
 ## Description
 
-OptiX provides a framework for defining and solving optimization problems. It allows users to:
-- Create decision variables with bounds
-- Define constraints with relational operators
-- Create objective functions to minimize or maximize
-- Work with goal constraints for goal programming
+OptiX provides a comprehensive framework for defining and solving optimization problems. It features:
+- **Multi-solver support**: Currently supports OR-Tools with extensible solver interface
+- **Flexible problem modeling**: Create decision variables, constraints, and objective functions
+- **Advanced constraint types**: Support for regular constraints and special constraints
+- **Database integration**: Built-in data management with OXData and OXDatabase
+- **Solution management**: Comprehensive solution tracking and analysis
+- **Example problems**: Includes real-world examples like bus assignment problems
 
 ## Installation
 
@@ -25,12 +27,12 @@ poetry install
 
 ## Usage
 
-Here's a simple example of how to use OptiX to create and define a linear programming problem:
+### Basic Linear Programming Example
 
 ```python
 from problem.OXProblem import OXLPProblem, ObjectiveType
-from variables.OXVariable import OXVariable
 from constraints.OXConstraint import RelationalOperators
+from solvers.OXSolverFactory import solve
 
 # Create a new LP problem
 problem = OXLPProblem()
@@ -56,8 +58,40 @@ problem.create_objective_function(
     objective_type=ObjectiveType.MAXIMIZE
 )
 
-# Now the problem is ready to be solved with your preferred solver
+# Solve the problem
+status, solver = solve(problem, 'ORTools')
+
+# Access solutions
+print(f"Status: {status}")
+for solution in solver:
+    print(solution)
+    solution.print_solution_for(problem)
 ```
+
+### Advanced Example with Database Integration
+
+See `samples/bus_assignment_problem/01_simple_bus_assignment_problem.py` for a comprehensive example that demonstrates:
+- Database integration with custom data classes
+- Variable creation from database objects
+- Dynamic constraint and objective function creation
+- Solution analysis and reporting
+
+## Supported Solvers
+
+- **OR-Tools**: Google's optimization tools (primary solver)
+- **Extensible Interface**: Easy to add new solvers through `OXSolverInterface`
+
+## Project Structure
+
+- `src/base/`: Core classes and exception handling
+- `src/constraints/`: Constraint definitions and special constraints
+- `src/data/`: Database and data management
+- `src/problem/`: Problem definition classes (LP, GP, CSP)
+- `src/solvers/`: Solver interfaces and implementations
+- `src/variables/`: Variable definitions and management
+- `src/utilities/`: Utility functions and serialization
+- `samples/`: Example problems and use cases
+- `tests/`: Comprehensive test suite
 
 ## License
 
