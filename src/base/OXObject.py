@@ -44,8 +44,6 @@ Module Dependencies:
 from dataclasses import dataclass, field
 from uuid import UUID, uuid4
 
-from utilities.class_loaders import get_fully_qualified_name
-
 
 @dataclass
 class OXObject:
@@ -118,6 +116,7 @@ class OXObject:
         See Also:
             :func:`utilities.class_loaders.get_fully_qualified_name`
         """
+        from utilities.class_loaders import get_fully_qualified_name
         self.class_name = get_fully_qualified_name(type(self))
 
     def __str__(self):
