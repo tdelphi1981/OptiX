@@ -1,18 +1,73 @@
-"""Advanced Bus Assignment Problem Example.
+"""
+Advanced Bus Assignment Problem Example
+======================================
 
-This example demonstrates a more complex bus assignment optimization problem 
-with enhanced naming and constraint management. It includes:
-- Ordered bus groups and lines for better identification
-- Named constraints for improved solution readability
-- Capacity constraints for both demand satisfaction and fleet limitations
-- Enhanced variable naming using dataclass field values
+This example demonstrates enhanced OptiX framework capabilities through an improved version of the
+basic bus assignment problem. Building on the foundation of 01_simple_bus_assignment_problem.py,
+this implementation showcases advanced OptiX features for better problem modeling, constraint
+management, and solution interpretation.
 
-The problem involves:
-- Bus groups with specific capacities, fleet sizes, and ordering
-- Lines with daily passenger demands and ordering
-- Demand satisfaction constraints (must meet passenger demand)
-- Fleet capacity constraints (cannot exceed available buses)
-- Objective to minimize the total number of trips
+Improvements Over Basic Version:
+    This advanced example extends the basic bus assignment problem with several key enhancements
+    that demonstrate additional OptiX capabilities:
+    
+    - **Named Constraints**: All constraints include descriptive names for better solution analysis
+    - **Dual Constraint Types**: Both demand satisfaction AND fleet capacity constraints
+    - **Enhanced Data Modeling**: Added ordering fields for improved identification and naming
+    - **Advanced Variable Naming**: Uses dataclass field values in variable name templates
+    - **Fleet Capacity Modeling**: Realistic operational limits based on available buses
+    - **Improved Solution Reporting**: More detailed constraint information in output
+
+OptiX Features Demonstrated:
+    - **Named Constraint Creation**: Using the `name` parameter in `create_constraint()`
+    - **Multiple Constraint Types**: Different constraint formulations in the same problem
+    - **Field-Based Variable Naming**: Template variables using dataclass field values
+    - **Complex Weight Calculations**: Different weight functions for different constraint types
+    - **Enhanced Data Relationships**: Order fields for better object identification
+
+Problem Structure Comparison:
+    **Basic Version (01)**:
+    - Decision Variables: trips[bus_group][line]
+    - Constraints: Demand satisfaction only (one per line)
+    - Objective: Minimize weighted trips (weight = 1.5)
+    - Variable naming: Uses object IDs
+    
+    **Advanced Version (02)**:
+    - Decision Variables: trips[bus_group][line] (same structure)
+    - Constraints: Demand satisfaction + Fleet capacity (lines + groups constraints)
+    - Objective: Minimize total trips (weight = 1.0, no artificial weighting)
+    - Variable naming: Uses order fields for human-readable names
+    - Additional: All constraints have descriptive names
+
+Key Enhancements Explained:
+    1. **Order Fields**: Both BusGroup and Line classes include `order` fields for better identification
+    2. **Named Constraints**: Each constraint includes a descriptive name explaining its purpose
+    3. **Fleet Constraints**: New constraint type limiting trips per bus group to operational capacity
+    4. **Enhanced Naming**: Variable names use order numbers instead of UUIDs for readability
+    5. **Dual Validation**: Assertions check both demand and fleet constraint counts
+
+Mathematical Formulation:
+    - Minimize: Σ(trips[i,j]) for all bus groups i and lines j
+    - Subject to: 
+        * Demand: Σ(capacity[i] × trips[i,j]) ≥ demand[j] for each line j
+        * Fleet: Σ(trips[i,j]) ≤ 2 × fleet_size[i] for each bus group i
+    - Bounds: 0 ≤ trips[i,j] ≤ 20
+
+Usage:
+    Run directly to see advanced OptiX features in action:
+    
+    ```bash
+    python 02_simple_bus_assignment_problem.py
+    ```
+    
+    Output includes named constraints and enhanced solution reporting.
+
+Learning Objectives:
+    - Understanding named constraints for better solution interpretation
+    - Multiple constraint types in the same optimization problem
+    - Advanced variable naming with dataclass field values
+    - Fleet capacity modeling in transportation problems
+    - Enhanced problem validation with multiple constraint sets
 """
 
 import random
@@ -26,12 +81,25 @@ from solvers.OXSolverFactory import solve
 
 @dataclass
 class BusGroup(OXData):
-    """Represents a group of buses with specific capacity, fleet size, and order.
+    """Enhanced bus group model with ordering for improved identification.
+    
+    This enhanced version of BusGroup adds ordering capability for better variable naming
+    and constraint identification. The order field enables human-readable variable names
+    and more descriptive constraint names in the optimization output.
+    
+    Improvements over basic version:
+        - Added order field for sequential identification
+        - Enables enhanced variable naming templates using {busgroup_order}
+        - Used in fleet capacity constraints (new constraint type)
+        - Supports more readable solution output
     
     Attributes:
-        capacity (int): The passenger capacity of each bus in this group.
-        number_of_busses (int): The number of buses available in this group.
-        order (int): The ordering index of this bus group for identification.
+        capacity (int): Passenger capacity per bus. Used as weight coefficient
+                       in demand satisfaction constraints.
+        number_of_busses (int): Fleet size available in this group. Used to
+                               calculate fleet capacity constraint limits (number_of_busses × 2).
+        order (int): Sequential ordering index for identification and naming.
+                    Used in variable name templates and constraint descriptions.
     """
     capacity: int = 0
     number_of_busses: int = 0
@@ -40,35 +108,60 @@ class BusGroup(OXData):
 
 @dataclass
 class Line(OXData):
-    """Represents a transit line with passenger demand and ordering.
+    """Enhanced transit line model with ordering for improved identification.
+    
+    This enhanced version of Line adds ordering capability for better variable naming
+    and constraint identification. The order field enables human-readable variable names
+    and more descriptive constraint names in the optimization output.
+    
+    Improvements over basic version:
+        - Added order field for sequential identification  
+        - Enables enhanced variable naming templates using {line_order}
+        - Used in named demand satisfaction constraints
+        - Supports more readable solution output
     
     Attributes:
-        daily_passenger_demand (int): The number of passengers that need to be
-            transported on this line per day.
-        order (int): The ordering index of this line for identification.
+        daily_passenger_demand (int): Number of passengers requiring transportation
+                                     per day. Used as right-hand side value in
+                                     demand satisfaction constraints.
+        order (int): Sequential ordering index for identification and naming.
+                    Used in variable name templates and constraint descriptions.
     """
     daily_passenger_demand: int = 0
     order: int = 0
 
 
 def main():
-    """Solve an advanced bus assignment problem with named constraints.
+    """Demonstrates advanced OptiX capabilities through enhanced bus assignment problem.
     
-    This function creates a linear programming problem to assign bus groups
-    to lines optimally, with enhanced constraint naming and fleet capacity
-    limitations.
+    This improved version showcases additional OptiX features compared to the basic example:
     
-    The problem formulation:
-    - Decision variables: Number of trips for each bus group on each line
-    - Demand constraints: Each line must have enough capacity to handle its demand
-    - Fleet constraints: Each bus group cannot exceed its available capacity
-    - Objective: Minimize total number of trips
+    Key Improvements Demonstrated:
+        1. **Named Constraints**: All constraints include descriptive names using the `name` parameter
+        2. **Dual Constraint Types**: Both demand satisfaction AND fleet capacity constraints
+        3. **Enhanced Variable Naming**: Uses order fields in variable name templates
+        4. **Fleet Capacity Modeling**: Realistic operational limits (2 trips per bus maximum)
+        5. **Improved Data Organization**: Order fields for better identification
     
-    Features demonstrated:
-    - Named constraints for better solution interpretation
-    - Enhanced variable naming using dataclass field values
-    - Dual constraint types (demand satisfaction and fleet capacity)
-    - Improved solution reporting with constraint names
+    Advanced OptiX Features Showcased:
+        - Named constraint creation for better solution interpretation
+        - Multiple constraint types with different weight calculation functions
+        - Field-based variable naming using dataclass attributes in templates
+        - Complex constraint formulations (fleet capacity based on available buses)
+        - Enhanced problem validation with multiple constraint set assertions
+    
+    Problem Enhancements vs Basic Version:
+        - **More Constraints**: Lines + Groups constraints instead of just Lines
+        - **Better Naming**: Order-based variable names instead of UUID-based
+        - **Fleet Realism**: Cannot exceed available bus capacity (2 trips per bus)
+        - **Solution Clarity**: Named constraints improve output readability
+        - **Weight Simplification**: Uses weight=1.0 instead of artificial 1.5 weighting
+    
+    Constraint Structure:
+        1. **Demand Satisfaction** (one per line): 
+           Σ(capacity[i] × trips[i,j]) ≥ demand[j] for line j
+        2. **Fleet Capacity** (one per bus group):
+           Σ(trips[i,j]) ≤ 2 × fleet_size[i] for bus group i
     """
     bap = OXLPProblem()
 
