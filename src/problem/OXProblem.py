@@ -1,3 +1,54 @@
+"""
+Optimization Problem Types Module
+==================================
+
+This module provides classes for representing different types of optimization problems
+in the OptiX framework. It implements a hierarchical structure supporting Constraint 
+Satisfaction Problems (CSP), Linear Programming (LP), and Goal Programming (GP).
+
+The module serves as the core problem definition layer in the OptiX optimization 
+framework, providing the foundation for mathematical optimization problems across
+various domains including resource allocation, scheduling, and multi-objective optimization.
+
+The module implements a progressive complexity pattern where each problem type builds
+upon the previous one, allowing users to choose the appropriate level of sophistication
+for their optimization needs.
+
+Example:
+    Basic usage for different problem types:
+
+    .. code-block:: python
+
+        from problem import OXLPProblem, OXGPProblem, ObjectiveType
+        from constraints import RelationalOperators
+        
+        # Linear Programming Problem
+        lp_problem = OXLPProblem()
+        lp_problem.create_decision_variable("x", lower_bound=0, upper_bound=10)
+        lp_problem.create_decision_variable("y", lower_bound=0, upper_bound=10)
+        
+        # Add constraint: x + y <= 15
+        lp_problem.create_constraint(
+            variables=[lp_problem.variables[0].id, lp_problem.variables[1].id],
+            weights=[1, 1],
+            operator=RelationalOperators.LESS_THAN_EQUAL,
+            value=15
+        )
+        
+        # Set objective: maximize 3x + 2y
+        lp_problem.create_objective_function(
+            variables=[lp_problem.variables[0].id, lp_problem.variables[1].id],
+            weights=[3, 2],
+            objective_type=ObjectiveType.MAXIMIZE
+        )
+
+Module Dependencies:
+    - base: For OXObject base class and exception handling
+    - constraints: For constraint and expression classes
+    - variables: For variable and variable set classes
+    - data: For database management classes
+"""
+
 import dataclasses
 import itertools
 import operator
