@@ -1,3 +1,53 @@
+"""
+OptiX Special Constraints Test Suite
+====================================
+
+This module provides comprehensive test coverage for the special constraint
+classes in the OptiX optimization framework. Special constraints handle
+non-linear relationships that cannot be expressed using standard linear
+constraints, including multiplicative, division, modulo, and conditional operations.
+
+The special constraint system enables modeling of complex mathematical
+relationships in optimization problems while maintaining solver compatibility
+through variable substitution and constraint transformation techniques.
+
+Example:
+    Running the special constraints test suite:
+
+    .. code-block:: bash
+
+        # Run all special constraint tests
+        poetry run python -m pytest tests/test_OXSpecialConstraints.py -v
+        
+        # Run multiplicative constraint tests
+        poetry run python -m pytest tests/test_OXSpecialConstraints.py -k "multiplicative" -v
+        
+        # Run division and modulo tests
+        poetry run python -m pytest tests/test_OXSpecialConstraints.py -k "division or modulo" -v
+
+Module Dependencies:
+    - uuid: For UUID generation and handling in constraint relationships
+    - src.constraints.OXSpecialConstraints: Special constraint class implementations
+
+Test Coverage:
+    - Base special constraint class initialization and properties
+    - Non-linear equality constraint setup and variable management
+    - Multiplicative equality constraints with multiple input variables
+    - Division equality constraints with divisor parameter handling
+    - Modulo equality constraints for remainder operations
+    - Summation equality constraints for variable aggregation
+    - Conditional constraints for logical relationship modeling
+
+Special Constraint Types Tested:
+    - OXSpecialConstraint: Base class for all special constraints
+    - OXNonLinearEqualityConstraint: General non-linear equality relationships
+    - OXMultiplicativeEqualityConstraint: Variable multiplication (x * y = z)
+    - OXDivisionEqualityConstraint: Variable division (x / c = y)
+    - OXModuloEqualityConstraint: Modulo operations (x % c = y)
+    - OXSummationEqualityConstraint: Variable summation (x + y = z)
+    - OXConditionalConstraint: Conditional logic relationships
+"""
+
 from uuid import UUID
 
 from src.constraints.OXSpecialConstraints import (

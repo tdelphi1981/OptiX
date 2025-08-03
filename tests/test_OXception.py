@@ -1,3 +1,50 @@
+"""
+OptiX Exception Handling Test Suite
+===================================
+
+This module provides comprehensive test coverage for the OXception class,
+which implements enhanced exception handling for the OptiX optimization
+framework. The OXception class extends standard Python exceptions with
+context information capture, debugging support, and structured error reporting.
+
+The OXception class automatically captures execution context including
+file names, line numbers, method names, and parameter information to
+facilitate debugging and error analysis in complex optimization workflows.
+
+Example:
+    Running the exception handling test suite:
+
+    .. code-block:: bash
+
+        # Run all exception tests
+        poetry run python -m pytest tests/test_OXception.py -v
+        
+        # Run context capture tests
+        poetry run python -m pytest tests/test_OXception.py -k "initialization" -v
+        
+        # Run serialization tests
+        poetry run python -m pytest tests/test_OXception.py -k "json" -v
+
+Module Dependencies:
+    - src.base.OXception: Enhanced exception class with context capture
+
+Test Coverage:
+    - Exception initialization with message and context capture
+    - Automatic file name, line number, and method name extraction
+    - Parameter dictionary creation for debugging information
+    - String and repr representation formatting
+    - JSON serialization for error logging and reporting
+    - Context information accuracy and relative path handling
+
+Exception Features Tested:
+    - Message storage and retrieval
+    - Context information capture (file, line, method)
+    - Parameter dictionary for debugging data
+    - String representation for error display
+    - JSON serialization for structured error reporting
+    - Relative path calculation for file references
+"""
+
 from src.base.OXception import OXception
 
 

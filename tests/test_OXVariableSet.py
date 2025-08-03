@@ -1,3 +1,55 @@
+"""
+OptiX Variable Set Test Suite
+=============================
+
+This module provides comprehensive test coverage for the OXVariableSet class,
+which implements a specialized container for managing collections of OXVariable
+instances in the OptiX optimization framework. The OXVariableSet extends the
+base OXObjectPot functionality with variable-specific operations and validation.
+
+The OXVariableSet class provides type-safe variable storage, query capabilities
+based on variable metadata, and ensures that only valid OXVariable instances
+can be added to the collection.
+
+Example:
+    Running the variable set test suite:
+
+    .. code-block:: bash
+
+        # Run all variable set tests
+        poetry run python -m pytest tests/test_OXVariableSet.py -v
+        
+        # Run variable addition/removal tests
+        poetry run python -m pytest tests/test_OXVariableSet.py -k "add_object or remove_object" -v
+        
+        # Run query functionality tests
+        poetry run python -m pytest tests/test_OXVariableSet.py -k "query" -v
+
+Module Dependencies:
+    - uuid: For generating unique identifiers in variable metadata
+    - pytest: Testing framework for assertion handling and exception testing
+    - base.OXObject: Base object class for type validation testing
+    - base.OXception: Custom exception handling for invalid operations
+    - variables.OXVariable: Variable class for container elements
+    - variables.OXVariableSet: Specialized variable container implementation
+
+Test Coverage:
+    - Type-safe object addition with OXVariable validation
+    - Invalid object rejection with appropriate exception handling
+    - Object removal with type checking and validation
+    - Query functionality based on variable metadata and properties
+    - Collection membership testing and size validation
+    - Variable retrieval by various search criteria
+
+Variable Set Operations Tested:
+    - Valid variable addition to the set
+    - Invalid object rejection with OXception
+    - Variable removal with type validation
+    - Metadata-based querying and filtering
+    - Collection size and membership operations
+    - Search functionality for variable discovery
+"""
+
 from uuid import uuid4
 
 import pytest

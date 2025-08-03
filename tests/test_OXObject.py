@@ -1,3 +1,51 @@
+"""
+OptiX Base Object Test Suite
+============================
+
+This module provides comprehensive test coverage for the OXObject class,
+which serves as the foundational base class for all objects in the OptiX
+optimization framework. The OXObject class implements UUID-based identity,
+class name tracking, and hash table compatibility.
+
+The OXObject class provides essential functionality for object identification,
+comparison, and storage across the entire OptiX ecosystem, ensuring consistent
+object behavior and reliable identity management.
+
+Example:
+    Running the base object test suite:
+
+    .. code-block:: bash
+
+        # Run all base object tests
+        poetry run python -m pytest tests/test_OXObject.py -v
+        
+        # Run initialization tests
+        poetry run python -m pytest tests/test_OXObject.py -k "initialization" -v
+        
+        # Run identity and equality tests
+        poetry run python -m pytest tests/test_OXObject.py -k "equality" -v
+
+Module Dependencies:
+    - uuid: For UUID generation and handling in object identity management
+    - base.OXObject: Core base class providing object identity and metadata
+
+Test Coverage:
+    - Default initialization with automatic UUID generation
+    - Custom ID initialization for predetermined object identities
+    - String and repr representation formatting
+    - Hash function implementation for dictionary and set usage
+    - Equality and identity comparison based on UUID
+    - Class name tracking and post-initialization setup
+
+Base Object Features Tested:
+    - UUID-based object identity with automatic generation
+    - Class name tracking for object type identification
+    - Hash table compatibility for efficient storage and retrieval
+    - String representation for debugging and logging
+    - Post-initialization setup for derived class support
+    - Identity-based equality for object comparison
+"""
+
 from uuid import UUID
 
 from base.OXObject import OXObject

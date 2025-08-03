@@ -1,3 +1,50 @@
+"""
+OptiX Problem Classes Test Suite
+================================
+
+This module provides comprehensive test coverage for the OptiX problem classes,
+including Constraint Satisfaction Problems (CSP), Linear Programming (LP), and
+Goal Programming (GP) problems. It validates the core functionality of problem
+creation, variable management, constraint handling, and objective function setup.
+
+The test suite covers three main problem types in the OptiX optimization framework:
+- OXCSPProblem: Constraint Satisfaction Problems with special constraint support
+- OXLPProblem: Linear Programming problems with objective function optimization
+- OXGPProblem: Goal Programming problems with goal constraints and deviation variables
+
+Example:
+    Running the test suite for problem classes:
+
+    .. code-block:: bash
+
+        # Run all problem tests
+        poetry run python -m pytest tests/test_OXProblem.py -v
+        
+        # Run specific test patterns
+        poetry run python -m pytest tests/test_OXProblem.py -k "test_create_constraint" -v
+        
+        # Run CSP-specific tests
+        poetry run python -m pytest tests/test_OXProblem.py -k "oxcspproblem" -v
+
+Module Dependencies:
+    - uuid: For generating unique identifiers for variables and constraints
+    - pytest: Testing framework for assertion handling and test fixtures
+    - base.OXception: Custom exception handling for OptiX operations
+    - constraints: Constraint classes for linear and special constraint types
+    - data.OXDatabase: Database management for problem data storage
+    - problem.OXProblem: Core problem class definitions and enumerations
+
+Test Coverage:
+    - Problem initialization and default value validation
+    - Decision variable creation with bounds and metadata
+    - Linear constraint creation with various parameter combinations
+    - Special constraint handling (multiplication, division, modulo, summation)
+    - Objective function setup for optimization problems
+    - Goal constraint management for goal programming
+    - Parameter validation and error handling
+    - Database integration and variable/constraint storage
+"""
+
 from uuid import UUID
 
 import pytest

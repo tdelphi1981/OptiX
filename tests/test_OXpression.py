@@ -1,3 +1,51 @@
+"""
+OptiX Mathematical Expression Test Suite
+========================================
+
+This module provides comprehensive test coverage for the OXpression class
+and related mathematical utility functions in the OptiX optimization framework.
+The OXpression class represents linear mathematical expressions with variables
+and coefficients, supporting fractional arithmetic and integer conversion.
+
+The module tests both the core expression functionality and utility functions
+for handling fractional coefficients, ensuring accurate mathematical operations
+and proper conversion between fractional and integer representations.
+
+Example:
+    Running the mathematical expression test suite:
+
+    .. code-block:: bash
+
+        # Run all expression tests
+        poetry run python -m pytest tests/test_OXpression.py -v
+        
+        # Run fraction calculation tests
+        poetry run python -m pytest tests/test_OXpression.py -k "fraction" -v
+        
+        # Run expression property tests
+        poetry run python -m pytest tests/test_OXpression.py -k "expression" -v
+
+Module Dependencies:
+    - uuid: For UUID generation and handling in variable references
+    - src.constraints.OXpression: Expression class and mathematical utilities
+
+Test Coverage:
+    - Fraction calculation utilities for coefficient handling
+    - Integer numerator and denominator conversion functions
+    - Expression initialization with default and custom parameters
+    - Variable and weight list management
+    - Mathematical property validation and calculation
+    - Expression manipulation and coefficient handling
+
+Mathematical Features Tested:
+    - Fractional arithmetic with automatic denominator calculation
+    - Integer conversion preserving mathematical relationships
+    - Linear expression representation with variables and coefficients
+    - Mathematical operations on expression components
+    - Coefficient normalization and fraction handling
+    - Variable reference management with UUID tracking
+"""
+
 from uuid import UUID
 
 from src.constraints.OXpression import OXpression, get_integer_numerator_and_denominators, calculate_fraction

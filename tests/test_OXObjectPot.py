@@ -1,3 +1,53 @@
+"""
+OptiX Object Container Test Suite
+=================================
+
+This module provides comprehensive test coverage for the OXObjectPot class,
+which implements a container for managing collections of OXObject instances
+in the OptiX optimization framework. The OXObjectPot serves as a specialized
+collection that provides object storage, retrieval, and manipulation capabilities.
+
+The OXObjectPot class is essential for managing groups of related objects
+such as variables, constraints, or data elements within optimization problems,
+providing efficient access patterns and collection operations.
+
+Example:
+    Running the object container test suite:
+
+    .. code-block:: bash
+
+        # Run all object pot tests
+        poetry run python -m pytest tests/test_OXObjectPot.py -v
+        
+        # Run object manipulation tests
+        poetry run python -m pytest tests/test_OXObjectPot.py -k "add_object" -v
+        
+        # Run search and retrieval tests
+        poetry run python -m pytest tests/test_OXObjectPot.py -k "search" -v
+
+Module Dependencies:
+    - pytest: Testing framework for assertion handling and test execution
+    - src.base.OXObject: Base object class for container element type
+    - src.base.OXObjectPot: Container class for managing object collections
+
+Test Coverage:
+    - Default initialization and empty state validation
+    - Object addition and removal operations
+    - Collection length and membership testing
+    - Object retrieval by index and search criteria
+    - Iterator protocol implementation
+    - Last object access for recent additions
+    - Collection clearing and state reset
+
+Container Operations Tested:
+    - Object addition with automatic indexing
+    - Object removal with list maintenance
+    - Search functionality for finding specific objects
+    - Index-based access for direct object retrieval
+    - Length calculation for collection size
+    - Iterator support for collection traversal
+"""
+
 import pytest
 
 from src.base.OXObject import OXObject

@@ -1,3 +1,55 @@
+"""
+OptiX Constraint Classes Test Suite
+===================================
+
+This module provides comprehensive test coverage for the constraint classes
+in the OptiX optimization framework, including regular constraints and goal
+constraints used in goal programming. The test suite validates constraint
+creation, relational operator handling, and constraint-to-goal conversions.
+
+The module tests two primary constraint types:
+- OXConstraint: Standard linear constraints with relational operators
+- OXGoalConstraint: Goal programming constraints with deviation variables
+
+Constraints form the core of mathematical optimization problems by defining
+feasible solution spaces and goal targets that must be satisfied or optimized.
+
+Example:
+    Running the constraint test suite:
+
+    .. code-block:: bash
+
+        # Run all constraint tests
+        poetry run python -m pytest tests/test_OXConstraint.py -v
+        
+        # Run relational operator tests
+        poetry run python -m pytest tests/test_OXConstraint.py -k "relational" -v
+        
+        # Run goal constraint conversion tests
+        poetry run python -m pytest tests/test_OXConstraint.py -k "to_goal" -v
+
+Module Dependencies:
+    - uuid: For generating and handling unique constraint identifiers
+    - constraints.OXConstraint: Core constraint classes and relational operators
+    - constraints.OXpression: Mathematical expression handling for constraints
+    - variables.OXDeviationVar: Deviation variables for goal programming
+
+Test Coverage:
+    - RelationalOperators enum validation and string representations
+    - OXConstraint initialization with default and custom parameters
+    - Right-hand side (RHS) value handling including fractional representations
+    - Constraint-to-goal conversion for all relational operator types
+    - OXGoalConstraint initialization and deviation variable management
+    - Desired and undesired deviation variable tracking
+    - Goal constraint property validation and state management
+
+Constraint Types Tested:
+    - Equality constraints (=) for exact value matching
+    - Inequality constraints (<, <=, >, >=) for bound enforcement
+    - Goal constraints with positive and negative deviation variables
+    - Fractional RHS handling with numerator/denominator properties
+"""
+
 from uuid import UUID
 
 from constraints.OXConstraint import OXConstraint, OXGoalConstraint, RelationalOperators
