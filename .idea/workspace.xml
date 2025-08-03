@@ -4,48 +4,12 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="8079d7c8-d88b-4860-b52c-e25ebcf044e3" name="Changes" comment="Add OXORToolsSolverInterface implementation for variable and constraint management">
-      <change afterPath="$PROJECT_DIR$/docs/Makefile" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/docs/README.md" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/docs/_static/css/custom.css" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/docs/_static/css/optix_theme.css" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/docs/_static/favicon.ico" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/docs/_static/js/custom.js" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/docs/_static/optix_logo.png" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/docs/_static/optix_logo.svg" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/docs/_static/optix_logo_large.png" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/docs/build_docs.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/docs/optix_logo.ico" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/docs/requirements.txt" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/docs/source/api/constraints.rst" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/docs/source/api/data.rst" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/docs/source/api/generated/utilities.load_class.rst" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/docs/source/api/generated/variables.__str__.rst" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/docs/source/api/problem.rst" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/docs/source/api/solvers.rst" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/docs/source/api/utilities.rst" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/docs/source/api/variables.rst" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/docs/source/changelog.rst" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/docs/source/conf.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/docs/source/examples/bus_assignment.rst" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/docs/source/examples/diet_problem.rst" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/docs/source/examples/index.rst" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/docs/source/index.rst" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/docs/source/installation.rst" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/docs/source/license.rst" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/docs/source/quickstart.rst" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/docs/source/tutorials/linear_programming.rst" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/docs/source/user_guide/problem_types.rst" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/analysis/OXObjectiveFunctionAnalysis.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/analysis/OXRightHandSideAnalysis.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/analysis/__init__.py" afterDir="false" />
+    <list default="true" id="8079d7c8-d88b-4860-b52c-e25ebcf044e3" name="Changes" comment="Enhance documentation and styling for OptiX framework with modern design elements">
+      <change afterPath="$PROJECT_DIR$/docs/source/api/analysis.rst" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/CHANGELOG.md" beforeDir="false" afterPath="$PROJECT_DIR$/CHANGELOG.md" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/README.md" beforeDir="false" afterPath="$PROJECT_DIR$/README.md" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/constraints/OXConstraint.py" beforeDir="false" afterPath="$PROJECT_DIR$/src/constraints/OXConstraint.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/solvers/OXSolverFactory.py" beforeDir="false" afterPath="$PROJECT_DIR$/src/solvers/OXSolverFactory.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/utilities/__init__.py" beforeDir="false" afterPath="$PROJECT_DIR$/src/utilities/__init__.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/utilities/class_loaders.py" beforeDir="false" afterPath="$PROJECT_DIR$/src/utilities/class_loaders.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/docs/source/api/solvers.rst" beforeDir="false" afterPath="$PROJECT_DIR$/docs/source/api/solvers.rst" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/docs/source/examples/diet_problem.rst" beforeDir="false" afterPath="$PROJECT_DIR$/docs/source/examples/diet_problem.rst" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/docs/source/index.rst" beforeDir="false" afterPath="$PROJECT_DIR$/docs/source/index.rst" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -320,7 +284,7 @@
       <workItem from="1753865906909" duration="7000" />
       <workItem from="1754137440263" duration="1888000" />
       <workItem from="1754217681514" duration="11887000" />
-      <workItem from="1754236759324" duration="13351000" />
+      <workItem from="1754236759324" duration="15418000" />
     </task>
     <task id="LOCAL-00001" summary="Add initial implementation of core OptiX framework  &#10;&#10;This commit introduces foundational components for the OptiX framework, including utility functions, base classes (e.g., `OXObject`, `OXVariable`), and test coverage for these modules. Additionally, it sets up project structure with `pyproject.toml`, `.gitignore`, and IntelliJ IDEA settings.">
       <option name="closed" value="true" />
@@ -474,7 +438,15 @@
       <option name="project" value="LOCAL" />
       <updated>1750148037776</updated>
     </task>
-    <option name="localTasksCounter" value="20" />
+    <task id="LOCAL-00020" summary="Enhance documentation and styling for OptiX framework with modern design elements">
+      <option name="closed" value="true" />
+      <created>1754256446867</created>
+      <option name="number" value="00020" />
+      <option name="presentableId" value="LOCAL-00020" />
+      <option name="project" value="LOCAL" />
+      <updated>1754256446867</updated>
+    </task>
+    <option name="localTasksCounter" value="21" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -492,7 +464,6 @@
     </option>
   </component>
   <component name="VcsManagerConfiguration">
-    <MESSAGE value="Update dependencies in pyproject.toml and organize dev tools&#10;&#10;Moved development dependencies to main dependencies section for consistency and clarity. Updated versions for `sphinx`, `myst-parser`, and related tools to reflect new standards. This improves dependency management and ensures compatibility." />
     <MESSAGE value="Refactor problem classes and add corresponding tests&#10;&#10;Renamed and modularized problem classes into `OXCSPProblem`, `OXLPProblem`, and `OXGPProblem` with added functionality for constraints and objective functions. Simplified variable creation logic and added validation for parameters. Included unit tests to validate database-driven variable creation and error handling." />
     <MESSAGE value="Add UML diagram for project structure&#10;&#10;Introduce a UML diagram to visually represent the project's class structure and relationships. This aids in understanding the system architecture and facilitates future development efforts." />
     <MESSAGE value="Add OXSpecialConstraints with various constraint types&#10;&#10;Introduce a new module `OXSpecialConstraints.py` containing specialized constraint classes like `OXNonLinearEqualityConstraint`, `OXMultiplicativeEqualityConstraint`, `OXDivisionEqualityConstraint`, `OXModuloEqualityConstraint`, `OXSummationEqualityConstraint`, and `OXConditionalConstraint`. These classes extend the existing constraint framework to support more complex problem definitions." />
@@ -517,7 +488,8 @@
     <MESSAGE value="Add OXSolverInterface class with methods for variable and constraint management" />
     <MESSAGE value="Add OXSolverInterface enhancements and XML configuration files" />
     <MESSAGE value="Add OXORToolsSolverInterface implementation for variable and constraint management" />
-    <option name="LAST_COMMIT_MESSAGE" value="Add OXORToolsSolverInterface implementation for variable and constraint management" />
+    <MESSAGE value="Enhance documentation and styling for OptiX framework with modern design elements" />
+    <option name="LAST_COMMIT_MESSAGE" value="Enhance documentation and styling for OptiX framework with modern design elements" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>

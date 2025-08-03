@@ -12,6 +12,8 @@ Solver Factory
 
 .. autofunction:: solve
 
+.. autofunction:: solve_all_scenarios
+
 Solver Interfaces
 -----------------
 
@@ -402,6 +404,330 @@ Solution Analysis
    # Usage
    status, solution = solve(problem, 'ORTools')
    analyze_solution(solution, problem)
+
+Multi-Scenario Solving
+~~~~~~~~~~~~~~~~~~~~~~~
+
+The ``solve_all_scenarios`` function enables comprehensive scenario-based optimization analysis:
+
+.. code-block:: python
+
+   from problem import OXLPProblem, ObjectiveType
+   from constraints import RelationalOperators
+   from data import OXData
+   from solvers import solve_all_scenarios
+
+   # Create problem with scenario-based data
+   problem = OXLPProblem()
+   
+   # Create decision variables
+   x = problem.create_decision_variable("production_x", "Production of X", 0, 100)
+   y = problem.create_decision_variable("production_y", "Production of Y", 0, 100)
+   
+   # Create data object with scenarios
+   demand_data = OXData()
+   demand_data.demand = 100        # Default scenario
+   demand_data.price = 5.0
+   
+   # Create scenarios for different market conditions
+   demand_data.create_scenario("High_Demand", demand=150, price=6.0)
+   demand_data.create_scenario("Low_Demand", demand=75, price=4.5)
+   demand_data.create_scenario("Peak_Season", demand=200, price=7.0)
+   
+   # Add data to problem database
+   problem.db.add_object(demand_data)
+   
+   # Create constraints using scenario data
+   problem.create_constraint(
+       variables=[x.id, y.id],
+       weights=[1, 1], 
+       operator=RelationalOperators.LESS_THAN_EQUAL,
+       value=demand_data.demand,
+       description="Total production must not exceed demand"
+   )
+   
+   # Create objective function using scenario data
+   problem.create_objective_function(
+       variables=[x.id, y.id],
+       weights=[demand_data.price, 3.0],
+       objective_type=ObjectiveType.MAXIMIZE,
+       description="Maximize revenue"
+   )
+   
+   # Solve across all scenarios
+   scenario_results = solve_all_scenarios(problem, 'ORTools', maxTime=300)
+   
+   print(f"Solved {len(scenario_results)} scenarios")
+   print(f"Scenarios: {list(scenario_results.keys())}")
+   
+   # Analyze results across scenarios
+   best_scenario = None
+   best_value = float('-inf')
+   
+   for scenario_name, result in scenario_results.items():
+       print(f"\n=== Scenario: {scenario_name} ===")
+       
+       if result['status'] == OXSolutionStatus.OPTIMAL:
+           solution = result['solution']
+           print(f"Status: Optimal")
+           print(f"Objective Value: {solution.objective_value:.2f}")
+           print(f"Production X: {solution.variable_values[x.id]:.2f}")
+           print(f"Production Y: {solution.variable_values[y.id]:.2f}")
+           
+           # Track best scenario
+           if solution.objective_value > best_value:
+               best_value = solution.objective_value
+               best_scenario = scenario_name
+       else:
+           print(f"Status: {result['status']}")
+   
+   if best_scenario:
+       print(f"\nBest performing scenario: {best_scenario} (${best_value:.2f})")
+
+Advanced Multi-Scenario Analysis
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+.. code-block:: python
+
+   from problem import OXLPProblem
+   from data import OXData  
+   from solvers import solve_all_scenarios
+   import statistics
+
+   def comprehensive_scenario_analysis(problem, solver='ORTools'):
+       """Perform comprehensive multi-scenario optimization analysis."""
+       
+       # Solve all scenarios
+       results = solve_all_scenarios(problem, solver, maxTime=600)
+       
+       # Collect statistics
+       optimal_scenarios = []
+       objective_values = []
+       
+       for scenario_name, result in results.items():
+           if result['status'] == OXSolutionStatus.OPTIMAL:
+               optimal_scenarios.append(scenario_name)
+               objective_values.append(result['solution'].objective_value)
+       
+       if not objective_values:
+           print("No optimal solutions found across scenarios")
+           return
+       
+       # Statistical analysis
+       print("=== Multi-Scenario Analysis ===")
+       print(f"Total scenarios: {len(results)}")
+       print(f"Optimal scenarios: {len(optimal_scenarios)}")
+       print(f"Success rate: {len(optimal_scenarios)/len(results)*100:.1f}%")
+       print()
+       
+       print("=== Objective Value Statistics ===")
+       print(f"Best value: {max(objective_values):.2f}")
+       print(f"Worst value: {min(objective_values):.2f}")
+       print(f"Average value: {statistics.mean(objective_values):.2f}")
+       print(f"Median value: {statistics.median(objective_values):.2f}")
+       print(f"Standard deviation: {statistics.stdev(objective_values):.2f}")
+       print()
+       
+       # Scenario ranking
+       scenario_ranking = []
+       for scenario_name, result in results.items():
+           if result['status'] == OXSolutionStatus.OPTIMAL:
+               scenario_ranking.append((scenario_name, result['solution'].objective_value))
+       
+       scenario_ranking.sort(key=lambda x: x[1], reverse=True)
+       
+       print("=== Scenario Ranking ===")
+       for i, (scenario, value) in enumerate(scenario_ranking, 1):
+           print(f"{i:2d}. {scenario:<20}: ${value:8.2f}")
+       
+       # Sensitivity analysis
+       if len(objective_values) > 1:
+           value_range = max(objective_values) - min(objective_values)
+           cv = statistics.stdev(objective_values) / statistics.mean(objective_values)
+           
+           print(f"\n=== Sensitivity Analysis ===")
+           print(f"Value range: ${value_range:.2f}")
+           print(f"Coefficient of variation: {cv:.3f}")
+           
+           if cv > 0.2:
+               print("⚠️  High sensitivity to scenario parameters")
+           elif cv > 0.1:
+               print("⚡ Moderate sensitivity to scenario parameters")  
+           else:
+               print("✅ Low sensitivity to scenario parameters")
+       
+       return results
+   
+   # Usage with complex multi-object scenarios
+   problem = OXLPProblem()
+   
+   # Create variables
+   x = problem.create_decision_variable("x", "Variable X", 0, 50)
+   y = problem.create_decision_variable("y", "Variable Y", 0, 50)
+   
+   # Create multiple data objects with coordinated scenarios
+   capacity_data = OXData()
+   capacity_data.max_capacity = 100
+   capacity_data.create_scenario("Expansion", max_capacity=150)
+   capacity_data.create_scenario("Recession", max_capacity=80)
+   capacity_data.create_scenario("Growth", max_capacity=120)
+   
+   cost_data = OXData()
+   cost_data.unit_cost = 2.0
+   cost_data.create_scenario("Expansion", unit_cost=1.8)    # Lower costs during expansion
+   cost_data.create_scenario("Recession", unit_cost=2.5)   # Higher costs during recession
+   cost_data.create_scenario("Growth", unit_cost=2.2)      # Moderate cost increase
+   
+   # Add to database
+   problem.db.add_object(capacity_data)
+   problem.db.add_object(cost_data)
+   
+   # Create constraints and objectives using scenario data
+   problem.create_constraint([x.id, y.id], [1, 1], "<=", capacity_data.max_capacity)
+   problem.create_objective_function([x.id, y.id], [cost_data.unit_cost, 3.0], "maximize")
+   
+   # Perform comprehensive analysis
+   analysis_results = comprehensive_scenario_analysis(problem, 'Gurobi')
+
+Constraint-Based Scenarios
+~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+.. code-block:: python
+
+   from constraints import RelationalOperators
+   from solvers import solve_all_scenarios
+
+   # Create problem with constraint scenarios
+   problem = OXLPProblem()
+   
+   x = problem.create_decision_variable("x", "Production X", 0, 100)
+   y = problem.create_decision_variable("y", "Production Y", 0, 100)
+   
+   # Create base constraint
+   resource_constraint = problem.create_constraint(
+       variables=[x.id, y.id],
+       weights=[2, 1],
+       operator=RelationalOperators.LESS_THAN_EQUAL,
+       value=200,
+       description="Resource availability constraint"
+   )
+   
+   # Add constraint scenarios for different resource conditions
+   resource_constraint.create_scenario(
+       "Limited_Resources", 
+       rhs=150, 
+       description="Resource shortage scenario"
+   )
+   
+   resource_constraint.create_scenario(
+       "Abundant_Resources", 
+       rhs=300,
+       description="Resource abundance scenario"
+   )
+   
+   resource_constraint.create_scenario(
+       "Emergency_Resources",
+       rhs=100,
+       description="Emergency resource rationing"
+   )
+   
+   # Create objective
+   problem.create_objective_function(
+       variables=[x.id, y.id],
+       weights=[5, 4],
+       objective_type=ObjectiveType.MAXIMIZE
+   )
+   
+   # Solve across constraint scenarios
+   constraint_results = solve_all_scenarios(problem, 'ORTools')
+   
+   # Analyze impact of resource availability
+   print("=== Resource Scenario Analysis ===")
+   for scenario_name, result in constraint_results.items():
+       if result['status'] == OXSolutionStatus.OPTIMAL:
+           solution = result['solution']
+           total_production = solution.variable_values[x.id] + solution.variable_values[y.id]
+           
+           print(f"{scenario_name}:")
+           print(f"  Objective: ${solution.objective_value:.2f}")
+           print(f"  Total Production: {total_production:.2f} units")
+           print(f"  X Production: {solution.variable_values[x.id]:.2f}")
+           print(f"  Y Production: {solution.variable_values[y.id]:.2f}")
+           print()
+
+Mixed Data and Constraint Scenarios
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+.. code-block:: python
+
+   from data import OXData
+   from solvers import solve_all_scenarios
+
+   # Complex scenario setup with both data and constraint scenarios
+   problem = OXLPProblem()
+   
+   # Variables
+   x = problem.create_decision_variable("x", "Product X", 0, 100)
+   y = problem.create_decision_variable("y", "Product Y", 0, 100)
+   
+   # Data object scenarios for market conditions
+   market_data = OXData()
+   market_data.price_x = 10.0
+   market_data.price_y = 8.0
+   market_data.create_scenario("Bull_Market", price_x=12.0, price_y=10.0)
+   market_data.create_scenario("Bear_Market", price_x=8.0, price_y=6.0)
+   
+   problem.db.add_object(market_data)
+   
+   # Constraint scenarios for operational conditions
+   capacity_constraint = problem.create_constraint(
+       variables=[x.id, y.id],
+       weights=[1, 1],
+       operator=RelationalOperators.LESS_THAN_EQUAL,
+       value=150,
+       description="Production capacity"
+   )
+   capacity_constraint.create_scenario("Maintenance", rhs=100)
+   capacity_constraint.create_scenario("Overtime", rhs=200)
+   
+   # Objective using data scenarios
+   problem.create_objective_function(
+       variables=[x.id, y.id],
+       weights=[market_data.price_x, market_data.price_y],
+       objective_type=ObjectiveType.MAXIMIZE
+   )
+   
+   # This will solve all combinations:
+   # - Default + Default, Bull_Market + Default, Bear_Market + Default
+   # - Default + Maintenance, Bull_Market + Maintenance, Bear_Market + Maintenance  
+   # - Default + Overtime, Bull_Market + Overtime, Bear_Market + Overtime
+   mixed_results = solve_all_scenarios(problem, 'Gurobi', use_continuous=True)
+   
+   print(f"Total scenario combinations solved: {len(mixed_results)}")
+   
+   # Group results by data vs constraint scenarios
+   market_scenarios = {}
+   capacity_scenarios = {}
+   
+   for scenario_name, result in mixed_results.items():
+       if result['status'] == OXSolutionStatus.OPTIMAL:
+           solution = result['solution']
+           
+           # Categorize scenarios
+           if 'Market' in scenario_name:
+               market_scenarios[scenario_name] = solution.objective_value
+           elif scenario_name in ['Maintenance', 'Overtime']:
+               capacity_scenarios[scenario_name] = solution.objective_value
+           else:
+               print(f"Default scenario value: ${solution.objective_value:.2f}")
+   
+   print("\n=== Market Impact Analysis ===")
+   for scenario, value in market_scenarios.items():
+       print(f"{scenario}: ${value:.2f}")
+   
+   print("\n=== Capacity Impact Analysis ===")
+   for scenario, value in capacity_scenarios.items():
+       print(f"{scenario}: ${value:.2f}")
 
 See Also
 --------
