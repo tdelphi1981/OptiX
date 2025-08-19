@@ -145,11 +145,12 @@ def main():
     assert len(bap.variables) == number_of_groups * number_of_lines
 
     for line in bap.db.search_by_function(lambda var: isinstance(var, Line)):
-        bap.create_constraint(
+        constraint=bap.create_constraint(
             variable_search_function=lambda var: var.related_data["line"] == line.id,
             weight_calculation_function=lambda var, prb: prb.db[prb.variables[var].related_data["busgroup"]].capacity,
             operator=RelationalOperators.GREATER_THAN_EQUAL,
             value=line.daily_passenger_demand)
+        bap.constraints.last_object.create_scenario("High_Capacity", rhs=150, name="High capacity scenario")
 
     assert len(bap.constraints) == number_of_lines
 
