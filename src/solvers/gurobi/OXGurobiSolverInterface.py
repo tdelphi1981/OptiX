@@ -54,7 +54,8 @@ from fractions import Fraction
 from typing import Optional
 
 from base import OXception
-from constraints import OXConstraint, OXGoalConstraint, RelationalOperators
+from constraints import OXConstraint, OXGoalConstraint, RelationalOperators, OXMultiplicativeEqualityConstraint, \
+    OXDivisionEqualityConstraint, OXModuloEqualityConstraint, OXConditionalConstraint, OXSummationEqualityConstraint
 from problem import OXCSPProblem, OXLPProblem, OXGPProblem, ObjectiveType
 from solvers.OXSolverInterface import OXSolverInterface, OXSolutionStatus
 from solvers.OXSolverInterface import LogsType, OXSolverSolution
@@ -130,6 +131,57 @@ class OXGurobiSolverInterface(OXSolverInterface):
         self._var_mapping = {}
         self._constraint_mapping = {}
         self._constraint_expr_mapping = {}
+        self._helper_variables = []
+
+    def _create_helper_variable(self, name: str = "", lb: float | int = 0, ub: float | int = 1,
+                                continuous: bool = False, integer: bool = False, binary: bool = False):
+        """
+        Create a single Gurobi variable from scratch to help with special constraints.
+
+        Creates a new helper variable with the specified bounds and variable types. This
+        function aims to simplify the creation of helper variables for special constraint
+        creation. It also stores the variable in _helper_variables array for later use.
+        It is not intended for use in general optimization problems.
+
+        Args:
+            name (str): Variable name (internal use only) (default: "")
+            lb (float | int): Lower bound for the variable (default: 0)
+            ub (float | int): Upper bound for the variable (default: 1)
+            continuous (bool): Whether to create a continuous variable (default: False)
+            integer (bool): Whether to create an integer variable (default: False)
+            binary (bool): Whether to create a binary variable (default: False)
+
+        Raises:
+            OXception: If more than one variable type is specified
+
+        Returns:
+            The created Gurobi variable object
+
+        Note:
+            - Binary variables: Created when binary parameter is True
+            - Continuous variables: Created when continuous parameter is True
+            - Integer variables: Created when integer parameter is True
+            - Only creation of one type of variable is supported at a time
+            - Infinite bounds are converted to system maximum values
+        """
+        requested_types = [binary, continuous, integer]
+        if sum(requested_types) > 1:
+            raise OXception("Only one variable type can be specified at a time.")
+        if math.isinf(ub):
+            ub = sys.maxsize
+        if math.isinf(lb):
+            lb = -sys.maxsize
+        if any(requested_types):
+            var = None
+            if continuous:
+                var = self._model.addVar(vtype=GRB.CONTINUOUS, lb=lb, ub=ub, name=name)
+            elif integer:
+                var = self._model.addVar(vtype=GRB.INTEGER, lb=lb, ub=ub, name=name)
+            elif binary:
+                var = self._model.addVar(vtype=GRB.BINARY, name=name)
+            self._helper_variables.append(var)
+            return var
+        raise OXception("No Variable type specified.")
 
     def _create_single_variable(self, var: OXVariable):
         """
@@ -290,7 +342,18 @@ class OXGurobiSolverInterface(OXSolverInterface):
             Implementation is pending for advanced constraint types that require
             special handling in the Gurobi solver.
         """
-        pass
+        for constraint in prb.specials:
+            if isinstance(constraint, OXMultiplicativeEqualityConstraint):
+                self.__create_multiplicative_equality_constraint(constraint)
+            elif isinstance(constraint, OXDivisionEqualityConstraint) or isinstance(constraint,
+                                                                                    OXModuloEqualityConstraint):
+                self.__create_division_modulo_equality_constraint(constraint)
+            elif isinstance(constraint, OXSummationEqualityConstraint):
+                self.__create_summation_equality_constraint(constraint)
+            elif isinstance(constraint, OXConditionalConstraint):
+                self.__create_conditional_constraint(constraint, prb)
+            else:
+                raise OXception(f"Unsupported special constraint type: {type(constraint)}")
 
     def create_objective(self, prb: OXLPProblem):
         """
@@ -408,3 +471,161 @@ class OXGurobiSolverInterface(OXSolverInterface):
             from the Gurobi solver instance.
         """
         pass
+
+    def __create_multiplicative_equality_constraint(self, constraint: OXMultiplicativeEqualityConstraint):
+        """Create a multiplicative equality constraint.
+
+        Args:
+            constraint (OXMultiplicativeEqualityConstraint): The constraint to create.
+        """
+        out_var = self._var_mapping[constraint.output_variable]
+
+        input_vars = [self._var_mapping[v] for v in constraint.input_variables]
+
+        gurobi_version = gp.gurobi().version()
+
+        if isinstance(gurobi_version, tuple) and gurobi_version[0] >= 12:
+            expr = input_vars[0]
+            for var in input_vars[1:]:
+                expr = expr * var
+            self._model.addGenConstrNL(out_var, expr)
+        else:
+            if len(input_vars) == 2:
+                self._model.addGenConstrNL(out_var, input_vars[0] * input_vars[1])
+            else:
+                iterator = iter(input_vars)
+                a = next(iterator)
+                for b in iterator:
+                    helper_var = self._create_helper_variable(lb=0, ub=math.inf, continuous=True)
+                    self._model.addGenConstrNL(helper_var, a * b)
+                    a = helper_var
+                self._model.addGenConstrNL(out_var, a)
+
+    def __create_division_modulo_equality_constraint(self,
+                                                     constraint: OXDivisionEqualityConstraint | OXModuloEqualityConstraint):
+        """Create a division or modulo equality constraint.
+
+        Args:
+            constraint (OXDivisionEqualityConstraint | OXModuloEqualityConstraint): The constraint to create.
+
+        Raises:
+            OXception: If the constraint type is not supported.
+        """
+        out_var = self._var_mapping[constraint.output_variable]
+        in_var = self._var_mapping[constraint.input_variable]
+        denominator = constraint.denominator
+
+        if isinstance(constraint, OXDivisionEqualityConstraint):
+            self._model.addConstr(in_var == out_var * denominator)
+        elif isinstance(constraint, OXModuloEqualityConstraint):
+            helper_var = self._create_helper_variable(lb=0, ub=math.inf, integer=True)
+            self._model.addConstr(in_var == helper_var * denominator + out_var)
+            self._model.addConstr(out_var < denominator)
+            self._model.addConstr(out_var >= 0)
+        else:
+            raise OXception(f"Unsupported special constraint type: {type(constraint)}")
+
+    def __create_summation_equality_constraint(self, constraint: OXSummationEqualityConstraint):
+        """Create a summation equality constraint.
+
+        Args:
+            constraint (OXSummationEqualityConstraint): The constraint to create.
+        """
+        out_var = self._var_mapping[constraint.output_variable]
+        input_vars = [self._var_mapping[v] for v in constraint.input_variables]
+
+        self._model.addConstr(out_var == sum(input_vars))
+
+    def __create_constraint_expression(self, constraint: OXConstraint, M: float = 0.0, eps: float = 0.0,
+                                       indicator_var=None, reverse_indicator_var=False):
+        """Create a constraint expression for Gurobi.
+
+        Args:
+            constraint (OXConstraint): The constraint to convert to an expression.
+
+        Returns:
+            The OR-Tools constraint expression.
+
+        Raises:
+            OXception: If the constraint contains unsupported elements or float weights
+                      without denominator equalization enabled.
+        """
+        weights = constraint.expression.weights
+        rhs = constraint.rhs
+        if any(isinstance(weight, float) or isinstance(weight, Fraction) for weight in weights) or isinstance(
+                rhs, float) or isinstance(rhs, Fraction):
+            if "equalizeDenominators" in self._parameters and self._parameters["equalizeDenominators"]:
+                weights = [round(constraint.rhs_denominator * weight) for weight in
+                           constraint.expression.integer_weights]
+                rhs = round(constraint.expression.integer_denominator * constraint.rhs_numerator)
+            else:
+                weights = constraint.expression.weights
+                rhs = constraint.rhs
+        if indicator_var is not None:
+            ind_expr = eps
+            if reverse_indicator_var:
+                ind_expr += M * (1 - indicator_var)
+            else:
+                ind_expr += M * indicator_var
+            if constraint.relational_operator == RelationalOperators.GREATER_THAN:
+                return sum(
+                    self._var_mapping[v] * w for v, w in zip(constraint.expression.variables, weights)) + ind_expr > rhs
+            elif constraint.relational_operator == RelationalOperators.GREATER_THAN_EQUAL:
+                return sum(self._var_mapping[v] * w for v, w in
+                           zip(constraint.expression.variables, weights)) + ind_expr >= rhs
+            elif constraint.relational_operator == RelationalOperators.EQUAL:
+                return sum(self._var_mapping[v] * w for v, w in
+                           zip(constraint.expression.variables, weights)) + ind_expr == rhs
+            elif constraint.relational_operator == RelationalOperators.LESS_THAN_EQUAL:
+                return sum(self._var_mapping[v] * w for v, w in
+                           zip(constraint.expression.variables, weights)) + ind_expr <= rhs
+            elif constraint.relational_operator == RelationalOperators.LESS_THAN:
+                return sum(
+                    self._var_mapping[v] * w for v, w in zip(constraint.expression.variables, weights)) + ind_expr < rhs
+            else:
+                raise OXception(f"Unsupported relational operator: {constraint.relational_operator}")
+        else:
+            if constraint.relational_operator == RelationalOperators.GREATER_THAN:
+                return sum(self._var_mapping[v] * w for v, w in
+                           zip(constraint.expression.variables, weights)) > rhs
+            elif constraint.relational_operator == RelationalOperators.GREATER_THAN_EQUAL:
+                return sum(self._var_mapping[v] * w for v, w in zip(constraint.expression.variables, weights)) >= rhs
+            elif constraint.relational_operator == RelationalOperators.EQUAL:
+                return sum(self._var_mapping[v] * w for v, w in zip(constraint.expression.variables, weights)) == rhs
+            elif constraint.relational_operator == RelationalOperators.LESS_THAN_EQUAL:
+                return sum(self._var_mapping[v] * w for v, w in zip(constraint.expression.variables, weights)) <= rhs
+            elif constraint.relational_operator == RelationalOperators.LESS_THAN:
+                return sum(self._var_mapping[v] * w for v, w in zip(constraint.expression.variables, weights)) < rhs
+            else:
+                raise OXception(f"Unsupported relational operator: {constraint.relational_operator}")
+
+    def __create_conditional_constraint(self, constraint: OXConditionalConstraint, prb: OXCSPProblem):
+        """Create a conditional constraint (if-then-else logic).
+
+        Args:
+            constraint (OXConditionalConstraint): The conditional constraint to create.
+            prb (OXCSPProblem): The problem containing the referenced constraints.
+        """
+        indicator_variable = self._var_mapping[constraint.indicator_variable]
+
+        input_constraint_id = constraint.input_constraint
+        true_constraint_id = constraint.constraint_if_true
+        false_constraint_id = constraint.constraint_if_false
+
+        input_constraint = prb.constraints[input_constraint_id]
+        true_constraint = prb.constraints[true_constraint_id]
+        false_constraint = prb.constraints[false_constraint_id]
+        input_reversed = input_constraint.reverse()
+
+        M = sum(prb.variables[var_id].upper_bound for var_id in input_constraint.expression.variables) + 1
+        eps = 1e-4
+
+        input_expression = self.__create_constraint_expression(input_constraint, -M, eps, indicator_variable, True)
+        input_reversed_expression = self.__create_constraint_expression(input_reversed, M, 0, indicator_variable)
+        true_expression = self.__create_constraint_expression(true_constraint)
+        false_expression = self.__create_constraint_expression(false_constraint)
+
+        self._model.add(input_expression)
+        self._model.add(input_reversed_expression)
+        self._model.add((indicator_variable == 1) >> true_expression)
+        self._model.add((indicator_variable == 0) >> false_expression)

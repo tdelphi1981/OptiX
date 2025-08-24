@@ -3,22 +3,32 @@ name = "optix"
 version = "0.1.0"
 description = ""
 authors = [
-    {name = "Tolga BERBER",email = "tolga.berber@fen.ktu.edu.tr"},
-    {name = "Beyzanur SİYAH",email = "beyzanursiyah@ktu.edu.tr"}
+    { name = "Tolga BERBER", email = "tolga.berber@fen.ktu.edu.tr" },
+    { name = "Beyzanur SİYAH", email = "beyzanursiyah@ktu.edu.tr" }
 ]
 readme = "README.md"
 requires-python = ">=3.11"
 dependencies = [
     "pytest (>=8.3.4,<9.0.0)",
     "urllib3 (==2.4.0)",
-    "ortools (==9.12.4544)",
     "sphinx (>=8.2.3,<9.0.0)",
     "sphinx-rtd-theme (>=3.0.2,<4.0.0)",
     "sphinxcontrib-apidoc (>=0.6.0,<0.7.0)",
     "myst-parser (>=4.0.1,<5.0.0)",
-    "gurobipy (>=12.0.3,<13.0.0)",
 ]
 
 [build-system]
 requires = ["poetry-core>=2.0.0,<3.0.0"]
 build-backend = "poetry.core.masonry.api"
+
+[project.optional-dependencies]
+gurobi = [
+    "gurobipy (>=12.0.3,<13.0.0)"
+]
+ortools = [
+    "ortools (==9.12.4544)"
+]
+all = [
+    "gurobipy (>=12.0.3,<13.0.0)",
+    "ortools (==9.12.4544)"
+]

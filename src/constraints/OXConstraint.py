@@ -93,7 +93,8 @@ from variables.OXDeviationVar import OXDeviationVar
 
 #: List of field names that are excluded from scenario management to prevent infinite loops
 #: and maintain object integrity. These fields are always accessed from the base object.
-NON_SCENARIO_FIELDS = ["active_scenario", "scenarios", "id", "class_name", "positive_deviation_variable", "negative_deviation_variable"]
+NON_SCENARIO_FIELDS = ["active_scenario", "scenarios", "id", "class_name", "positive_deviation_variable",
+                       "negative_deviation_variable", "expression"]
 
 
 class RelationalOperators(StrEnum):
@@ -265,7 +266,7 @@ class OXConstraint(OXObject):
             for field in obj_fields:
                 if field.name not in NON_SCENARIO_FIELDS:
                     self.scenarios['Default'][field.name] = getattr(self, field.name)
-        
+
         self.scenarios[scenario_name] = {}
         for key, value in kwargs.items():
             if key not in NON_SCENARIO_FIELDS:
