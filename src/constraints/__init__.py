@@ -68,7 +68,6 @@ Notes:
 
 from .OXConstraint import OXConstraint, OXGoalConstraint, RelationalOperators
 from .OXConstraintSet import OXConstraintSet
-from .OXpression import OXpression, get_integer_numerator_and_denominators
 from .OXSpecialConstraints import (
     OXSpecialConstraint,
     OXNonLinearEqualityConstraint,
@@ -78,6 +77,7 @@ from .OXSpecialConstraints import (
     OXSummationEqualityConstraint,
     OXConditionalConstraint
 )
+from .OXpression import OXpression, get_integer_numerator_and_denominators
 
 __all__ = [
     # Base constraint classes

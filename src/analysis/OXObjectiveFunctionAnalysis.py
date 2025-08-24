@@ -70,10 +70,9 @@ Module Dependencies:
     - typing: Type annotations for enhanced code reliability
 """
 
+import statistics
 from dataclasses import dataclass, field
 from typing import Dict, List, Optional, Union, Any
-import statistics
-from uuid import UUID
 
 from base import OXObject, OXception
 from problem.OXProblem import OXLPProblem, OXGPProblem

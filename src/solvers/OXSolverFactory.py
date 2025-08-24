@@ -123,9 +123,9 @@ Module Dependencies:
 
 from base import OXception
 from problem.OXProblem import OXCSPProblem, OXLPProblem
+from solvers.OXSolverInterface import OXSolutionStatus
 from solvers.gurobi.OXGurobiSolverInterface import OXGurobiSolverInterface
 from solvers.ortools.OXORToolsSolverInterface import OXORToolsSolverInterface
-from solvers.OXSolverInterface import OXSolutionStatus
 
 _available_solvers = {
     'ORTools': OXORToolsSolverInterface,
@@ -532,16 +532,16 @@ def solve_all_scenarios(problem: OXCSPProblem, solver: str, **kwargs):
 
     # Discover all unique scenarios across data objects and constraints
     all_scenarios = set()
-    
+
     # Discover scenarios from data objects
     for data_obj in problem.db:
         all_scenarios.update(data_obj.scenarios.keys())
-    
+
     # Discover scenarios from constraints
     if hasattr(problem, 'constraints'):
         for constraint in problem.constraints:
             all_scenarios.update(constraint.scenarios.keys())
-    
+
     if len(all_scenarios) == 0:
         raise OXception("No scenarios found in data objects or constraints")
 
@@ -549,7 +549,7 @@ def solve_all_scenarios(problem: OXCSPProblem, solver: str, **kwargs):
     original_data_scenarios = {}
     for data_obj in problem.db:
         original_data_scenarios[data_obj.id] = data_obj.active_scenario
-    
+
     original_constraint_scenarios = {}
     if hasattr(problem, 'constraints'):
         for constraint in problem.constraints:
@@ -567,7 +567,7 @@ def solve_all_scenarios(problem: OXCSPProblem, solver: str, **kwargs):
                 else:
                     # Keep default scenario if this scenario doesn't exist for this object
                     data_obj.active_scenario = "Default"
-            
+
             # Set all constraints to the current scenario
             if hasattr(problem, 'constraints'):
                 for constraint in problem.constraints:
@@ -580,6 +580,11 @@ def solve_all_scenarios(problem: OXCSPProblem, solver: str, **kwargs):
             # Solve the problem with current scenario configuration
             try:
                 status, solver_obj = solve(problem, solver, **kwargs)
+                if status in [OXSolutionStatus.INFEASIBLE, OXSolutionStatus.ERROR, OXSolutionStatus.UNKNOWN, OXSolutionStatus.TIMEOUT, OXSolutionStatus.UNBOUNDED]:
+                    scenario_results[scenario_name] = {
+                        'status': status,
+                        'solution': None
+                    }
                 for solution in solver_obj:
                     scenario_results[scenario_name] = {
                         'status': status,
@@ -591,17 +596,15 @@ def solve_all_scenarios(problem: OXCSPProblem, solver: str, **kwargs):
                     'status': OXSolutionStatus.ERROR,
                     'solution': None
                 }
-
+        return scenario_results
     finally:
         # Restore original active scenarios for data objects
         for data_obj in problem.db:
             if data_obj.id in original_data_scenarios:
                 data_obj.active_scenario = original_data_scenarios[data_obj.id]
-        
+
         # Restore original active scenarios for constraints
         if hasattr(problem, 'constraints'):
             for constraint in problem.constraints:
                 if constraint.id in original_constraint_scenarios:
                     constraint.active_scenario = original_constraint_scenarios[constraint.id]
-
-    return scenario_results

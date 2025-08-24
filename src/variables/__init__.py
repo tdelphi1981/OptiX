@@ -99,9 +99,9 @@ See Also:
     :mod:`solvers`: Solver interfaces that process variables for optimization execution.
 """
 
+from .OXDeviationVar import OXDeviationVar
 from .OXVariable import OXVariable
 from .OXVariableSet import OXVariableSet
-from .OXDeviationVar import OXDeviationVar
 
 __all__ = [
     # Core decision variables

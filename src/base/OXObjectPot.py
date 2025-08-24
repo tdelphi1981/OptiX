@@ -57,8 +57,8 @@ from collections.abc import Callable
 from dataclasses import dataclass, field
 from uuid import UUID
 
-from base.OXception import OXception
 from base.OXObject import OXObject
+from base.OXception import OXception
 
 
 @dataclass

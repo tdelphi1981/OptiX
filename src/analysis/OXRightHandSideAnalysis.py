@@ -88,16 +88,16 @@ Module Dependencies:
     - typing: Type annotations for enhanced code reliability
 """
 
-from dataclasses import dataclass, field
-from typing import Dict, List, Optional, Union, Any, Set
 import statistics
+from dataclasses import dataclass, field
+from typing import Dict, List, Optional, Union, Set
 from uuid import UUID
 
 from base import OXObject, OXception
-from problem.OXProblem import OXLPProblem, OXGPProblem, OXCSPProblem
-from solvers.OXSolverFactory import solve_all_scenarios, solve
-from solvers.OXSolverInterface import OXSolutionStatus
 from constraints.OXConstraint import OXConstraint, RelationalOperators
+from problem.OXProblem import OXLPProblem, OXGPProblem, OXCSPProblem
+from solvers.OXSolverFactory import solve
+from solvers.OXSolverInterface import OXSolutionStatus
 
 
 @dataclass

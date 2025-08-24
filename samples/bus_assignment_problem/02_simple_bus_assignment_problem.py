@@ -69,14 +69,14 @@ Learning Objectives:
     - Fleet capacity modeling in transportation problems
     - Enhanced problem validation with multiple constraint sets
 """
-
+import pprint
 import random
 from dataclasses import dataclass
 
 from constraints.OXConstraint import RelationalOperators
 from data.OXData import OXData
 from problem.OXProblem import OXLPProblem, ObjectiveType
-from solvers.OXSolverFactory import solve
+from solvers.OXSolverFactory import solve, solve_all_scenarios
 
 
 @dataclass
@@ -173,6 +173,7 @@ def main():
         group.capacity = random.randint(25, 50)
         group.number_of_busses = random.randint(5, 10)
         group.order = i
+        group.create_scenario("epidemic", capacity=random.randint(12, 20))
         bap.db.add_object(group)
 
     for i in range(number_of_lines):
@@ -215,13 +216,23 @@ def main():
         variable_search_function=lambda var: True,
         weight_calculation_function=lambda var, prb: 1.0,
     )
-
-    status, solver = solve(bap, 'Gurobi', use_continuous=False, equalizeDenominators=True)
+    status, solver = solve(bap, 'ORTools', use_continuous=False, equalizeDenominators=True)
 
     print(f"Status: {status}")
 
     for solution in solver:
         solution.print_solution_for(bap)
+
+    results = solve_all_scenarios(bap, 'ORTools', use_continuous=False, equalizeDenominators=True)
+
+    for scenario in results:
+        print(f"=== Scenario: {scenario} ===")
+        print(f"=== Status: {results[scenario]['status']} ===")
+        print(f"=== Solution: ===")
+        if results[scenario]['solution']:
+            results[scenario]['solution'].print_solution_for(bap)
+        else:
+            print("  No solution found.")
 
 
 if __name__ == '__main__':

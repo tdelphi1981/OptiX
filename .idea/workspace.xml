@@ -4,10 +4,21 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="8079d7c8-d88b-4860-b52c-e25ebcf044e3" name="Changes" comment="Update project configuration and enhance Gurobi solver with new constraint types">
+    <list default="true" id="8079d7c8-d88b-4860-b52c-e25ebcf044e3" name="Changes" comment="Refactor UUID initialization in OXSpecialConstraints and update test cases for consistency">
+      <change afterPath="$PROJECT_DIR$/src/utilities/DynamicValue.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/constraints/OXSpecialConstraints.py" beforeDir="false" afterPath="$PROJECT_DIR$/src/constraints/OXSpecialConstraints.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/tests/test_OXSpecialConstraints.py" beforeDir="false" afterPath="$PROJECT_DIR$/tests/test_OXSpecialConstraints.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/samples/bus_assignment_problem/02_simple_bus_assignment_problem.py" beforeDir="false" afterPath="$PROJECT_DIR$/samples/bus_assignment_problem/02_simple_bus_assignment_problem.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/analysis/OXObjectiveFunctionAnalysis.py" beforeDir="false" afterPath="$PROJECT_DIR$/src/analysis/OXObjectiveFunctionAnalysis.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/analysis/OXRightHandSideAnalysis.py" beforeDir="false" afterPath="$PROJECT_DIR$/src/analysis/OXRightHandSideAnalysis.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/base/OXObjectPot.py" beforeDir="false" afterPath="$PROJECT_DIR$/src/base/OXObjectPot.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/constraints/OXConstraint.py" beforeDir="false" afterPath="$PROJECT_DIR$/src/constraints/OXConstraint.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/constraints/__init__.py" beforeDir="false" afterPath="$PROJECT_DIR$/src/constraints/__init__.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/data/OXData.py" beforeDir="false" afterPath="$PROJECT_DIR$/src/data/OXData.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/problem/OXProblem.py" beforeDir="false" afterPath="$PROJECT_DIR$/src/problem/OXProblem.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/serialization/serializers.py" beforeDir="false" afterPath="$PROJECT_DIR$/src/serialization/serializers.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/solvers/OXSolverFactory.py" beforeDir="false" afterPath="$PROJECT_DIR$/src/solvers/OXSolverFactory.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/solvers/gurobi/OXGurobiSolverInterface.py" beforeDir="false" afterPath="$PROJECT_DIR$/src/solvers/gurobi/OXGurobiSolverInterface.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/variables/__init__.py" beforeDir="false" afterPath="$PROJECT_DIR$/src/variables/__init__.py" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -100,7 +111,7 @@
       <recent name="$PROJECT_DIR$/docs" />
     </key>
   </component>
-  <component name="RunManager" selected="Python tests.Python tests in tests">
+  <component name="RunManager" selected="Python.02_simple_bus_assignment_problem">
     <configuration name="01_diet_problem" type="PythonConfigurationType" factoryName="Python" temporary="true" nameIsGenerated="true">
       <module name="OptiX" />
       <option name="ENV_FILES" value="" />
@@ -228,10 +239,10 @@
     </configuration>
     <recent_temporary>
       <list>
+        <item itemvalue="Python.02_simple_bus_assignment_problem" />
         <item itemvalue="Python tests.Python tests for test_OXSpecialConstraints.test_conditional_constraint_initialization" />
         <item itemvalue="Python.01_diet_problem" />
         <item itemvalue="Python.03_bus_assignment_problem" />
-        <item itemvalue="Python.02_simple_bus_assignment_problem" />
         <item itemvalue="Python.01_simple_bus_assignment_problem" />
       </list>
     </recent_temporary>
@@ -296,7 +307,7 @@
       <workItem from="1754137440263" duration="1888000" />
       <workItem from="1754217681514" duration="11887000" />
       <workItem from="1754236759324" duration="15418000" />
-      <workItem from="1756001323687" duration="5784000" />
+      <workItem from="1756001323687" duration="10657000" />
     </task>
     <task id="LOCAL-00001" summary="Add initial implementation of core OptiX framework  &#10;&#10;This commit introduces foundational components for the OptiX framework, including utility functions, base classes (e.g., `OXObject`, `OXVariable`), and test coverage for these modules. Additionally, it sets up project structure with `pyproject.toml`, `.gitignore`, and IntelliJ IDEA settings.">
       <option name="closed" value="true" />
@@ -466,7 +477,15 @@
       <option name="project" value="LOCAL" />
       <updated>1756006843741</updated>
     </task>
-    <option name="localTasksCounter" value="22" />
+    <task id="LOCAL-00022" summary="Refactor UUID initialization in OXSpecialConstraints and update test cases for consistency">
+      <option name="closed" value="true" />
+      <created>1756007252400</created>
+      <option name="number" value="00022" />
+      <option name="presentableId" value="LOCAL-00022" />
+      <option name="project" value="LOCAL" />
+      <updated>1756007252400</updated>
+    </task>
+    <option name="localTasksCounter" value="23" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -484,7 +503,6 @@
     </option>
   </component>
   <component name="VcsManagerConfiguration">
-    <MESSAGE value="Add UML diagram for project structure&#10;&#10;Introduce a UML diagram to visually represent the project's class structure and relationships. This aids in understanding the system architecture and facilitates future development efforts." />
     <MESSAGE value="Add OXSpecialConstraints with various constraint types&#10;&#10;Introduce a new module `OXSpecialConstraints.py` containing specialized constraint classes like `OXNonLinearEqualityConstraint`, `OXMultiplicativeEqualityConstraint`, `OXDivisionEqualityConstraint`, `OXModuloEqualityConstraint`, `OXSummationEqualityConstraint`, and `OXConditionalConstraint`. These classes extend the existing constraint framework to support more complex problem definitions." />
     <MESSAGE value="Add `OXSpecialConstraint` and update `OXCSPProblem` for specialized constraints" />
     <MESSAGE value="Add SpecialConstraintType Enum to OXCSPProblem&#10;&#10;Introduce `SpecialConstraintType` as an enumeration within the `OXCSPProblem` class to categorize specialized constraints. This addition enhances the framework's flexibility by supporting various constraint types like MultiplicativeEquality, DivisionEquality, ModulusEquality, SummationEquality, and ConditionalConstraint. This change aligns with recent enhancements in constraint handling and supports more complex problem definitions." />
@@ -509,7 +527,8 @@
     <MESSAGE value="Add OXORToolsSolverInterface implementation for variable and constraint management" />
     <MESSAGE value="Enhance documentation and styling for OptiX framework with modern design elements" />
     <MESSAGE value="Update project configuration and enhance Gurobi solver with new constraint types" />
-    <option name="LAST_COMMIT_MESSAGE" value="Update project configuration and enhance Gurobi solver with new constraint types" />
+    <MESSAGE value="Refactor UUID initialization in OXSpecialConstraints and update test cases for consistency" />
+    <option name="LAST_COMMIT_MESSAGE" value="Refactor UUID initialization in OXSpecialConstraints and update test cases for consistency" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>
@@ -524,6 +543,11 @@
           <line>57</line>
           <option name="timeStamp" value="14" />
         </line-breakpoint>
+        <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
+          <url>file://$PROJECT_DIR$/src/solvers/OXSolverFactory.py</url>
+          <line>529</line>
+          <option name="timeStamp" value="15" />
+        </line-breakpoint>
       </breakpoints>
     </breakpoint-manager>
     <watches-manager>
@@ -533,11 +557,12 @@
     </watches-manager>
   </component>
   <component name="com.intellij.coverage.CoverageDataManagerImpl">
+    <SUITE FILE_PATH="coverage/OptiXGithub$02_simple_bus_assignment_problem.coverage" NAME="02_simple_bus_assignment_problem Coverage Results" MODIFIED="1756011694402" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/samples/bus_assignment_problem" />
     <SUITE FILE_PATH="coverage/OptiX$03_bus_assignment_problem.coverage" NAME="03_bus_assignment_problem Coverage Results" MODIFIED="1754255668585" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/samples/bus_assignment_problem" />
     <SUITE FILE_PATH="coverage/OptiX$01_simple_bus_assignment_problem.coverage" NAME="01_simple_bus_assignment_problem Coverage Results" MODIFIED="1753812914203" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/samples/bus_assignment_problem" />
     <SUITE FILE_PATH="coverage/OptiX$02_simple_bus_assignment_problem.coverage" NAME="02_simple_bus_assignment_problem Coverage Results" MODIFIED="1754255662998" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/samples/bus_assignment_problem" />
     <SUITE FILE_PATH="coverage/OptiX$.coverage" NAME=" Coverage Results" MODIFIED="1754220309531" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="" />
-    <SUITE FILE_PATH="coverage/OptiXGithub$.coverage" NAME=" Coverage Results" MODIFIED="1756007090688" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/tests" />
+    <SUITE FILE_PATH="coverage/OptiXGithub$.coverage" NAME=" Coverage Results" MODIFIED="1756007231593" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="" />
     <SUITE FILE_PATH="coverage/OptiX$01_diet_problem.coverage" NAME="01_diet_problem Coverage Results" MODIFIED="1754255675213" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/samples/diet_problem" />
   </component>
 </project>

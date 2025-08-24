@@ -88,8 +88,9 @@ from fractions import Fraction
 from typing import Any
 
 from base import OXObject, OXception
-from .OXpression import OXpression
+from utilities.DynamicValue import DynamicFloat
 from variables.OXDeviationVar import OXDeviationVar
+from .OXpression import OXpression
 
 #: List of field names that are excluded from scenario management to prevent infinite loops
 #: and maintain object integrity. These fields are always accessed from the base object.
@@ -204,11 +205,26 @@ class OXConstraint(OXObject):
         """
         if item in NON_SCENARIO_FIELDS:  # Prevent Infinite Loop!
             return super().__getattribute__(item)
-        active_scenario_values = self.scenarios.get(self.active_scenario, {})
-        if len(active_scenario_values) > 0:
-            if item in active_scenario_values:
-                return active_scenario_values[item]
-        return super().__getattribute__(item)
+
+        # Check if item is a dataclass field
+        obj_fields = super().__getattribute__('__dataclass_fields__')
+        if item not in obj_fields:
+            return super().__getattribute__(item)
+
+        def get_current_value():
+            current_scenarios = super(OXConstraint, self).__getattribute__('scenarios')
+            current_active = super(OXConstraint, self).__getattribute__('active_scenario')
+            current_scenario_values = current_scenarios.get(current_active, {})
+
+            if current_scenario_values and item in current_scenario_values:
+                return current_scenario_values[item]
+            return super(OXConstraint, self).__getattribute__(item)
+
+        current_value = get_current_value()
+        if isinstance(current_value, (int, float)) and not isinstance(current_value, DynamicFloat):
+            return DynamicFloat(get_current_value)
+        return current_value
+
 
     def create_scenario(self, scenario_name: str, **kwargs):
         """Create a new scenario with the specified constraint attribute values.
@@ -265,8 +281,7 @@ class OXConstraint(OXObject):
             obj_fields = fields(self)
             for field in obj_fields:
                 if field.name not in NON_SCENARIO_FIELDS:
-                    self.scenarios['Default'][field.name] = getattr(self, field.name)
-
+                    self.scenarios['Default'][field.name] = super().__getattribute__(field.name)
         self.scenarios[scenario_name] = {}
         for key, value in kwargs.items():
             if key not in NON_SCENARIO_FIELDS:

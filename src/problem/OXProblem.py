@@ -681,8 +681,6 @@ class OXCSPProblem(OXObject):
             Exactly one of variable_search_function/variables and one of
             weight_calculation_function/weights must be provided.
         """
-        # TODO value için fonksiyonel bir mekanizma koyulabilir mi? Value için değişkenler ve ağırlıklar için olduğu gibi
-        #      bir fonksiyonel ağırlıklandırma yapılabilir mi?
         self._check_parameters(variable_search_function, variables, weight_calculation_function, weights)
 
         if variables is None:

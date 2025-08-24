@@ -53,16 +53,16 @@ import sys
 from fractions import Fraction
 from typing import Optional
 
+import gurobipy as gp
+from gurobipy import GRB
+
 from base import OXception
 from constraints import OXConstraint, OXGoalConstraint, RelationalOperators, OXMultiplicativeEqualityConstraint, \
     OXDivisionEqualityConstraint, OXModuloEqualityConstraint, OXConditionalConstraint, OXSummationEqualityConstraint
 from problem import OXCSPProblem, OXLPProblem, OXGPProblem, ObjectiveType
-from solvers.OXSolverInterface import OXSolverInterface, OXSolutionStatus
 from solvers.OXSolverInterface import LogsType, OXSolverSolution
+from solvers.OXSolverInterface import OXSolverInterface, OXSolutionStatus
 from variables import OXVariable
-
-import gurobipy as gp
-from gurobipy import GRB
 
 
 class OXGurobiSolverInterface(OXSolverInterface):
