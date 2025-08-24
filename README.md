@@ -28,9 +28,8 @@ OptiX provides a hierarchical problem-solving framework with increasing complexi
 - **🎛️ Flexible Modeling**: Create decision variables, constraints, and objective functions
 - **🌐 Multi-Solver Architecture**: OR-Tools and Gurobi with unified interface
 - **📱 Special Constraints**: Non-linear operations (×, ÷, mod, if-then)
-- **🔄 Database Integration**: Object-relational mapping for complex data structures
-- **📋 Comprehensive Examples**: Real-world problems including bus assignment and diet optimization
-- **🧪 Full Test Coverage**: Comprehensive test suite for all major components
+- **🔄 Data Integration**: Object-relational-like mapping for complex data structures
+- **📋 Detailed Examples**: Real-world problems including bus assignment and diet optimization
 
 ## 🛠️ Prerequisites
 
@@ -61,17 +60,7 @@ poetry install
 
 # Activate virtual environment
 poetry shell
-```
-
-### Alternative: Using pip
-
-```bash
-# Create virtual environment
-python -m venv venv
-source venv/bin/activate  # On Windows: venv\Scripts\activate
-
-# Install dependencies
-pip install -r requirements.txt  # If available
+`poetry env activate`
 ```
 
 ### Solver Installation
@@ -130,7 +119,7 @@ problem.create_constraint(
 # Create objective function
 # For example: maximize 5x1 + 4x2
 problem.create_objective_function(
-    variables=[var.id for var in problem.variables.search_by_function(lambda x: x.name in ["x1", "x2"])],
+    variable_search_function=lambda x: x.name in ["x1", "x2"],
     weights=[5, 4],
     objective_type=ObjectiveType.MAXIMIZE
 )
@@ -199,7 +188,7 @@ problem.create_special_constraint(
 Located in `samples/bus_assignment_problem/`, this comprehensive example demonstrates:
 
 - **Goal Programming Implementation**: Multi-objective optimization with conflicting goals
-- **Database Integration**: Custom data classes for buses, routes, and schedules
+- **Data Integration**: Custom data classes for buses, routes, and schedules
 - **Variable Creation**: Dynamic variable generation from database objects using Cartesian products
 - **Complex Constraints**: Fleet limitations, service requirements, and operational restrictions
 - **Solution Analysis**: Detailed reporting and goal deviation analysis
@@ -306,92 +295,6 @@ Advanced constraint types for non-linear operations:
 - **Unified API**: Same code works with different solvers
 - **Solver Factory**: Automatic solver selection and configuration
 
-## 🧪 Testing
-
-### Running Tests
-
-```bash
-# Run all tests
-poetry run python -m pytest
-
-# Run specific test file  
-poetry run python -m pytest tests/test_OXProblem.py
-
-# Run tests with specific pattern
-poetry run python -m pytest -k "test_name_pattern"
-
-# Run with verbose output
-poetry run python -m pytest -v
-
-# Run with coverage report
-poetry run python -m pytest --cov=src --cov-report=html
-```
-
-### Test Structure
-
-```
-tests/
-├── test_base/              # Base class tests
-├── test_constraints/       # Constraint system tests  
-├── test_data/             # Database and data tests
-├── test_problem/          # Problem type tests
-├── test_solvers/          # Solver interface tests
-├── test_variables/        # Variable management tests
-└── test_utilities/        # Utility function tests
-```
-
-## 📁 Project Structure
-
-```
-OptiX/
-├── src/                           # Core framework source code
-│   ├── base/                      # Core classes and exception handling
-│   │   ├── OXObject.py           # Base class with UUID-based identity
-│   │   └── OXception.py          # Custom exception handling
-│   ├── constraints/               # Constraint definitions and special constraints
-│   │   ├── OXConstraint.py       # Regular linear constraints
-│   │   ├── OXConstraintSet.py    # Constraint collections
-│   │   ├── OXSpecialConstraint.py # Non-linear constraints
-│   │   └── OXpression.py         # Mathematical expressions
-│   ├── data/                      # Database and data management
-│   │   ├── OXData.py             # Individual data objects
-│   │   └── OXDatabase.py         # Data collections and filtering
-│   ├── problem/                   # Problem definition classes
-│   │   └── OXProblem.py          # CSP, LP, and GP problem types
-│   ├── solvers/                   # Solver interfaces and implementations
-│   │   ├── OXSolverInterface.py  # Base solver interface
-│   │   ├── OXSolverFactory.py    # Solver factory and unified solving
-│   │   ├── ortools/              # OR-Tools solver integration
-│   │   │   └── OXORToolsSolverInterface.py
-│   │   └── gurobi/               # Gurobi solver integration
-│   │       └── OXGurobiSolverInterface.py
-│   ├── variables/                 # Variable definitions and management
-│   │   ├── OXVariable.py         # Decision variables with bounds
-│   │   └── OXVariableSet.py      # Variable collections with search
-│   └── utilities/                 # Utility functions and serialization
-│       ├── OXClassLoader.py      # Dynamic class loading
-│       └── OXSerialization.py    # Object serialization utilities
-├── samples/                       # Example problems and use cases
-│   ├── bus_assignment_problem/    # Goal Programming examples
-│   │   ├── 01_simple_bus_assignment_problem.py
-│   │   ├── 02_simple_bus_assignment_problem.py
-│   │   └── 03_bus_assignment_problem.py
-│   └── diet_problem/              # Classic Linear Programming example
-│       └── 01_diet_problem.py
-├── tests/                         # Comprehensive test suite
-│   ├── test_base/                # Base class tests
-│   ├── test_constraints/         # Constraint system tests
-│   ├── test_data/               # Database integration tests
-│   ├── test_problem/            # Problem type tests
-│   ├── test_solvers/            # Solver interface tests
-│   ├── test_variables/          # Variable management tests
-│   └── test_utilities/          # Utility function tests
-├── pyproject.toml               # Poetry configuration and dependencies
-├── CLAUDE.md                    # Development and AI assistant guidance
-├── CHANGELOG.md                 # Version history and changes
-└── README.md                    # This documentation file
-```
-
 ## 🔧 Development Commands
 
 ### Installation and Environment
@@ -426,22 +329,6 @@ poetry run python -m pytest -v
 poetry run python -m pytest --cov=src --cov-report=html
 ```
 
-### Code Quality
-
-```bash
-# Format code with black
-poetry run black src/ tests/ samples/
-
-# Sort imports with isort  
-poetry run isort src/ tests/ samples/
-
-# Type checking with mypy
-poetry run mypy src/
-
-# Linting with flake8
-poetry run flake8 src/ tests/ samples/
-```
-
 ## 🔧 Configuration
 
 ### Solver Configuration
@@ -461,23 +348,9 @@ status, solution = solve(problem, 'Gurobi')
 
 # Automatic solver selection
 status, solution = solve(problem)  # Uses best available solver
-```
 
-### Environment Variables
-
-```bash
-# Gurobi Configuration (if installed)
-export GUROBI_HOME="/opt/gurobi1000/linux64"
-export PATH="${PATH}:${GUROBI_HOME}/bin"
-export LD_LIBRARY_PATH="${LD_LIBRARY_PATH}:${GUROBI_HOME}/lib"
-
-# Logging Configuration
-export LOG_LEVEL="INFO"  # DEBUG, INFO, WARNING, ERROR
-export LOG_FILE="optix.log"
-
-# Performance Settings
-export OPTIX_SOLVER_TIMEOUT="3600"  # Solver timeout in seconds
-export OPTIX_THREAD_LIMIT="4"       # Maximum threads for parallel solving
+# Automatically solve all scenarios
+results = solve_all_scenarios(problem, 'ORTools')
 ```
 
 ## 📖 API Documentation
@@ -522,54 +395,6 @@ from solvers import solve
 status, solution = solve(problem, 'ORTools')
 ```
 
-### Variable Management
-
-```python
-from variables import OXVariable, OXVariableSet
-
-# Create individual variables
-var = OXVariable(
-    name="inventory_level",
-    description="Current inventory level",
-    lower_bound=0,
-    upper_bound=10000,
-    variable_type="continuous"
-)
-
-# Search variables by criteria
-matching_vars = problem.variables.search_by_function(
-    lambda v: "production" in v.name
-)
-
-# Filter variables by type
-continuous_vars = problem.variables.search_by_function(
-    lambda v: v.variable_type == "continuous"
-)
-```
-
-### Database Integration
-
-```python
-from data import OXData, OXDatabase
-
-# Create data objects
-product = OXData(name="Product A", cost=10.5, demand=100)
-factory = OXData(name="Factory 1", capacity=500, location="City A")
-
-# Create database collections
-products_db = OXDatabase([product])
-factories_db = OXDatabase([factory])
-
-# Create variables from database objects (Cartesian product)
-problem.create_variables_from_database_objects(
-    database_objects=[products_db, factories_db],
-    variable_name_template="production_{0}_{1}",
-    variable_description_template="Production of {0} at {1}",
-    lower_bound=0,
-    upper_bound=1000
-)
-```
-
 ## 🚀 Advanced Features
 
 ### Custom Solver Integration
@@ -593,28 +418,11 @@ from solvers import register_solver
 register_solver("CustomSolver", CustomSolverInterface)
 ```
 
-### Performance Optimization
-
-```python
-# Parallel solving with multiple solvers
-from solvers import solve_parallel
-
-results = solve_parallel(
-    problem, 
-    solvers=['ORTools', 'Gurobi'],
-    timeout=300  # 5 minutes
-)
-
-# Best solution selection
-best_solution = min(results, key=lambda x: x.objective_value)
-```
-
 ## 🔒 Security Considerations
 
 ### Input Validation
 
 - All user inputs are validated for type safety and bounds checking
-- SQL injection protection through parameterized queries (if database extensions used)
 - Memory usage monitoring for large-scale problems
 
 ### Best Practices
@@ -693,40 +501,6 @@ status, solution = solve(problem, solver='ORTools', timeout=3600)
 status, solution = solve(problem, solver='Gurobi')
 ```
 
-#### Performance Issues
-
-**Problem**: Slow solving times for large problems
-
-**Solution**:
-```bash
-# Enable parallel solving
-export OPTIX_THREAD_LIMIT="8"
-
-# Use Gurobi for better performance on large problems
-poetry run python your_script.py --solver=Gurobi
-
-# Profile your code to identify bottlenecks
-poetry run python -m cProfile -o profile.stats your_script.py
-```
-
-#### Memory Issues
-
-**Problem**: `MemoryError` for large-scale problems
-
-**Solution**:
-```python
-# Reduce problem size by aggregating variables
-# Use sparse constraint representation
-# Implement incremental solving for very large problems
-
-# Monitor memory usage
-import psutil
-import os
-
-process = psutil.Process(os.getpid())
-print(f"Memory usage: {process.memory_info().rss / 1024 / 1024:.2f} MB")
-```
-
 ## 📖 Additional Resources
 
 ### Documentation
@@ -734,7 +508,6 @@ print(f"Memory usage: {process.memory_info().rss / 1024 / 1024:.2f} MB")
 - **API Reference**: Comprehensive docstrings in all modules
 - **Examples**: Real-world problems in `samples/` directory
 - **Test Cases**: Extensive test coverage demonstrating usage patterns
-- **Development Guide**: See `CLAUDE.md` for development guidelines
 
 ### External Resources
 
@@ -786,7 +559,3 @@ This project is licensed under the Academic Free License ("AFL") v. 3.0 - see th
 - **Email**: beyzanursiyah@ktu.edu.tr  
 - **Institution**: Karadeniz Technical University
 - **Role**: Core Developer & Research Assistant
-
----
-
-### 🚀 Ready to optimize? Start with our [examples](samples/) or dive into the [API documentation](#-api-documentation)!
