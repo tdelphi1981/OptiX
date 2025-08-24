@@ -73,6 +73,7 @@ import pprint
 import random
 from dataclasses import dataclass
 
+from analysis import OXObjectiveFunctionAnalysis
 from constraints.OXConstraint import RelationalOperators
 from data.OXData import OXData
 from problem.OXProblem import OXLPProblem, ObjectiveType
@@ -174,6 +175,7 @@ def main():
         group.number_of_busses = random.randint(5, 10)
         group.order = i
         group.create_scenario("epidemic", capacity=random.randint(12, 20))
+        group.create_scenario("workdays", capacity=random.randint(35, 75))
         bap.db.add_object(group)
 
     for i in range(number_of_lines):
@@ -233,6 +235,12 @@ def main():
             results[scenario]['solution'].print_solution_for(bap)
         else:
             print("  No solution found.")
+
+    analyzer = OXObjectiveFunctionAnalysis(bap, 'ORTools', use_continuous=False, equalizeDenominators=True)
+    analysis_results = analyzer.analyze()
+
+    print("=== Analysis Results ===")
+    pprint.pprint(analysis_results)
 
 
 if __name__ == '__main__':

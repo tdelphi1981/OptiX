@@ -370,7 +370,7 @@ class OXObjectiveFunctionAnalysis:
         if hasattr(self.problem, 'objective_type'):
             result.objective_direction = self.problem.objective_type.value if hasattr(self.problem.objective_type, 'value') else str(self.problem.objective_type)
         else:
-            result.objective_direction = "maximize"  # Default assumption
+            result.objective_direction = "minimize"  # Default assumption
         
         # Extract objective function values from optimal solutions
         for scenario_name, scenario_result in scenario_results.items():
@@ -379,7 +379,7 @@ class OXObjectiveFunctionAnalysis:
             
             result.scenario_statuses[scenario_name] = status
             
-            if status == OXSolutionStatus.OPTIMAL and solution is not None:
+            if status in [OXSolutionStatus.OPTIMAL, OXSolutionStatus.FEASIBLE] and solution is not None:
                 objective_value = solution.objective_function_value
                 result.scenario_values[scenario_name] = objective_value
                 result.optimal_scenario_count += 1

@@ -48,7 +48,8 @@ Mathematical Features Tested:
 
 from uuid import UUID
 
-from src.constraints.OXpression import OXpression, get_integer_numerator_and_denominators, calculate_fraction
+from src.constraints.OXpression import OXpression, get_integer_numerator_and_denominators
+from utilities.fraction import calculate_fraction
 
 
 def test_get_integer_numerator_and_denominators():

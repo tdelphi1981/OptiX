@@ -89,6 +89,7 @@ from typing import Any
 
 from base import OXObject, OXception
 from utilities.DynamicValue import DynamicFloat
+from utilities.fraction import calculate_fraction
 from variables.OXDeviationVar import OXDeviationVar
 from .OXpression import OXpression
 
@@ -326,7 +327,7 @@ class OXConstraint(OXObject):
         Returns:
             int: The numerator of the right-hand side.
         """
-        return Fraction(self.rhs).numerator
+        return calculate_fraction(self.rhs).numerator
 
     @property
     def rhs_denominator(self):
@@ -335,7 +336,7 @@ class OXConstraint(OXObject):
         Returns:
             int: The denominator of the right-hand side.
         """
-        return Fraction(self.rhs).denominator
+        return calculate_fraction(self.rhs).denominator
 
     def to_goal(self, upper_bound: int | float | Fraction = 100) -> "OXGoalConstraint":
         """Convert this constraint to a goal constraint for goal programming.
