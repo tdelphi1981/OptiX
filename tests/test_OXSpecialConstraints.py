@@ -50,7 +50,7 @@ Special Constraint Types Tested:
 
 from uuid import UUID
 
-from src.constraints.OXSpecialConstraints import (
+from constraints import (
     OXSpecialConstraint,
     OXNonLinearEqualityConstraint,
     OXMultiplicativeEqualityConstraint,
@@ -64,14 +64,14 @@ from src.constraints.OXSpecialConstraints import (
 def test_special_constraint_initialization():
     """Test initialization of the base OXSpecialConstraint class."""
     constraint = OXSpecialConstraint()
-    assert constraint.class_name == "constraints.OXSpecialConstraint"
+    assert constraint.class_name == "constraints.OXSpecialConstraints.OXSpecialConstraint"
 
 
 def test_non_linear_equality_constraint_initialization():
     """Test initialization of OXNonLinearEqualityConstraint."""
     # Default initialization
     constraint = OXNonLinearEqualityConstraint()
-    assert constraint.class_name == "constraints.OXNonLinearEqualityConstraint"
+    assert constraint.class_name == "constraints.OXSpecialConstraints.OXNonLinearEqualityConstraint"
     assert isinstance(constraint.output_variable, UUID)
     
     # Custom initialization
@@ -84,7 +84,7 @@ def test_multiplicative_equality_constraint_initialization():
     """Test initialization of OXMultiplicativeEqualityConstraint."""
     # Default initialization
     constraint = OXMultiplicativeEqualityConstraint()
-    assert constraint.class_name == "constraints.OXMultiplicativeEqualityConstraint"
+    assert constraint.class_name == "constraints.OXSpecialConstraints.OXMultiplicativeEqualityConstraint"
     assert isinstance(constraint.output_variable, UUID)
     assert isinstance(constraint.input_variables, list)
     assert len(constraint.input_variables) == 0
@@ -109,7 +109,7 @@ def test_division_equality_constraint_initialization():
     """Test initialization of OXDivisionEqualityConstraint."""
     # Default initialization
     constraint = OXDivisionEqualityConstraint()
-    assert constraint.class_name == "constraints.OXDivisionEqualityConstraint"
+    assert constraint.class_name == "constraints.OXSpecialConstraints.OXDivisionEqualityConstraint"
     assert isinstance(constraint.output_variable, UUID)
     assert isinstance(constraint.input_variable, UUID)
     assert constraint.denominator == 1
@@ -133,7 +133,7 @@ def test_modulo_equality_constraint_initialization():
     """Test initialization of OXModuloEqualityConstraint."""
     # Default initialization
     constraint = OXModuloEqualityConstraint()
-    assert constraint.class_name == "constraints.OXModuloEqualityConstraint"
+    assert constraint.class_name == "constraints.OXSpecialConstraints.OXModuloEqualityConstraint"
     assert isinstance(constraint.output_variable, UUID)
     assert isinstance(constraint.input_variable, UUID)
     assert constraint.denominator == 1
@@ -157,7 +157,7 @@ def test_summation_equality_constraint_initialization():
     """Test initialization of OXSummationEqualityConstraint."""
     # Default initialization
     constraint = OXSummationEqualityConstraint()
-    assert constraint.class_name == "constraints.OXSummationEqualityConstraint"
+    assert constraint.class_name == "constraints.OXSpecialConstraints.OXSummationEqualityConstraint"
     assert isinstance(constraint.output_variable, UUID)
     assert isinstance(constraint.input_variables, list)
     assert len(constraint.input_variables) == 0
@@ -182,7 +182,7 @@ def test_conditional_constraint_initialization():
     """Test initialization of OXConditionalConstraint."""
     # Default initialization
     constraint = OXConditionalConstraint()
-    assert constraint.class_name == "constraints.OXConditionalConstraint"
+    assert constraint.class_name == "constraints.OXSpecialConstraints.OXConditionalConstraint"
     assert isinstance(constraint.indicator_variable, UUID)
     assert isinstance(constraint.input_constraint, UUID)
     assert isinstance(constraint.constraint_if_true, UUID)

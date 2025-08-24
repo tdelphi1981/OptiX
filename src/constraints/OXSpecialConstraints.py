@@ -68,7 +68,7 @@ Example:
 """
 
 from dataclasses import dataclass, field
-from uuid import UUID
+from uuid import UUID, uuid4
 
 from base import OXObject
 
@@ -116,7 +116,7 @@ class OXNonLinearEqualityConstraint(OXSpecialConstraint):
         :class:`OXDivisionEqualityConstraint`
         :class:`OXModuloEqualityConstraint`
     """
-    output_variable: UUID = field(default_factory=UUID)
+    output_variable: UUID = field(default_factory=uuid4)
 
 
 @dataclass
@@ -170,7 +170,7 @@ class OXDivisionEqualityConstraint(OXNonLinearEqualityConstraint):
         This constraint performs integer division (floor division), not
         floating-point division.
     """
-    input_variable: UUID = field(default_factory=UUID)
+    input_variable: UUID = field(default_factory=uuid4)
     denominator: int = 1
 
 
@@ -198,7 +198,7 @@ class OXModuloEqualityConstraint(OXNonLinearEqualityConstraint):
     Note:
         The result is always non-negative and less than the denominator.
     """
-    input_variable: UUID = field(default_factory=UUID)
+    input_variable: UUID = field(default_factory=uuid4)
     denominator: int = 1
 
 
@@ -225,7 +225,7 @@ class OXSummationEqualityConstraint(OXSpecialConstraint):
         as a special constraint for consistency and solver optimization.
     """
     input_variables: list[UUID] = field(default_factory=list)
-    output_variable: UUID = field(default_factory=UUID)
+    output_variable: UUID = field(default_factory=uuid4)
 
 
 @dataclass
@@ -258,7 +258,7 @@ class OXConditionalConstraint(OXSpecialConstraint):
         This constraint is used for modeling logical implications and
         conditional relationships in optimization problems.
     """
-    indicator_variable: UUID = field(default_factory=UUID)
-    input_constraint: UUID = field(default_factory=UUID)
-    constraint_if_true: UUID = field(default_factory=UUID)
-    constraint_if_false: UUID = field(default_factory=UUID)
+    indicator_variable: UUID = field(default_factory=uuid4)
+    input_constraint: UUID = field(default_factory=uuid4)
+    constraint_if_true: UUID = field(default_factory=uuid4)
+    constraint_if_false: UUID = field(default_factory=uuid4)
